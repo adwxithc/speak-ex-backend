@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
-// import {errorHandler,NotFoundError } from '@adjticketing/common'
-
-// import { currentUserRouter } from './routes/current-user';
+import { userRoute } from '../routes/userRoute';
+import {errorHandler} from "../../../usecaseLayer/middleware/error-handler" 
+import {NotFoundError} from "../../../usecaseLayer/errors"
 
 
 
@@ -21,13 +21,13 @@ app.get('/',(req:Request,res:Response)=>{
     res.send({success:true})
 })
 
-// app.use(currentUserRouter);
+app.use('/api/user',userRoute(express.Router()))
+
+app.all('*', () => {
+  throw new NotFoundError();
+});
 
 
-// app.all('*', () => {
-//   throw new NotFoundError();
-// });
-
-// app.use(errorHandler);
+app.use(errorHandler);
 
 export { app }

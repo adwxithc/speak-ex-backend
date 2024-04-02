@@ -1,15 +1,13 @@
-interface IUser{
-    id?:number;
+export interface IOtpUser {
+    id?: string;
     firstName:string;
     lastName:string;
     username:string;
     email:string;
     password:string;
-    profile?:string;
-    blocked?:boolean;
     focusLanguage:string;
     proficientLanguage:string[]
-    
+    otp: string;
+    expiresAt?: Date;
+    createdAt?: Date;
 }
-
-export default IUser
