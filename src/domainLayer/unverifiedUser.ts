@@ -12,4 +12,4 @@ interface IUnverifiedUser {
     createdAt?: Date;
 }
 
-export default  IUnverifiedUser
+export default  IUnverifiedUser;

@@ -1,5 +1,6 @@
-import { registerUser } from "./registerUser";
+import { registerUser } from './registerUser';
+
 
 export{
-    registerUser
-}
+  registerUser
+};

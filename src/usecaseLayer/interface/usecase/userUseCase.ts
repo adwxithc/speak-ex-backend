@@ -1,5 +1,5 @@
-import IUser from "../../../domainLayer/user"
-import { Next } from "../../../infrastructureLayer/types/expressTypes";
+import IUser from '../../../domainLayer/user';
+import { Next } from '../../../infrastructureLayer/types/expressTypes';
 
 
 // type UserDetails = {
