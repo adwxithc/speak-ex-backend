@@ -1,3 +1,4 @@
 export interface IcreateOTP {
-    generateOTP(): Promise<string>
+  generateOTP(): number;
 }
+

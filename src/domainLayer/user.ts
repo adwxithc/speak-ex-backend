@@ -12,4 +12,4 @@ interface IUser{
     
 }
 
-export default IUser
+export default IUser;

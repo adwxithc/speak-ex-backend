@@ -1,6 +1,3 @@
 import { registerUser } from './registerUser';
 
-
-export{
-  registerUser
-};
+export { registerUser };

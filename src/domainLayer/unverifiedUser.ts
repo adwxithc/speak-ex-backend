@@ -7,7 +7,7 @@ interface IUnverifiedUser {
     password:string;
     focusLanguage:string;
     proficientLanguage:string[]
-    otp: string;
+    otp: number;
     expiresAt?: Date;
     createdAt?: Date;
 }

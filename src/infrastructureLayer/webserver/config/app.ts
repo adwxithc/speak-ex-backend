@@ -9,20 +9,20 @@ const app = express();
 app.use(express.json());
 // app.set('trust proxy', true);
 app.use(
-  cookieSession({
-    signed: false,
-    secure: process.env.NODE_ENV !== 'test',
-  })
+    cookieSession({
+        signed: false,
+        secure: process.env.NODE_ENV !== 'test',
+    })
 );
 
 app.get('/', (req: Request, res: Response) => {
-  res.send({ success: true });
+    res.send({ success: true });
 });
 
 app.use('/api/user', userRoute(express.Router()));
 
 app.all('*', () => {
-  throw new NotFoundError();
+    throw new NotFoundError();
 });
 
 app.use(errorHandler);

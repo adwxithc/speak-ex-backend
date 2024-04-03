@@ -11,44 +11,44 @@ import { IUnverifiedUserRepository } from '../interface/repository/IUnverifiedUs
 import { Next } from '../../infrastructureLayer/types/expressTypes';
 
 export class UserUseCase implements IUserUseCase {
-  private readonly userRepository: IUserRepository;
-  private readonly bcrypt: IHashpassword;
-  private readonly otpGenerator: IcreateOTP;
-  private readonly sendMail: ISendMail;
-  private readonly unverifiedUserRepository: IUnverifiedUserRepository;
-  private readonly jwtToken: IJwt;
+    private readonly userRepository: IUserRepository;
+    private readonly bcrypt: IHashpassword;
+    private readonly otpGenerator: IcreateOTP;
+    private readonly sendMail: ISendMail;
+    private readonly unverifiedUserRepository: IUnverifiedUserRepository;
+    private readonly jwtToken: IJwt;
 
-  constructor(
-    userRepository: IUserRepository,
-    bcrypt: IHashpassword,
-    otpGenerator: IcreateOTP,
-    sendMail: ISendMail,
-    unverifiedUserRepository: IUnverifiedUserRepository,
-    jwtToken: IJwt
-  ) {
-    this.userRepository = userRepository;
-    this.bcrypt = bcrypt;
-    this.otpGenerator = otpGenerator;
-    this.sendMail = sendMail;
-    this.unverifiedUserRepository = unverifiedUserRepository;
-    this.jwtToken = jwtToken;
-  }
+    constructor(
+        userRepository: IUserRepository,
+        bcrypt: IHashpassword,
+        otpGenerator: IcreateOTP,
+        sendMail: ISendMail,
+        unverifiedUserRepository: IUnverifiedUserRepository,
+        jwtToken: IJwt
+    ) {
+        this.userRepository = userRepository;
+        this.bcrypt = bcrypt;
+        this.otpGenerator = otpGenerator;
+        this.sendMail = sendMail;
+        this.unverifiedUserRepository = unverifiedUserRepository;
+        this.jwtToken = jwtToken;
+    }
 
-  //register user
-  async registerUser(
-    newUser: IUser,
-    next: Next
-  ): Promise<string | void | never> {
-    const result = await registerUser(
-      this.unverifiedUserRepository,
-      this.userRepository,
-      this.sendMail,
-      this.otpGenerator,
-      this.jwtToken,
-      this.bcrypt,
-      newUser,
-      next
-    );
-    return result;
-  }
+    //register user
+    async registerUser(
+        newUser: IUser,
+        next: Next
+    ): Promise<string | void | never> {
+        const result = await registerUser(
+            this.unverifiedUserRepository,
+            this.userRepository,
+            this.sendMail,
+            this.otpGenerator,
+            this.jwtToken,
+            this.bcrypt,
+            newUser,
+            next
+        );
+        return result;
+    }
 }

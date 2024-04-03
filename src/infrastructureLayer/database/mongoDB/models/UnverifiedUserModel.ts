@@ -1,5 +1,5 @@
-import mongoose, { Schema } from "mongoose";
-import IUnverifiedUser from "../../../../domainLayer/unverifiedUser";
+import mongoose, { Schema } from 'mongoose';
+import IUnverifiedUser from '../../../../domainLayer/unverifiedUser';
 
 function arrayLimit(val: string[]) {
   return val.length > 0;
@@ -34,7 +34,7 @@ const unverifiedUserSchema = new Schema<IUnverifiedUser>(
     proficientLanguage: {
       type: [String],
       required: true,
-      validate: [arrayLimit, "The array must contain at least one element"],
+      validate: [arrayLimit, 'The array must contain at least one element'],
     },
     otp: {
       type: String,
@@ -59,7 +59,7 @@ const unverifiedUserSchema = new Schema<IUnverifiedUser>(
 );
 
 const UnverifiedUserModel = mongoose.model<IUnverifiedUser>(
-  "UnverifiedUser",
+  'UnverifiedUser',
   unverifiedUserSchema
 );
 
