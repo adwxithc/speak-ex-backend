@@ -1,4 +1,4 @@
-export interface IOtpUser {
+interface IUnverifiedUser {
     id?: string;
     firstName:string;
     lastName:string;
@@ -11,3 +11,5 @@ export interface IOtpUser {
     expiresAt?: Date;
     createdAt?: Date;
 }
+
+export default  IUnverifiedUser
