@@ -34,6 +34,12 @@ export function userRoute(router: Router) {
             await userController.signin(req,res, next);
         });
 
+    router.post(
+        '/send-verification-mail',
+        async(req:Req, res:Res, next:Next)=>{
+            await userController.sendVerificationMail(req,res,next);
+        });
+
     return router;
 }
 

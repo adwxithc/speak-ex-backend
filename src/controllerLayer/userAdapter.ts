@@ -47,5 +47,12 @@ export class UserController {
         res.json(result.user);
     }
 
+    async sendVerificationMail(req:Req, res:Res, next:Next){
+        const {email} = req.body;
+        const result = await this.userUseCase.sendVerificationMail(email);
+
+        res.send(result);
+    }
+
     
 }

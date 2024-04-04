@@ -23,8 +23,6 @@ export const registerUser = async (
 
 
 
-    console.log('entered register user func');
-
     const {
         firstName,
         lastName,

@@ -15,4 +15,7 @@ export interface IUserUseCase {
 
     //signin user
     signin({email,password}:{email:string,password:string}): Promise<{user:IUser,token:IToken} | never>
+
+    //send verification mail
+    sendVerificationMail(email:string):Promise<{success:boolean}>;
 }

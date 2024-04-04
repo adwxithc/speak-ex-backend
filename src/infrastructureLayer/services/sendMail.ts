@@ -33,11 +33,9 @@ export class SendMail implements ISendMail{
 
             this.transporter.sendMail(mailOptions, (err) => {
                 if (err) {
-                    console.log(err,'-----------------------------------------------------------------');
                     
                     reject({ success: false, error: err });
                 } else {
-                    console.log('-------------------------------------------------mail sended ---------------------------------------------------------------------------------------------------');
                     
                     resolve({ success: true });
                 }
