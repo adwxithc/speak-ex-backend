@@ -5,8 +5,6 @@ interface IUnverifiedUser {
     username:string;
     email:string;
     password:string;
-    focusLanguage:string;
-    proficientLanguage:string[]
     otp: number;
     expiresAt?: Date;
     createdAt?: Date;

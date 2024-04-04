@@ -12,7 +12,7 @@ export class SendMail implements ISendMail{
         this.transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: parseInt(process.env.SMTP_PORT || '587'), // if we dont do this the host will show warning
-            service: process.env.SMTP_SERVICE,
+            secure:false,
             auth: {
                 user: process.env.SMTP_MAIL,
                 pass: process.env.SMTP_PASSWORD
@@ -22,7 +22,7 @@ export class SendMail implements ISendMail{
 
  
 
-    sendEmailVerification(username: string, email: string, verificationCode: string): Promise<{ success: boolean; }> {
+    sendEmailVerification(username: string, email: string, verificationCode: number): Promise<{ success: boolean; }> {
         return new Promise((resolve, reject) => {
             const mailOptions: nodemailer.SendMailOptions = {
                 from: process.env.SMTP_MAIL,
@@ -33,8 +33,12 @@ export class SendMail implements ISendMail{
 
             this.transporter.sendMail(mailOptions, (err) => {
                 if (err) {
+                    console.log(err,'-----------------------------------------------------------------');
+                    
                     reject({ success: false, error: err });
                 } else {
+                    console.log('-------------------------------------------------mail sended ---------------------------------------------------------------------------------------------------');
+                    
                     resolve({ success: true });
                 }
             });

@@ -1,9 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import IUser from '../../../../domainLayer/user';
 
-function arrayLimit(val: string[]) {
-    return val.length > 0;
-}
+
 
 const userSchema = new Schema<IUser>(
     {
@@ -37,15 +35,9 @@ const userSchema = new Schema<IUser>(
         },
         focusLanguage: {
             type: String,
-            required: true,
         },
         proficientLanguage: {
             type: [String],
-            required: true,
-            validate: [
-                arrayLimit,
-                'The array must contain at least one element',
-            ],
         },
     },
     {

@@ -1,3 +1,3 @@
 export interface ISendMail {
-    sendEmailVerification(username: string, email: string, verificationCode: string): Promise<{success: boolean}>
+    sendEmailVerification(username: string, email: string, verificationCode: number): Promise<{success: boolean}>
 }

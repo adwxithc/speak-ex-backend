@@ -9,5 +9,4 @@ export const createUser = async(
     const user = await userModels.create(newUser);
     await user.save();
     return user;
-
 };

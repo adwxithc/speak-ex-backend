@@ -7,8 +7,8 @@ interface IUser{
     password:string;
     profile?:string;
     blocked?:boolean;
-    focusLanguage:string;
-    proficientLanguage:string[]
+    focusLanguage?:string;
+    proficientLanguage?:string[]
     
 }
 

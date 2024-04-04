@@ -1,6 +1,6 @@
 import IUser from '../../../domainLayer/user';
 // import { IUnverifiedUser } from '../../../domainLayer/unverifiedUser';
-import { Next } from '../../../infrastructureLayer/types/expressTypes';
+
 import { BadRequestError } from '../../errors';
 // import { Ilogger, Next } from "../../../infrastructureLayer/types/serverPackageTypes";
 import { IUnverifiedUserRepository } from '../../interface/repository/IUnverifiedUserRepository';
@@ -18,30 +18,33 @@ export const registerUser = async (
     jwtTokenGenerator: IJwt,
     bcrypt: IHashpassword,
     newUser: IUser,
-    next: Next
     // logger:Ilogger
 ): Promise<string | void | never> => {
+
+
+
+    console.log('entered register user func');
+
     const {
         firstName,
         lastName,
         username,
         email,
         password,
-        focusLanguage,
-        proficientLanguage,
     } = newUser;
     // check user exist
 
     const isUserExistOnUserRepo = await userRepository.findUserByEmail(email);
+    
 
     if (isUserExistOnUserRepo) {
-        return next(
-            new BadRequestError('user already exist with the same mail id')
-        );
+       
+        throw new BadRequestError('user already exist with the same mail id');
+        
     }
 
     // generate otp
-    const otp = await otpGenerator.generateOTP();
+    const otp = otpGenerator.generateOTP();
 
     // send mail
     await sendMail.sendEmailVerification(username, email, otp);
@@ -61,10 +64,12 @@ export const registerUser = async (
             username,
             email,
             password: hashPassword,
-            focusLanguage,
-            proficientLanguage,
             otp,
         });
 
     return jwtToken;
+    
+
+
+   
 };

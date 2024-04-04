@@ -8,7 +8,7 @@ import { IcreateOTP } from '../interface/services/ICreateOtp';
 import { ISendMail } from '../interface/services/ISendMail';
 import { IJwt } from '../interface/services/IJwt.types';
 import { IUnverifiedUserRepository } from '../interface/repository/IUnverifiedUserRepository';
-import { Next } from '../../infrastructureLayer/types/expressTypes';
+
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -37,8 +37,9 @@ export class UserUseCase implements IUserUseCase {
     //register user
     async registerUser(
         newUser: IUser,
-        next: Next
     ): Promise<string | void | never> {
+
+
         const result = await registerUser(
             this.unverifiedUserRepository,
             this.userRepository,
@@ -47,8 +48,10 @@ export class UserUseCase implements IUserUseCase {
             this.jwtToken,
             this.bcrypt,
             newUser,
-            next
+           
         );
         return result;
+        
+
     }
 }

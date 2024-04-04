@@ -10,6 +10,8 @@ export class UserRepository implements IUserRepository {
     constructor(private userModels: typeof UserModel) {}
 
     async findUserByEmail(email: string): Promise<IUser | null> {
+        console.log('findUserByEmail........');
+        
         const userExist = await findUserByEmail(email, this.userModels);
         return userExist;
     }
