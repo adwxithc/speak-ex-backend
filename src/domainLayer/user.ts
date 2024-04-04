@@ -1,4 +1,4 @@
-export interface IUser{
+interface IUser{
     id?:number;
     firstName:string;
     lastName:string;
@@ -7,7 +7,9 @@ export interface IUser{
     password:string;
     profile?:string;
     blocked?:boolean;
-    focusLanguage:string;
-    proficientLanguage:string[]
+    focusLanguage?:string;
+    proficientLanguage?:string[]
     
 }
+
+export default IUser;

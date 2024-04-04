@@ -1,0 +1,12 @@
+import IUnverifiedUser from '../../../domainLayer/unverifiedUser';
+
+export interface IUnverifiedUserRepository {
+    findUser(email: string): Promise<IUnverifiedUser | null>;
+    upsert(newUser: IUnverifiedUser): Promise<IUnverifiedUser>;
+    createUserCollection(newUser: IUnverifiedUser): Promise<IUnverifiedUser>;
+    findUserWithOTP(
+        email: string,
+        otpFromUser: string
+    ): Promise<IUnverifiedUser | null>;
+    findUserAndDelete(email: string): Promise<IUnverifiedUser | null | boolean>;
+}
