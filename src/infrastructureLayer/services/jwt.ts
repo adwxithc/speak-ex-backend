@@ -24,9 +24,18 @@ export class JWTToken implements IJwt {
         
     // }
 
-    // verifyJwt(token: string): Promise<IUser | { userId: string; email: string; iat: number; exp: number; }> {
+    verifyJwt(token: string): Promise<IVerificationJwt | null> {
+        return new Promise((resolve, reject)=>{
+            jwt.verify(token, this.JWT_VERIFICATION_KEY,(err, decoded)=>{
+                if(err){
+                    reject(null);
+                }else{
+                    resolve(decoded as IVerificationJwt);
+                }
+            });
+        });
         
-    // }
+    }
 
     // forgotPasswordToken(userId: string, email: string): Promise<string> {
         

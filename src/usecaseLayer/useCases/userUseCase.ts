@@ -2,7 +2,7 @@ import IUser from '../../domainLayer/user';
 import { IUserUseCase } from '../interface/usecase/userUseCase';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 
-import { registerUser } from './user';
+import { registerUser,createUser } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
 import { ISendMail } from '../interface/services/ISendMail';
@@ -21,7 +21,7 @@ export class UserUseCase implements IUserUseCase {
     constructor(
         userRepository: IUserRepository,
         bcrypt: IHashpassword,
-        otpGenerator: IcreateOTP,
+        otpGenerator: IcreateOTP, 
         sendMail: ISendMail,
         unverifiedUserRepository: IUnverifiedUserRepository,
         jwtToken: IJwt
@@ -53,5 +53,19 @@ export class UserUseCase implements IUserUseCase {
         return result;
         
 
+    }
+
+    //create verified user
+    async createUser(otpFromUser: string, token: string): Promise<IUser | null> {
+        
+        const result = await createUser({
+            UserRepository:this.userRepository,
+            UnverifiedUserRepository:this.unverifiedUserRepository,
+            jwtToken:this.jwtToken,
+            otpFromUser:otpFromUser,
+            token:token,
+
+        });
+        return result;
     }
 }

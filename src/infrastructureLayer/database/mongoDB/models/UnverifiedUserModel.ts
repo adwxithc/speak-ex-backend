@@ -12,7 +12,7 @@ const unverifiedUserSchema = new Schema<IUnverifiedUser>(
             type: String,
             required: true,
         },
-        username: {
+        userName: {
             type: String,
             required: true,
         },
@@ -31,7 +31,7 @@ const unverifiedUserSchema = new Schema<IUnverifiedUser>(
         expiresAt: {
             type: Date,
             default: Date.now,
-            expires: 2 * 60,
+            expires: 2*60,
         }, // Automatically delete document after 120 seconds
     },
     {

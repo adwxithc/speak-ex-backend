@@ -1,4 +1,5 @@
 import { Req, Res, Next } from '../infrastructureLayer/types/expressTypes';
+import { BadRequestError } from '../usecaseLayer/errors';
 import { UserUseCase } from '../usecaseLayer/useCases/userUseCase';
 
 export class UserController {
@@ -21,4 +22,19 @@ export class UserController {
         });
         
     }
+
+    async createUser(req: Req, res:Res, next:Next){
+        const token = req.cookies?.verficationToken;
+        if(!token){
+            throw new BadRequestError('No verification token found');
+
+        }
+        const {otp}= req.body;
+
+        const result = await this.userUseCase.createUser(otp,token);
+
+        if(result) res.clearCookie('verificationToken').status(200).send(result);
+    }
+
+    
 }

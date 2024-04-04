@@ -28,7 +28,7 @@ export const registerUser = async (
     const {
         firstName,
         lastName,
-        username,
+        userName,
         email,
         password,
     } = newUser;
@@ -47,12 +47,12 @@ export const registerUser = async (
     const otp = otpGenerator.generateOTP();
 
     // send mail
-    await sendMail.sendEmailVerification(username, email, otp);
+    await sendMail.sendEmailVerification(userName, email, otp);
 
     const hashPassword = await bcrypt.createHash(password as string);
 
     const jwtToken = await jwtTokenGenerator.createVerificationJWT({
-        username,
+        userName,
         email,
     });
 
@@ -61,7 +61,7 @@ export const registerUser = async (
         await unverifiedUserRepository.upsert({
             firstName,
             lastName,
-            username,
+            userName,
             email,
             password: hashPassword,
             otp,

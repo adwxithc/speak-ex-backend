@@ -2,7 +2,7 @@ interface IUser{
     id?:number;
     firstName:string;
     lastName:string;
-    username:string;
+    userName:string;
     email:string;
     password:string;
     profile?:string;
