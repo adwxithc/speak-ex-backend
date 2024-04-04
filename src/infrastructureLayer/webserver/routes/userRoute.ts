@@ -28,6 +28,12 @@ export function userRoute(router: Router) {
             await userController.createUser(req, res, next);
         });
 
+    router.post(
+        '/signin',
+        async (req:Req, res:Res, next:Next)=>{
+            await userController.signin(req,res, next);
+        });
+
     return router;
 }
 

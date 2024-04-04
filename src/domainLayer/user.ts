@@ -1,5 +1,5 @@
 interface IUser{
-    id?:number;
+    id?:string;
     firstName:string;
     lastName:string;
     userName:string;
@@ -9,7 +9,7 @@ interface IUser{
     blocked?:boolean;
     focusLanguage?:string;
     proficientLanguage?:string[]
-    
+    status?: 'active' | 'freeze';
 }
 
 export default IUser;

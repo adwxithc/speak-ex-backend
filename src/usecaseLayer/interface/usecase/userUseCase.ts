@@ -1,4 +1,5 @@
 import IUser from '../../../domainLayer/user';
+import { IToken } from '../services/IJwt.types';
 
 
 // type UserDetails = {
@@ -9,6 +10,9 @@ export interface IUserUseCase {
     // saving user details temporary
     registerUser(newUser: IUser): Promise<string | void | never>;
 
-    //crate verified user
-    createUser(otpFromUser:string,token:string): Promise<IUser | null>
+    //create verified user
+    createUser(otpFromUser:string,token:string): Promise<IUser| never | null>
+
+    //signin user
+    signin({email,password}:{email:string,password:string}): Promise<{user:IUser,token:IToken} | never>
 }

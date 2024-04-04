@@ -12,7 +12,7 @@ export interface IToken {
 
 export interface IJwt {
     createVerificationJWT(payload: IVerificationJwt): string;
-    // createAccessAndRefreshToken(id: string): Promise<IToken>;
+    createAccessAndRefreshToken(id: string): Promise<IToken>;
     verifyJwt(token: string): Promise< IVerificationJwt | null >;
     // forgotPasswordToken(userId: string, email: string): Promise<string>
 }
