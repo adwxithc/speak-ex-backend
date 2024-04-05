@@ -35,9 +35,22 @@ export function userRoute(router: Router) {
         });
 
     router.post(
-        '/send-verification-mail',
+        '/forgot-password',
         async(req:Req, res:Res, next:Next)=>{
-            await userController.sendVerificationMail(req,res,next);
+            await userController.sendPasswordResetMail(req,res,next);
+        });
+
+    router.post(
+        '/verify-password-reset',
+        async(req:Req, res:Res, next:Next)=>{
+            await userController.verifyPasswordReset(req,res, next);
+        }
+    );
+
+    router.post(
+        '/reset-password',
+        async(req:Req, res:Res, next:Next) =>{
+            await userController.resetPassword(req, res, next);
         });
 
     return router;

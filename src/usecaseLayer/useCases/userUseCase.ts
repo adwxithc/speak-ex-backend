@@ -2,12 +2,13 @@ import IUser from '../../domainLayer/user';
 import { IUserUseCase } from '../interface/usecase/userUseCase';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 
-import { registerUser, createUser, login, sendVerificationMail } from './user';
+import { registerUser, createUser, login, sendPasswordResetMail, verifyPasswordReset, createNewPassword } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
 import { ISendMail } from '../interface/services/ISendMail';
 import { IJwt, IToken } from '../interface/services/IJwt.types';
 import { IUnverifiedUserRepository } from '../interface/repository/IUnverifiedUserRepository';
+import { IUserOtpRepository } from '../interface/repository/IUserOtp';
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -16,6 +17,7 @@ export class UserUseCase implements IUserUseCase {
     private readonly sendMail: ISendMail;
     private readonly unverifiedUserRepository: IUnverifiedUserRepository;
     private readonly jwtToken: IJwt;
+    private readonly userOtpRepository: IUserOtpRepository;
 
     constructor(
         userRepository: IUserRepository,
@@ -23,7 +25,8 @@ export class UserUseCase implements IUserUseCase {
         otpGenerator: IcreateOTP,
         sendMail: ISendMail,
         unverifiedUserRepository: IUnverifiedUserRepository,
-        jwtToken: IJwt
+        jwtToken: IJwt,
+        userOtpRepository: IUserOtpRepository
     ) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -31,6 +34,7 @@ export class UserUseCase implements IUserUseCase {
         this.sendMail = sendMail;
         this.unverifiedUserRepository = unverifiedUserRepository;
         this.jwtToken = jwtToken;
+        this.userOtpRepository = userOtpRepository;
     }
 
     //register user
@@ -79,12 +83,36 @@ export class UserUseCase implements IUserUseCase {
         });
     }
 
-    async sendVerificationMail(email: string): Promise<{ success: boolean }> {
-        return await sendVerificationMail({
+    async sendPasswordResetMail(email: string): Promise<string> {
+        return await sendPasswordResetMail({
             email,
-            otpGenerator:this.otpGenerator,
-            sendMail:this.sendMail,
-            userRepository:this.userRepository
+            otpGenerator: this.otpGenerator,
+            sendMail: this.sendMail,
+            userRepository: this.userRepository,
+            jwtTokenGenerator: this.jwtToken,
+            userOtpRepository: this.userOtpRepository,
+        });
+    }
+
+    async verifyPasswordReset(
+        otpFromUser: string,
+        token: string
+    ): Promise<string> {
+        return verifyPasswordReset({
+            UserOtpRepository:this.userOtpRepository,
+            jwtToken:this.jwtToken,
+            otpFromUser,
+            token,
+        });
+    }
+
+    async createNewPassword(password: string, token: string): Promise< boolean> {
+        return await createNewPassword({
+            UserRepository:this.userRepository,
+            jwtToken:this.jwtToken,
+            token,
+            password,
+            bcrypt:this.bcrypt
         });
     }
 }

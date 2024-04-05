@@ -10,6 +10,7 @@ import { JWTToken } from '../../../services/jwt';
 import { UserUseCase } from '../../../../usecaseLayer/useCases/userUseCase';
 
 import { UserController } from '../../../../controllerLayer/userAdapter';
+import { UserOtpRepository } from '../../../database/mongoDB/repository/UserOtpRepository';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -17,6 +18,7 @@ const generateOTP = new GenerateOTP();
 const sendMail = new SendMail();
 const unverifiedUserRepository = new UnverifiedUserRepository();
 const jwtToken = new JWTToken();
+const userOtpRepository = new UserOtpRepository();
 
 const userUseCase = new UserUseCase(
     userRepository,
@@ -24,9 +26,9 @@ const userUseCase = new UserUseCase(
     generateOTP,
     sendMail,
     unverifiedUserRepository,
-    jwtToken
+    jwtToken,
+    userOtpRepository
 );
-
 
 const userController = new UserController(userUseCase);
 
