@@ -32,7 +32,7 @@ export const sendPasswordResetMail = async ({
 
     await sendMail.sendEmailVerification(userName, email, otp);
 
-    const jwtToken = await jwtTokenGenerator.createVerificationJWT({
+    const jwtToken = jwtTokenGenerator.createVerificationJWT({
         userName,
         email,
     });

@@ -5,7 +5,7 @@ import { Router } from 'express';
 import { validateRequest } from '../middlewares';
 
 import { userController } from './injections/injection';
-import { Next, Req, Res } from '../../types/expressTypes';
+import { Req, Res } from '../../types/expressTypes';
 
 
 export function userRoute(router: Router) {
@@ -18,39 +18,39 @@ export function userRoute(router: Router) {
                 .withMessage('password must be between 4 and 20 characters')
         ],
         validateRequest,
-        async(req: Req, res: Res, next:Next) => {
-            await userController.registerUser(req, res, next); 
+        async(req: Req, res: Res) => {
+            await userController.registerUser(req, res); 
         });
 
     router.post(
         '/verify-otp',
-        async(req:Req, res:Res, next:Next)=>{
-            await userController.createUser(req, res, next);
+        async(req:Req, res:Res)=>{
+            await userController.createUser(req, res);
         });
 
     router.post(
         '/signin',
-        async (req:Req, res:Res, next:Next)=>{
-            await userController.signin(req,res, next);
+        async (req:Req, res:Res)=>{
+            await userController.signin(req,res);
         });
 
     router.post(
         '/forgot-password',
-        async(req:Req, res:Res, next:Next)=>{
-            await userController.sendPasswordResetMail(req,res,next);
+        async(req:Req, res:Res)=>{
+            await userController.sendPasswordResetMail(req,res);
         });
 
     router.post(
         '/verify-password-reset',
-        async(req:Req, res:Res, next:Next)=>{
-            await userController.verifyPasswordReset(req,res, next);
+        async(req:Req, res:Res)=>{
+            await userController.verifyPasswordReset(req,res);
         }
     );
 
     router.post(
         '/reset-password',
-        async(req:Req, res:Res, next:Next) =>{
-            await userController.resetPassword(req, res, next);
+        async(req:Req, res:Res) =>{
+            await userController.resetPassword(req, res);
         });
 
     return router;

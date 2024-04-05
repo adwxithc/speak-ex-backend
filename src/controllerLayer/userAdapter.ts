@@ -1,4 +1,4 @@
-import { Req, Res, Next } from '../infrastructureLayer/types/expressTypes';
+import { Req, Res } from '../infrastructureLayer/types/expressTypes';
 import { accessTokenOptions, refreshTokenOptions } from '../infrastructureLayer/utils/tokenOptions';
 import { BadRequestError } from '../usecaseLayer/errors';
 import { IUserUseCase } from '../usecaseLayer/interface/usecase/userUseCase';
@@ -6,7 +6,7 @@ import { IUserUseCase } from '../usecaseLayer/interface/usecase/userUseCase';
 export class UserController {
     constructor(private userUseCase: IUserUseCase) {}
 
-    async registerUser(req: Req, res: Res, next: Next) {
+    async registerUser(req: Req, res: Res) {
 
 
         const token = await this.userUseCase.registerUser(req.body);
@@ -24,7 +24,7 @@ export class UserController {
         
     }
 
-    async createUser(req: Req, res:Res, next:Next){
+    async createUser(req: Req, res:Res){
         const token = req.cookies?.verficationToken;
         if(!token){
             throw new BadRequestError('No verification token found');
@@ -37,7 +37,7 @@ export class UserController {
         if(result) res.clearCookie('verificationToken').status(200).send(result);
     }
 
-    async signin(req:Req,res:Res, next:Next){
+    async signin(req:Req,res:Res){
         const {email, password} = req.body;
 
         const result = await this.userUseCase.signin({email,password});
@@ -47,7 +47,7 @@ export class UserController {
         res.json(result.user);
     }
 
-    async sendPasswordResetMail(req:Req, res:Res, next:Next){
+    async sendPasswordResetMail(req:Req, res:Res){
         const {email} = req.body;
         const token = await this.userUseCase.sendPasswordResetMail(email);
         res.cookie('forgotPasswordToken', token, {
@@ -62,7 +62,7 @@ export class UserController {
         });
     }
 
-    async verifyPasswordReset(req:Req, res:Res, next:Next){
+    async verifyPasswordReset(req:Req, res:Res){
         const token = req.cookies?.forgotPasswordToken;
         const {otp} = req.body;
         const passwordResetToken =await this.userUseCase.verifyPasswordReset(otp,token);
@@ -79,7 +79,7 @@ export class UserController {
         });
     }
 
-    async resetPassword(req:Req, res:Res, next:Next){
+    async resetPassword(req:Req, res:Res){
         const {password} = req.body;
         const token = req.cookies?.passwordResetToken;
         await this.userUseCase.createNewPassword(password,token);
