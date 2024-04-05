@@ -2,7 +2,7 @@ import IUser from '../../domainLayer/user';
 import { IUserUseCase } from '../interface/usecase/userUseCase';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 
-import { registerUser, createUser, login, sendPasswordResetMail, verifyPasswordReset, createNewPassword } from './user';
+import { registerUser, createUser, login, sendPasswordResetMail, verifyPasswordReset, createNewPassword, resendOtp } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
 import { ISendMail } from '../interface/services/ISendMail';
@@ -65,6 +65,19 @@ export class UserUseCase implements IUserUseCase {
         });
         return result;
     }
+
+    //resend verification otp
+    async resendOtp(token: string): Promise<string | void> {
+        return await resendOtp({
+            unverifiedUserRepository: this.unverifiedUserRepository,
+            sendMail: this.sendMail,
+            otpGenerator: this.otpGenerator,
+            jwtTokenGenerator: this.jwtToken,
+            token 
+        });
+    }
+
+
 
     //signin
     async signin({

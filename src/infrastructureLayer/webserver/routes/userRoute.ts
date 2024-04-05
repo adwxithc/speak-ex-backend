@@ -29,13 +29,20 @@ export function userRoute(router: Router) {
     );
 
     router.post(
-        '/verify-otp',
+        '/signup/verify-user',
         [body('otp').isLength({ min: 6, max: 6 }).withMessage('invalid otp')],
         validateRequest,
         async (req: Req, res: Res) => {
             await userController.createUser(req, res);
         }
     );
+
+    router.post(
+        '/signup/verify-user/resend-otp',
+        async(req:Req, res:Res, )=>{
+
+            await userController.resendOtp(req, res);
+        });
 
     router.post(
         '/signin',
@@ -62,7 +69,7 @@ export function userRoute(router: Router) {
     );
 
     router.post(
-        '/verify-password-reset',
+        '/forgot-password/verify-user',
         [body('otp').isLength({ min: 6, max: 6 }).withMessage('invalid otp')],
         validateRequest,
         async (req: Req, res: Res) => {
@@ -71,7 +78,7 @@ export function userRoute(router: Router) {
     );
 
     router.post(
-        '/reset-password',
+        '/forgot-password/reset-password',
         [
             body('password')
                 .trim()

@@ -75,7 +75,7 @@ export const generateVerificationHtml=(verificationCode:number,username:string)=
                         <p>If you haven't initiated this verification or encounter any issues, please reach out. We're here to help.</p>
                 
                 
-                        <p>Thank you for choosing Omniflow!</p>
+                        <p>Thank you for choosing Speakex!</p>
                 
                         <div class="contact-info">
                             <p>- Speakex</p>

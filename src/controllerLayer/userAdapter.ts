@@ -40,6 +40,22 @@ export class UserController {
         });
     }
 
+    async resendOtp(req:Req,res:Res){
+        const token = req.cookies?.verficationToken;
+        const newToken = await  this.userUseCase.resendOtp(token);
+
+        res.cookie('verficationToken', newToken, {
+            httpOnly: true,
+            sameSite: 'strict',
+            expires: new Date(Date.now() + 30 * 60 * 1000),
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'verification otp has been re send to the mail',
+        });
+    }
+
     async signin(req:Req,res:Res){
         const {email, password} = req.body;
 
@@ -97,6 +113,8 @@ export class UserController {
         });
 
     }
+
+
  
     
 }
