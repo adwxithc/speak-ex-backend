@@ -34,7 +34,10 @@ export class UserController {
 
         const result = await this.userUseCase.createUser(otp,token);
 
-        if(result) res.clearCookie('verificationToken').status(200).send(result);
+        if(result) res.clearCookie('verificationToken').status(200).json({
+            success:true,
+            data:result
+        });
     }
 
     async signin(req:Req,res:Res){
@@ -44,7 +47,11 @@ export class UserController {
         res.cookie('accessToken',result?.token.accessToken,accessTokenOptions);
         res.cookie('refreshToken',result.token.refreshToken,refreshTokenOptions);
 
-        res.json(result.user);
+        res.json({
+            succes:true,
+            data:result.user,
+            message:'login successfully'
+        });
     }
 
     async sendPasswordResetMail(req:Req, res:Res){

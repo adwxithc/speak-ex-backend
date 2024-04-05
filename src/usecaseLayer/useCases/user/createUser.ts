@@ -47,6 +47,9 @@ export const createUser = async ({
     };
 
     const newUser = await UserRepository.createUser(user);
+
+    newUser.password='';
+
     return newUser;
 
 };
