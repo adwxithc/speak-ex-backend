@@ -1,4 +1,4 @@
-import IUserOtp  from '../../../../domainLayer/userOtp';
+import IUserOtp  from '../../../../domain/userOtp';
 import UserOtpModel from '../models/userOtpModel';
 import { IUserOtpRepository } from '../../../../usecaseLayer/interface/repository/IUserOtp';
 

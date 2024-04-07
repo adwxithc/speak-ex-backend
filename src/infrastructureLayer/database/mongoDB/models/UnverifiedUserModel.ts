@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import IUnverifiedUser from '../../../../domainLayer/unverifiedUser';
+import IUnverifiedUser from '../../../../domain/unverifiedUser';
 
 
 const unverifiedUserSchema = new Schema<IUnverifiedUser>(

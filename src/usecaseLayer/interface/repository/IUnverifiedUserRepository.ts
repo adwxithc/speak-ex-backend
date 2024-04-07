@@ -1,4 +1,4 @@
-import IUnverifiedUser from '../../../domainLayer/unverifiedUser';
+import IUnverifiedUser from '../../../domain/unverifiedUser';
 
 export interface IUnverifiedUserRepository {
     findUser(email: string): Promise<IUnverifiedUser | null>;

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import IUser from '../../../../domainLayer/user';
+import IUser from '../../../../domain/user';
 
 
 
@@ -38,10 +38,7 @@ const userSchema = new Schema<IUser>(
         proficientLanguage: {
             type: [String],
         },
-        status:{
-            type:String,
-            enum:['active','freeze']
-        }
+        
     },
     {
         timestamps: true,

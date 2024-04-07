@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import  IUserOtp  from '../../../../domainLayer/userOtp';
+import  IUserOtp  from '../../../../domain/userOtp';
 
 
 const userOtpSchema = new Schema<IUserOtp>(

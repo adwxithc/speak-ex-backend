@@ -1,4 +1,4 @@
-import IUser from '../../../domainLayer/user';
+import IUser from '../../../domain/user';
 import { BadRequestError } from '../../errors';
 import { IUserRepository } from '../../interface/repository/IUserRepository';
 import { IHashpassword } from '../../interface/services/IHashPassword';
@@ -21,14 +21,15 @@ export const login = async ({
     const user = await userRepository.findUserByEmail(email);
     if(!user) throw new BadRequestError('invalid email or password');
 
-    if(user.status=='freeze') throw new BadRequestError('access has been denied');
+    if(user.blocked) throw new BadRequestError('access has been denied');
     const hashPassword = user.password;
     const passwordMatch =  await bcrypt.comparePassword(password,hashPassword);
 
     if(!passwordMatch) throw new BadRequestError('invalid email or password');    
 
-    const token = await jwtToken.createAccessAndRefreshToken(user.id as string);
+    const token =  jwtToken.createAccessAndRefreshToken(user.id as string);
     
+    user.password='';
 
     return {user, token};
 };

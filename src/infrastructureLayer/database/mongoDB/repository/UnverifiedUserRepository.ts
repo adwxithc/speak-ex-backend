@@ -1,5 +1,5 @@
 import UnverifiedUserModel from '../models/UnverifiedUserModel';
-import IUnverifiedUser from '../../../../domainLayer/unverifiedUser';
+import IUnverifiedUser from '../../../../domain/unverifiedUser';
 import { IUnverifiedUserRepository } from '../../../../usecaseLayer/interface/repository/IUnverifiedUserRepository';
 
 export class UnverifiedUserRepository implements IUnverifiedUserRepository {

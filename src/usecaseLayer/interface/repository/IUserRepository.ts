@@ -1,4 +1,4 @@
-import IUser from '../../../domainLayer/user';
+import IUser from '../../../domain/user';
 
 export interface IUserRepository {
     findUserByEmail(email: string): Promise<IUser | null>;
