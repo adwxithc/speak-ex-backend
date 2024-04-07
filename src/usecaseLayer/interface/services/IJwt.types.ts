@@ -1,7 +1,7 @@
-// import IUser from "../../../domainLayer/user";
+// import IUser from '../../../domainLayer/user';
 
 export interface IVerificationJwt{
-    username:string;
+    userName:string;
     email:string
 }
 
@@ -12,7 +12,9 @@ export interface IToken {
 
 export interface IJwt {
     createVerificationJWT(payload: IVerificationJwt): string;
-    // createAccessAndRefreshToken(id: string): Promise<IToken>;
-    // verifyJwt(token: string): Promise< | IUser | { userId: string; email: string; iat: number; exp: number} >;
+    createAccessAndRefreshToken(id: string): IToken;
+    verifyJwt(token: string): Promise< IVerificationJwt | null >;
+    verifyPasswordResetJwt(token: string): Promise< IVerificationJwt | null >;
+    createPasswordResetJWT(payload:IVerificationJwt): string;
     // forgotPasswordToken(userId: string, email: string): Promise<string>
 }

@@ -1,15 +1,15 @@
 interface IUser{
-    id?:number;
+    id?:string;
     firstName:string;
     lastName:string;
-    username:string;
+    userName:string;
     email:string;
     password:string;
     profile?:string;
     blocked?:boolean;
     focusLanguage?:string;
     proficientLanguage?:string[]
-    
+    status?: 'active' | 'freeze';
 }
 
 export default IUser;

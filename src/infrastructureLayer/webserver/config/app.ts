@@ -5,6 +5,9 @@ import { userRoute } from '../routes/userRoute';
 import { errorHandler } from '../../../usecaseLayer/middleware/error-handler';
 import { NotFoundError } from '../../../usecaseLayer/errors';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const app = express();
 app.use(express.json());
 // app.set('trust proxy', true);

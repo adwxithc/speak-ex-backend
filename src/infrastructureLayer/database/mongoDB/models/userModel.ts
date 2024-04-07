@@ -13,7 +13,7 @@ const userSchema = new Schema<IUser>(
             type: String,
             required: true,
         },
-        username: {
+        userName: {
             type: String,
             required: true,
         },
@@ -27,11 +27,10 @@ const userSchema = new Schema<IUser>(
         },
         profile: {
             type: String,
-            required: true,
         },
         blocked: {
             type: Boolean,
-            required: true,
+            default:false,
         },
         focusLanguage: {
             type: String,
@@ -39,6 +38,10 @@ const userSchema = new Schema<IUser>(
         proficientLanguage: {
             type: [String],
         },
+        status:{
+            type:String,
+            enum:['active','freeze']
+        }
     },
     {
         timestamps: true,
@@ -53,7 +56,6 @@ const userSchema = new Schema<IUser>(
 );
 
 const UserModel = mongoose.model<IUser>('User', userSchema);
-
 
 
 export default UserModel;

@@ -18,7 +18,6 @@ export class UnverifiedUserRepository implements IUnverifiedUserRepository {
     }
 
     async upsert(newUser: IUnverifiedUser): Promise<IUnverifiedUser> {
-        console.log('upsert.............');
         
         const result = await UnverifiedUserModel.findOneAndUpdate(
             { email: newUser.email },
@@ -27,6 +26,8 @@ export class UnverifiedUserRepository implements IUnverifiedUserRepository {
             },
             { upsert: true, new: true }
         );
+        
+        
         return result;
     }
 

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { ISendMail } from '../../usecaseLayer/interface/services/ISendMail';
+import { generateVerificationHtml } from '../utils/generateVerificationHtml';
 
 
 export class SendMail implements ISendMail{
@@ -28,16 +29,15 @@ export class SendMail implements ISendMail{
                 from: process.env.SMTP_MAIL,
                 to: email,
                 subject: 'Speakex Email Verification',
-                text: `Hi ${username},\n\nYour Verification Code is ${verificationCode}. Do not share this code with anyone.`
+                html:generateVerificationHtml(verificationCode,username)
+                
             };
 
             this.transporter.sendMail(mailOptions, (err) => {
                 if (err) {
-                    console.log(err,'-----------------------------------------------------------------');
                     
                     reject({ success: false, error: err });
                 } else {
-                    console.log('-------------------------------------------------mail sended ---------------------------------------------------------------------------------------------------');
                     
                     resolve({ success: true });
                 }
