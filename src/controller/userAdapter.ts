@@ -25,6 +25,8 @@ export class UserController {
     }
 
     async createUser(req: Req, res:Res){
+        
+        
         const token = req.cookies?.verficationToken;
         if(!token){
             throw new BadRequestError('No verification token found');
@@ -38,7 +40,7 @@ export class UserController {
             success:true,
             data:result
         });
-    }
+    } 
 
     async resendOtp(req:Req,res:Res){
         const token = req.cookies?.verficationToken;
@@ -67,6 +69,15 @@ export class UserController {
             succes:true,
             data:result.user,
             message:'login successfully'
+        });
+    }
+
+    async signout(req:Req, res:Res){
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.json({
+            success:true,
+            message:'successfully logout'
         });
     }
 

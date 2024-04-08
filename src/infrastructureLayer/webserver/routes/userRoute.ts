@@ -33,6 +33,7 @@ export function userRoute(router: Router) {
         [body('otp').isLength({ min: 6, max: 6 }).withMessage('invalid otp')],
         validateRequest,
         async (req: Req, res: Res) => {
+            
             await userController.createUser(req, res);
         }
     );
@@ -58,6 +59,12 @@ export function userRoute(router: Router) {
             await userController.signin(req, res);
         }
     );
+
+    router.post(
+        '/signout',
+        async(req:Req, res:Res)=>{
+            await userController.signout(req, res);
+        });
 
     router.post(
         '/forgot-password',

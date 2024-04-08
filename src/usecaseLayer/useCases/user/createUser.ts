@@ -17,6 +17,8 @@ export const createUser = async ({
     otpFromUser: string;
     token: string;
 }) => {
+   
+    
     const decode = await jwtToken.verifyJwt(token);
 
     if(!decode){
@@ -25,13 +27,10 @@ export const createUser = async ({
     }
     const email = decode.email;
     const checkUser = await UnverifiedUserRepository.findUserWithOTP(email,otpFromUser);
-
     if(!checkUser){
-        throw new BadRequestError('OTP mismatch');
+        throw new BadRequestError('OTP mismatch'); 
     }
-
     const checkUserExistInUserRepo = await UserRepository.findUserByEmail(email);
-
     if(checkUserExistInUserRepo){
         throw new BadRequestError('user already exists');
     }
@@ -47,7 +46,7 @@ export const createUser = async ({
     };
 
     const newUser = await UserRepository.createUser(user);
-
+ 
     newUser.password='';
 
     return newUser;

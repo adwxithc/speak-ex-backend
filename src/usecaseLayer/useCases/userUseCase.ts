@@ -1,4 +1,4 @@
-import IUser from '../../domainLayer/user';
+import IUser from '../../domain/user';
 import { IUserUseCase } from '../interface/usecase/userUseCase';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 
@@ -56,6 +56,7 @@ export class UserUseCase implements IUserUseCase {
         otpFromUser: string,
         token: string
     ): Promise<IUser | null> {
+       
         const result = await createUser({
             UserRepository: this.userRepository,
             UnverifiedUserRepository: this.unverifiedUserRepository,
@@ -63,6 +64,7 @@ export class UserUseCase implements IUserUseCase {
             otpFromUser: otpFromUser,
             token: token,
         });
+        
         return result;
     }
 

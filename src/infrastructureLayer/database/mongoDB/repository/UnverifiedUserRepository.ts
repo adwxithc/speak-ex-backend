@@ -1,5 +1,5 @@
 import UnverifiedUserModel from '../models/UnverifiedUserModel';
-import IUnverifiedUser from '../../../../domainLayer/unverifiedUser';
+import IUnverifiedUser from '../../../../domain/unverifiedUser';
 import { IUnverifiedUserRepository } from '../../../../usecaseLayer/interface/repository/IUnverifiedUserRepository';
 
 export class UnverifiedUserRepository implements IUnverifiedUserRepository {
@@ -42,6 +42,8 @@ export class UnverifiedUserRepository implements IUnverifiedUserRepository {
         email: string,
         otpFromUser: string
     ): Promise<IUnverifiedUser | null> {
-        return await UnverifiedUserModel.findOne({ otp: otpFromUser });
+       
+        
+        return await UnverifiedUserModel.findOne({email, otp: otpFromUser });
     }
 }

@@ -1,4 +1,4 @@
-import IUser from '../../../domainLayer/user';
+import IUser from '../../../domain/user';
 // import { IUnverifiedUser } from '../../../domainLayer/unverifiedUser';
 
 import { BadRequestError } from '../../errors';

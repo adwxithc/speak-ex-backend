@@ -1,4 +1,4 @@
-import IUser from '../../../domainLayer/user';
+import IUser from '../../../domain/user';
 import { IToken } from '../services/IJwt.types';
 
 

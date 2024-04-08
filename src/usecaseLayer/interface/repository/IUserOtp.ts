@@ -1,4 +1,4 @@
-import IUserOtp from '../../../domainLayer/userOtp';
+import IUserOtp from '../../../domain/userOtp';
 
 export interface IUserOtpRepository {
     upsert(newUser: IUserOtp): Promise<IUserOtp>;

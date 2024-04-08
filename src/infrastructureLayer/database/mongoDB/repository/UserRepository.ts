@@ -1,5 +1,5 @@
 import UserModel from '../models/userModel';
-import IUser from '../../../../domainLayer/user';
+import IUser from '../../../../domain/user';
 import { IUserRepository } from '../../../../usecaseLayer/interface/repository/IUserRepository';
 
 import { findUserByEmail, createUser, findUserByUserName,changePassword } from './userRepository/user';

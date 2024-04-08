@@ -9,7 +9,9 @@ import { JWTToken } from '../../../services/jwt';
 
 import { UserUseCase } from '../../../../usecaseLayer/useCases/userUseCase';
 
-import { UserController } from '../../../../controllerLayer/userAdapter';
+import { UserController } from '../../../../controller/userAdapter';
+
+
 import { UserOtpRepository } from '../../../database/mongoDB/repository/UserOtpRepository';
 
 const userRepository = new UserRepository(UserModel);

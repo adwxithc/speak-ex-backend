@@ -24,6 +24,7 @@ export const sendPasswordResetMail = async ({
     const user= await userRepository.findUserByEmail(email);
     if(!user){
         throw new BadRequestError('user account  does not exist please signup');
+
     }
 
     const { userName}=user;
