@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import 'express-async-errors';
 import cookieParser from 'cookie-parser';
 import { userRoute } from '../routes/userRoute';
@@ -13,9 +13,7 @@ app.use(express.json());
 // app.set('trust proxy', true);
 app.use(cookieParser());
 
-app.get('/', (req: Request, res: Response) => {
-    res.send({ success: true });
-});
+
 
 
 app.use('/api/user', userRoute(express.Router()));

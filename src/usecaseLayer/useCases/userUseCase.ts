@@ -56,6 +56,7 @@ export class UserUseCase implements IUserUseCase {
         otpFromUser: string,
         token: string
     ): Promise<IUser | null> {
+       
         const result = await createUser({
             UserRepository: this.userRepository,
             UnverifiedUserRepository: this.unverifiedUserRepository,
@@ -63,6 +64,7 @@ export class UserUseCase implements IUserUseCase {
             otpFromUser: otpFromUser,
             token: token,
         });
+        
         return result;
     }
 

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 // import IUser from '../../domainLayer/user';
 import {IJwt, IToken, IVerificationJwt } from '../../usecaseLayer/interface/services/IJwt.types';
+import { BadRequestError } from '../../usecaseLayer/errors';
 
 
 
@@ -31,11 +32,14 @@ export class JWTToken implements IJwt {
     }
 
     verifyJwt(token: string): Promise<IVerificationJwt | null> {
+        
         return new Promise((resolve, reject)=>{
             jwt.verify(token, this.JWT_VERIFICATION_KEY,(err, decoded)=>{
                 if(err){
-                    reject(null);
+                    
+                    reject(new BadRequestError('in valid token..!'));
                 }else{
+                   
                     resolve(decoded as IVerificationJwt);
                 }
             });
