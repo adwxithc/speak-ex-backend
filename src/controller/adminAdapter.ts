@@ -20,4 +20,6 @@ export class AdminController {
             message:'login successfully'
         });
     }
+
+    
 }

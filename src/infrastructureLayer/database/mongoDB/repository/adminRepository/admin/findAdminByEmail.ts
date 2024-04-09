@@ -1,9 +1,9 @@
-import AdminModel from "../../../models/AdminModel";
+import AdminModel from '../../../models/AdminModel';
 
 export const findAdminByEmail = async (
     email:string,
-    userModel:typeof AdminModel
+    adminModel:typeof AdminModel
 )=>{
-    return await AdminModel.findOne({email});
+    return await adminModel.findOne({email});
     
 };
