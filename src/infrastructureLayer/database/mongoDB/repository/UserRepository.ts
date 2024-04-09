@@ -2,7 +2,7 @@ import UserModel from '../models/userModel';
 import IUser from '../../../../domain/user';
 import { IUserRepository } from '../../../../usecaseLayer/interface/repository/IUserRepository';
 
-import { findUserByEmail, createUser, findUserByUserName,changePassword } from './userRepository/user';
+import { findUserByEmail, createUser, findUserByUserName,changePassword, listUsers, countUsers, updateUser } from './userRepository/user';
 import { getAllUser } from './userRepository/admin';
 
 
@@ -33,4 +33,16 @@ export class UserRepository implements IUserRepository {
         return await changePassword({userId, password},this.userModels);
     }
 
+    async listUsers({ page, limit, key }: { page: number; limit: number; key: string; }): Promise<{users: Omit<IUser, 'password'>[];totalUsers: number;}> {
+       
+        return await listUsers({ page, limit, key },this.userModels);
+    }
+    async countUsers(): Promise<number> {
+        return await countUsers(this.userModels);
+    }
+
+    async updateUser({ id, firstName, lastName, email, blocked }: { id: string; firstName?: string; lastName?: string ; email?: string; blocked?: boolean; }): Promise<IUser> {
+        return await updateUser({ id, firstName, lastName, email, blocked },this.userModels);
+    }
+ 
 }

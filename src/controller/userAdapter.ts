@@ -125,7 +125,34 @@ export class UserController {
 
     }
 
+    // controller for admin
+    async listUsers (req:Req, res:Res){
 
- 
-    
+        const {page =1,limit=4,key=''}=req.query;
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if(typeof pageNumber !== 'number' || typeof limitNumber !== 'number' || typeof key !== 'string'){
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const usersData = await this.userUseCase.listUsers({page:pageNumber,limit:limitNumber,key});
+
+        res.status(200).json({
+            success:true,
+            data:usersData
+        });
+    }
+
+    async adminUpdateUser(req:Req, res:Res){
+        const {id} = req.params;
+        const {email,firstName,lastName, blocked }=req.body;
+        const userData= await this.userUseCase.updateUser({id,email,firstName,lastName,blocked});
+
+        res.status(200).json({
+            success:true,
+            data:userData
+        });
+    }
+
 }

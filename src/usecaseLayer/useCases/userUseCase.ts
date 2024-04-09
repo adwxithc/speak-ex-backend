@@ -2,7 +2,17 @@ import IUser from '../../domain/user';
 import { IUserUseCase } from '../interface/usecase/userUseCase';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 
-import { registerUser, createUser, login, sendPasswordResetMail, verifyPasswordReset, createNewPassword, resendOtp } from './user';
+import {
+    registerUser,
+    createUser,
+    login,
+    sendPasswordResetMail,
+    verifyPasswordReset,
+    createNewPassword,
+    resendOtp,
+    listUsers,
+    updateUser,
+} from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
 import { ISendMail } from '../interface/services/ISendMail';
@@ -56,7 +66,6 @@ export class UserUseCase implements IUserUseCase {
         otpFromUser: string,
         token: string
     ): Promise<IUser | null> {
-       
         const result = await createUser({
             UserRepository: this.userRepository,
             UnverifiedUserRepository: this.unverifiedUserRepository,
@@ -64,7 +73,7 @@ export class UserUseCase implements IUserUseCase {
             otpFromUser: otpFromUser,
             token: token,
         });
-        
+
         return result;
     }
 
@@ -75,11 +84,9 @@ export class UserUseCase implements IUserUseCase {
             sendMail: this.sendMail,
             otpGenerator: this.otpGenerator,
             jwtTokenGenerator: this.jwtToken,
-            token 
+            token,
         });
     }
-
-
 
     //signin
     async signin({
@@ -114,20 +121,46 @@ export class UserUseCase implements IUserUseCase {
         token: string
     ): Promise<string> {
         return verifyPasswordReset({
-            UserOtpRepository:this.userOtpRepository,
-            jwtToken:this.jwtToken,
+            UserOtpRepository: this.userOtpRepository,
+            jwtToken: this.jwtToken,
             otpFromUser,
             token,
         });
     }
 
-    async createNewPassword(password: string, token: string): Promise< boolean> {
+    async createNewPassword(password: string, token: string): Promise<boolean> {
         return await createNewPassword({
-            UserRepository:this.userRepository,
-            jwtToken:this.jwtToken,
+            UserRepository: this.userRepository,
+            jwtToken: this.jwtToken,
             token,
             password,
-            bcrypt:this.bcrypt
+            bcrypt: this.bcrypt,
         });
+    }
+
+    async listUsers({
+        page,
+        key,
+        limit,
+    }: {
+        page: number;
+        key: string;
+        limit: number;
+    }): Promise<{ users: Omit<IUser, 'password'>[]; totalUsers: number; lastPage: number }> {
+        const usersData = await listUsers({
+            UserRepository: this.userRepository,
+            page,
+            key,
+            limit,
+        });
+        return usersData;
+    }
+
+    async updateUser({ id, firstName, lastName, email, blocked }: { id: string; firstName?: string; lastName?: string ; email?: string ; blocked?: boolean; }): Promise<Omit<IUser, 'password'>> {
+        
+        return await updateUser({
+            id, firstName, lastName, email, blocked 
+
+        },this.userRepository);
     }
 }

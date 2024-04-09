@@ -3,7 +3,7 @@ import { Router } from 'express';
 
 import { validateRequest } from '../middlewares';
 
-import { userController } from './injections/injection';
+import { userController } from './injections/userInjection';
 import { Req, Res } from '../../types/expressTypes';
 
 export function userRoute(router: Router) {

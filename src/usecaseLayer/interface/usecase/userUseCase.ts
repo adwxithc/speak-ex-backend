@@ -25,5 +25,10 @@ export interface IUserUseCase {
     //create new password for user
     createNewPassword(password:string,token:string): Promise<boolean>
 
+    //get list of users
+    listUsers({page,key,limit}:{page:number,key:string,limit:number}):Promise<{ users: Omit<IUser, 'password'>[]; totalUsers: number; lastPage: number }>
+
+    updateUser({id,firstName,lastName,email,blocked}:{id:string,firstName?:string,lastName?:string,email?:string,blocked?:boolean}):Promise<Omit<IUser, 'password'> | null>
+
 
 }

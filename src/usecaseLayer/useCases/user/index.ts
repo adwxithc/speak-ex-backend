@@ -5,6 +5,8 @@ import { sendPasswordResetMail } from './sendPasswordResetMail';
 import { verifyPasswordReset } from './verifyPasswordReset';
 import { createNewPassword } from './createNewPassword';
 import { resendOtp } from './resendOtp';
+import { listUsers } from './listUsers';
+import {updateUser} from './updateUser';
 
 export {
     registerUser,
@@ -14,4 +16,6 @@ export {
     verifyPasswordReset,
     createNewPassword,
     resendOtp,
+    listUsers,
+    updateUser
 };
