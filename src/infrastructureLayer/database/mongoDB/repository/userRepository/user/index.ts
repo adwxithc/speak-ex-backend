@@ -5,6 +5,8 @@ import { changePassword } from './changePassword';
 import { listUsers } from './listUsers';
 import { countUsers } from './countUsers';
 import { updateUser } from './updateUser';
+import { findUserById } from './findUserById';
+
 
 export {
     findUserByEmail,
@@ -13,5 +15,6 @@ export {
     changePassword,
     listUsers,
     countUsers,
-    updateUser
+    updateUser,
+    findUserById
 };

@@ -16,5 +16,6 @@ export interface IJwt {
     verifyJwt(token: string): Promise< IVerificationJwt | null >;
     verifyPasswordResetJwt(token: string): Promise< IVerificationJwt | null >;
     createPasswordResetJWT(payload:IVerificationJwt): string;
+    verifyAccessJwt(token:string):Promise<{id:string | null}>
     // forgotPasswordToken(userId: string, email: string): Promise<string>
 }
