@@ -3,7 +3,7 @@ import LanguageModel from '../models/languageModel';
 import { ILanguageRepository } from '../../../../usecaseLayer/interface/repository/ILanguageRepository';
 import ILanguage from '../../../../domain/language';
 
-import { createLanguage } from './languageRepository/index';
+import { createLanguage,listLanguages } from './languageRepository/index';
 
 
 
@@ -12,5 +12,8 @@ export class LanguageRepository implements ILanguageRepository{
 
     async createLanguage(language: ILanguage): Promise<ILanguage> {
         return await createLanguage(language,this.languageModel);
+    }
+    async listLanguages({ page, limit, key }: { page: number; limit: number; key: string; }): Promise<{ languages: ILanguage[]; totalLanguages: number; }> {
+        return await listLanguages({ page, limit, key },this.languageModel);
     }
 }

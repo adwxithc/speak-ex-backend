@@ -70,5 +70,10 @@ export function adminRoute(router: Router) {
         await languageController.createLanguage(req, res);
     });
 
+
+    router.get('/languages-list', async (req: Req, res: Res) => {
+        await languageController.listLanguages(req, res);
+    });
+
     return router;
 }
