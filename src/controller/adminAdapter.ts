@@ -20,6 +20,16 @@ export class AdminController {
             message:'login successfully'
         });
     }
+    async signout(req:Req,res:Res){
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.json({
+            success:true,
+            message:'successfully logout'
+        });
+    }
+
+
 
     
 }

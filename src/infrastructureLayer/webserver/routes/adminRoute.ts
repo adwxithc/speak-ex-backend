@@ -4,12 +4,13 @@ import { validateRequest } from '../middlewares';
 
 import { adminController } from './injections/adminInjection';
 import { userController } from './injections/userInjection';
+import {languageController} from './injections/languageInjection';
 
 import { Req, Res } from '../../types/expressTypes';
 
 export function adminRoute(router: Router) {
     router.post(
-        '/sigin',
+        '/signin',
         [
             body('email').isEmail().withMessage('Email must be valid'),
             body('password')
@@ -23,11 +24,15 @@ export function adminRoute(router: Router) {
         }
     );
 
+    router.post('/signout', async (req: Req, res: Res) => {
+        await adminController.signout(req, res);
+    });
+
     router.get('/users-list', async (req: Req, res: Res) => {
         await userController.listUsers(req, res);
     });
 
-    router.get(
+    router.put(
         '/update-user/:id',
         [
             body('email')
@@ -48,6 +53,22 @@ export function adminRoute(router: Router) {
             await userController.adminUpdateUser(req, res);
         }
     );
+
+    router.post('/language', [
+        body('name')
+            .trim()
+            .isLength({ min: 3 })
+            .withMessage('Name must be atleast 3 characters long'),
+        body('basePrice')
+            .isNumeric()
+            .withMessage('Base price must be a numeric value')
+            .isFloat({ min: 0 })
+            .withMessage('Base price should be a positive number'),
+    ],
+    validateRequest,
+    async (req: Req, res: Res) => {
+        await languageController.createLanguage(req, res);
+    });
 
     return router;
 }

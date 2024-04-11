@@ -23,7 +23,7 @@ export class JWTToken implements IJwt {
 
     createAccessAndRefreshToken(id: string): IToken {
         const accessToken = jwt.sign({id:id},this.JWT_ACCESS_KEY,{
-            expiresIn:'5h'
+            expiresIn:'10h'
         });
         const refreshToken =jwt.sign({id:id},this.JWT_REFRESH_KEY,{
             expiresIn:'1y'
@@ -41,6 +41,22 @@ export class JWTToken implements IJwt {
                 }else{
                    
                     resolve(decoded as IVerificationJwt);
+                }
+            });
+        });
+        
+    }
+
+    verifyAccessJwt(token: string): Promise<{id:string | null}> {
+        
+        return new Promise((resolve, reject)=>{
+            jwt.verify(token, this.JWT_ACCESS_KEY,(err, decoded)=>{
+                if(err){
+                    
+                    reject(new BadRequestError('in valid token..!'));
+                }else{
+                   
+                    resolve(decoded as {id:string | null});
                 }
             });
         });

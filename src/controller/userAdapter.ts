@@ -128,7 +128,8 @@ export class UserController {
     // controller for admin
     async listUsers (req:Req, res:Res){
 
-        const {page =1,limit=4,key=''}=req.query;
+        const {page =1,limit=10,key=''}=req.query;
+        
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
 
