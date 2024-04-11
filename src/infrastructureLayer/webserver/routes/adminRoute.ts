@@ -3,10 +3,10 @@ import { Router } from 'express';
 import { validateRequest } from '../middlewares';
 
 import { adminController } from './injections/adminInjection';
-import { userController } from './injections/userInjection';
 import {languageController} from './injections/languageInjection';
 
 import { Req, Res } from '../../types/expressTypes';
+import { userController } from './injections/userInjection';
 
 export function adminRoute(router: Router) {
     router.post(
@@ -28,12 +28,12 @@ export function adminRoute(router: Router) {
         await adminController.signout(req, res);
     });
 
-    router.get('/users-list', async (req: Req, res: Res) => {
+    router.get('/users', async (req: Req, res: Res) => {
         await userController.listUsers(req, res);
     });
 
     router.put(
-        '/update-user/:id',
+        '/user/:id',
         [
             body('email')
                 .optional()
@@ -71,7 +71,7 @@ export function adminRoute(router: Router) {
     });
 
 
-    router.get('/languages-list', async (req: Req, res: Res) => {
+    router.get('/languages', async (req: Req, res: Res) => {
         await languageController.listLanguages(req, res);
     });
 
