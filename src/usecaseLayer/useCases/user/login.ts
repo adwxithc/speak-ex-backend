@@ -2,7 +2,7 @@ import IUser from '../../../domain/user';
 import { BadRequestError } from '../../errors';
 import { IUserRepository } from '../../interface/repository/IUserRepository';
 import { IHashpassword } from '../../interface/services/IHashPassword';
-import { IJwt, IToken } from '../../interface/services/IJwt.types';
+import { IAccessRefreshToken, IJwt, IToken } from '../../interface/services/IJwt.types';
 
 export const login = async ({
     userRepository,
@@ -27,9 +27,12 @@ export const login = async ({
 
     if(!passwordMatch) throw new BadRequestError('invalid email or password');    
 
-    const token =  jwtToken.createAccessAndRefreshToken(user.id as string);
-    
-    user.password='';
+    const data ={
+        id:user.id,
+        role:'user'
+    };
+    const token =  jwtToken.createAccessAndRefreshToken(data as IAccessRefreshToken);
+
 
     return {user, token};
 };

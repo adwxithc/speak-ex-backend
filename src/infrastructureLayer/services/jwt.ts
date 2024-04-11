@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 
 // import IUser from '../../domainLayer/user';
-import {IJwt, IToken, IVerificationJwt } from '../../usecaseLayer/interface/services/IJwt.types';
+import {IAccessRefreshToken, IJwt, IToken, IVerificationJwt } from '../../usecaseLayer/interface/services/IJwt.types';
 import { BadRequestError } from '../../usecaseLayer/errors';
 
 
@@ -21,11 +21,11 @@ export class JWTToken implements IJwt {
         return verifyToken;
     }
 
-    createAccessAndRefreshToken(id: string): IToken {
-        const accessToken = jwt.sign({id:id},this.JWT_ACCESS_KEY,{
+    createAccessAndRefreshToken(data: IAccessRefreshToken): IToken {
+        const accessToken = jwt.sign(data,this.JWT_ACCESS_KEY,{
             expiresIn:'10h'
         });
-        const refreshToken =jwt.sign({id:id},this.JWT_REFRESH_KEY,{
+        const refreshToken =jwt.sign(data,this.JWT_REFRESH_KEY,{
             expiresIn:'1y'
         });
         return {accessToken, refreshToken};
@@ -47,7 +47,7 @@ export class JWTToken implements IJwt {
         
     }
 
-    verifyAccessJwt(token: string): Promise<{id:string | null}> {
+    verifyAccessJwt(token: string): Promise<IAccessRefreshToken | null> {
         
         return new Promise((resolve, reject)=>{
             jwt.verify(token, this.JWT_ACCESS_KEY,(err, decoded)=>{
@@ -56,12 +56,36 @@ export class JWTToken implements IJwt {
                     reject(new BadRequestError('in valid token..!'));
                 }else{
                    
-                    resolve(decoded as {id:string | null});
+                    resolve(decoded as IAccessRefreshToken | null);
                 }
             });
         });
         
     }
+
+    verifyRefreshJwt(token: string): Promise<IAccessRefreshToken | null> {
+        
+        return new Promise((resolve, reject)=>{
+            jwt.verify(token, this.JWT_REFRESH_KEY,(err, decoded)=>{
+                if(err){
+                    
+                    reject(new BadRequestError('in valid token..!'));
+                }else{
+                   
+                    resolve(decoded as IAccessRefreshToken | null);
+                }
+            });
+        });
+        
+    }
+
+    createAccessToken(payload: IAccessRefreshToken): string {
+        const accessToken = jwt.sign(payload,this.JWT_ACCESS_KEY,{
+            expiresIn:'10h'
+        });
+        return accessToken;
+    }
+
 
     verifyPasswordResetJwt(token: string): Promise<IVerificationJwt | null> {
         return new Promise((resolve, reject)=>{

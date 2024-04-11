@@ -11,7 +11,6 @@ import { UserUseCase } from '../../../../usecaseLayer/useCases/userUseCase';
 
 import { UserController } from '../../../../controller/userAdapter';
 
-
 import { UserOtpRepository } from '../../../database/mongoDB/repository/UserOtpRepository';
 
 const userRepository = new UserRepository(UserModel);
@@ -20,6 +19,7 @@ const generateOTP = new GenerateOTP();
 const sendMail = new SendMail();
 const unverifiedUserRepository = new UnverifiedUserRepository();
 const jwtToken = new JWTToken();
+
 const userOtpRepository = new UserOtpRepository();
 
 const userUseCase = new UserUseCase(

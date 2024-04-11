@@ -3,7 +3,7 @@ import 'express-async-errors';
 import cookieParser from 'cookie-parser';
 import { userRoute } from '../routes/userRoute';
 import { adminRoute } from '../routes/adminRoute';
-import { errorHandler } from '../../../usecaseLayer/middleware/error-handler';
+import { errorHandler } from '../middlewares/error-handler';
 import { NotFoundError } from '../../../usecaseLayer/errors';
 
 import dotenv from 'dotenv';

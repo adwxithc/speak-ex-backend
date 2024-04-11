@@ -64,7 +64,8 @@ export class UserController {
         const result = await this.userUseCase.signin({email,password});
         res.cookie('accessToken',result?.token.accessToken,accessTokenOptions);
         res.cookie('refreshToken',result.token.refreshToken,refreshTokenOptions);
-
+        console.log(result.token,'======================================================');
+        
         res.json({
             succes:true,
             data:result.user,
@@ -153,6 +154,17 @@ export class UserController {
         res.status(200).json({
             success:true,
             data:userData
+        });
+    }
+
+    async renewAccess(req:Req, res:Res){
+        const { refreshToken } = req.cookies;
+        const accessToken = await this.userUseCase.renewAccess(refreshToken); 
+        res.cookie('accessToken',accessToken,accessTokenOptions);
+        console.log('jabrishjabrishjabrish');
+        
+        res.json({
+            success:true
         });
     }
 
