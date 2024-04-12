@@ -64,7 +64,8 @@ export class UserController {
         const result = await this.userUseCase.signin({email,password});
         res.cookie('accessToken',result?.token.accessToken,accessTokenOptions);
         res.cookie('refreshToken',result.token.refreshToken,refreshTokenOptions);
-
+    
+        
         res.json({
             succes:true,
             data:result.user,
@@ -128,7 +129,7 @@ export class UserController {
     // controller for admin
     async listUsers (req:Req, res:Res){
 
-        const {page =1,limit=10,key=''}=req.query;
+        const {page =1,limit=5,key=''}=req.query;
         
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
@@ -153,6 +154,27 @@ export class UserController {
         res.status(200).json({
             success:true,
             data:userData
+        });
+    }
+
+    async renewAccess(req:Req, res:Res){
+        const { refreshToken } = req.cookies;
+        const accessToken = await this.userUseCase.renewAccess(refreshToken); 
+        res.cookie('accessToken',accessToken,accessTokenOptions);
+        
+        
+        res.json({
+            success:true
+        });
+    }
+    async checkUserName(req:Req, res:Res){
+        const { userName } = req.body;
+        
+        const available = await this.userUseCase.checkUserName(userName);
+        
+        res.json({
+            success:true,
+            data:{available}
         });
     }
 

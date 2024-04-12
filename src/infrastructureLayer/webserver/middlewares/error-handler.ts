@@ -1,5 +1,7 @@
-import { Next, Req, Res } from '../../infrastructureLayer/types/expressTypes';
-import { CustomError } from '../errors/custom-error';
+import { Next, Req, Res } from '../../types/expressTypes';
+import { CustomError } from '../../../usecaseLayer/errors/custom-error';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const errorHandler = (err: Error, req: Req, res: Res,next :Next) => {
     console.error(err);
     if (err instanceof CustomError) {

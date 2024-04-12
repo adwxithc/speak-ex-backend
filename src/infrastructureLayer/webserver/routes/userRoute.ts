@@ -4,6 +4,7 @@ import { Router } from 'express';
 import { validateRequest } from '../middlewares';
 
 import { userController } from './injections/userInjection';
+import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 
 export function userRoute(router: Router) {
@@ -33,17 +34,16 @@ export function userRoute(router: Router) {
         [body('otp').isLength({ min: 6, max: 6 }).withMessage('invalid otp')],
         validateRequest,
         async (req: Req, res: Res) => {
-            
             await userController.createUser(req, res);
         }
     );
 
     router.post(
         '/signup/verify-user/resend-otp',
-        async(req:Req, res:Res, )=>{
-
+        async (req: Req, res: Res) => {
             await userController.resendOtp(req, res);
-        });
+        }
+    );
 
     router.post(
         '/signin',
@@ -60,11 +60,9 @@ export function userRoute(router: Router) {
         }
     );
 
-    router.post(
-        '/signout',
-        async(req:Req, res:Res)=>{
-            await userController.signout(req, res);
-        });
+    router.post('/signout', async (req: Req, res: Res) => {
+        await userController.signout(req, res);
+    });
 
     router.post(
         '/forgot-password',
@@ -95,6 +93,29 @@ export function userRoute(router: Router) {
         validateRequest,
         async (req: Req, res: Res) => {
             await userController.resetPassword(req, res);
+        }
+    );
+
+    router.post('/refresh', async (req: Req, res: Res) => {
+        await userController.renewAccess(req, res);
+    });
+
+    router.post('/protect', protect.protectUser, async (req: Req, res: Res) => {
+        console.log('entered protected route');
+        res.send('entered protected router');
+    });
+
+    router.post(
+        '/check-userName',
+        body('userName')
+            .isLength({ min: 3 })
+            .withMessage('User name must be atleast 3 character long'),
+        validateRequest,
+        async (req: Req, res: Res) => {
+            
+            console.log(req.body);
+            
+            await userController.checkUserName(req, res);
         }
     );
 

@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import UserModel from '../../database/mongoDB/models/userModel';
 import { UserRepository } from '../../database/mongoDB/repository/UserRepository';
-import { BadRequestError, NotAuthorizedErro } from '../../../usecaseLayer/errors';
+import { BadRequestError } from '../../../usecaseLayer/errors';
 import { Next, Req, Res } from '../../types/expressTypes';
 import IUser from '../../../domain/user';
 

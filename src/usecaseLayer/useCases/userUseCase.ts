@@ -12,6 +12,8 @@ import {
     resendOtp,
     listUsers,
     updateUser,
+    renewAccess,
+    checkUserName
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -146,7 +148,11 @@ export class UserUseCase implements IUserUseCase {
         page: number;
         key: string;
         limit: number;
-    }): Promise<{ users: Omit<IUser, 'password'>[]; totalUsers: number; lastPage: number }> {
+    }): Promise<{
+        users: Omit<IUser, 'password'>[];
+        totalUsers: number;
+        lastPage: number;
+    }> {
         const usersData = await listUsers({
             UserRepository: this.userRepository,
             page,
@@ -156,11 +162,43 @@ export class UserUseCase implements IUserUseCase {
         return usersData;
     }
 
-    async updateUser({ id, firstName, lastName, email, blocked }: { id: string; firstName?: string; lastName?: string ; email?: string ; blocked?: boolean; }): Promise<Omit<IUser, 'password'>> {
-        
-        return await updateUser({
-            id, firstName, lastName, email, blocked 
+    async updateUser({
+        id,
+        firstName,
+        lastName,
+        email,
+        blocked,
+    }: {
+        id: string;
+        firstName?: string;
+        lastName?: string;
+        email?: string;
+        blocked?: boolean;
+    }): Promise<Omit<IUser, 'password'>> {
+        return await updateUser(
+            {
+                id,
+                firstName,
+                lastName,
+                email,
+                blocked,
+            },
+            this.userRepository
+        );
+    }
 
-        },this.userRepository);
+    async renewAccess(token: string): Promise<string | undefined> {
+        return await renewAccess(
+            {
+                token,
+                jwtToken:this.jwtToken,
+                UserRepository:this.userRepository
+            });
+    }
+    async checkUserName(userName: string): Promise<boolean> {
+        return await checkUserName({
+            userName,
+            UserRepository:this.userRepository
+        });
     }
 }
