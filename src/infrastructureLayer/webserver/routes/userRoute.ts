@@ -105,10 +105,19 @@ export function userRoute(router: Router) {
         res.send('entered protected router');
     });
 
-    router.post('/check-userName', async (req: Req, res: Res) => {
-        await userController.checkUserName(req, res);
-        
-    });
+    router.post(
+        '/check-userName',
+        body('userName')
+            .isLength({ min: 3 })
+            .withMessage('User name must be atleast 3 character long'),
+        validateRequest,
+        async (req: Req, res: Res) => {
+            
+            console.log(req.body);
+            
+            await userController.checkUserName(req, res);
+        }
+    );
 
     return router;
 }
