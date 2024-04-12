@@ -13,6 +13,7 @@ import {
     listUsers,
     updateUser,
     renewAccess,
+    checkUserName
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -193,5 +194,11 @@ export class UserUseCase implements IUserUseCase {
                 jwtToken:this.jwtToken,
                 UserRepository:this.userRepository
             });
+    }
+    async checkUserName(userName: string): Promise<boolean> {
+        return await checkUserName({
+            userName,
+            UserRepository:this.userRepository
+        });
     }
 }

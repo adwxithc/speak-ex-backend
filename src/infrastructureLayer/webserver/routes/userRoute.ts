@@ -4,7 +4,7 @@ import { Router } from 'express';
 import { validateRequest } from '../middlewares';
 
 import { userController } from './injections/userInjection';
-// import { protect } from './injections/middlewareInjection';
+import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 
 export function userRoute(router: Router) {
@@ -98,6 +98,16 @@ export function userRoute(router: Router) {
 
     router.post('/refresh', async (req: Req, res: Res) => {
         await userController.renewAccess(req, res);
+    });
+
+    router.post('/protect', protect.protectUser, async (req: Req, res: Res) => {
+        console.log('entered protected route');
+        res.send('entered protected router');
+    });
+
+    router.post('/check-userName', async (req: Req, res: Res) => {
+        await userController.checkUserName(req, res);
+        
     });
 
     return router;

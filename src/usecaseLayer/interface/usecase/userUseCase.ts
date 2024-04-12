@@ -63,4 +63,6 @@ export interface IUserUseCase {
 
     //renewAccess token
     renewAccess(token: string): Promise<string | undefined>;
+
+    checkUserName(userName:string): Promise<boolean>;
 }

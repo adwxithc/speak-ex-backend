@@ -8,6 +8,7 @@ import { resendOtp } from './resendOtp';
 import { listUsers } from './listUsers';
 import {updateUser} from './updateUser';
 import { renewAccess } from './renewAccess';
+import { checkUserName } from './checkUserName';
 
 export {
     registerUser,
@@ -19,5 +20,6 @@ export {
     resendOtp,
     listUsers,
     updateUser,
-    renewAccess
+    renewAccess,
+    checkUserName
 };
