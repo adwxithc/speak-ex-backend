@@ -35,6 +35,11 @@ export const createUser = async ({
         throw new BadRequestError('user already exists');
     }
 
+    const checkUserNameExistInUserRepo = await UserRepository.findUserByUserName(checkUser.userName);
+    if(checkUserNameExistInUserRepo){
+        throw new BadRequestError('a user already exists same userName');
+    }
+
     const {firstName,lastName,userName,password}= checkUser;
 
     const user={

@@ -33,13 +33,21 @@ export const registerUser = async (
     // check user exist
 
     const isUserExistOnUserRepo = await userRepository.findUserByEmail(email);
-    
-
     if (isUserExistOnUserRepo) {
        
         throw new BadRequestError('user already exist with the same mail id');
         
     }
+
+    const useNameExistOnUserRepo = await userRepository.findUserByUserName(userName);
+    
+    if (useNameExistOnUserRepo) {
+       
+        throw new BadRequestError('user already exist with the same userName');
+        
+    }
+
+    
 
     // generate otp
     const otp = otpGenerator.generateOTP();
