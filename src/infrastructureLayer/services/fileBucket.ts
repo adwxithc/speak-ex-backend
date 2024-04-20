@@ -13,7 +13,7 @@ const
 
 
 
-
+  
 const s3 = new S3Client({
     credentials: {
         accessKeyId: AWS_ACCESS_KEY,
@@ -39,6 +39,7 @@ export async function uploadImageToS3({
     });
 
     await s3.send(command);
-    const url = `https://${RESIZED_IMAGE_BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${imageName}`;
-    return url;
+    const command=
+    // const url = `https://${RESIZED_IMAGE_BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${imageName}`;
+    return imageName;
 }

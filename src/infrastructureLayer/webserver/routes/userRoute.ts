@@ -6,7 +6,8 @@ import { validateRequest } from '../middlewares';
 import { userController } from './injections/userInjection';
 import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
-
+import { upload } from '../middlewares/multer';
+import { uploadImageToS3 } from '../../services/fileBucket';
 
 
 
@@ -106,7 +107,7 @@ export function userRoute(router: Router) {
     });
 
     router.post('/protect', protect.protectUser, async (req: Req, res: Res) => {
-        console.log('entered protected route');
+        
         res.send('entered protected router');
     });
 
@@ -117,14 +118,24 @@ export function userRoute(router: Router) {
             .withMessage('User name must be atleast 3 character long'),
         validateRequest,
         async (req: Req, res: Res) => {
-            
-            console.log(req.body);
-            
             await userController.checkUserName(req, res);
         }
     );
 
-
+    router.post(
+        '/upload',
+        upload.single('image'),
+        async (req: Req, res: Res) => {
+           
+            if(!req.file) throw new Error('umfi');
+            const imageName = await uploadImageToS3({imageBuffer:req.file.buffer, mimetype:req.file.mimetype});
+            console.log(req.file);
+            console.log(req.body);
+            
+            
+        }   
+    );
+ 
 
     return router;
 }
