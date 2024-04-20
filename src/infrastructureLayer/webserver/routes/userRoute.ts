@@ -7,6 +7,11 @@ import { userController } from './injections/userInjection';
 import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 
+
+
+
+
+
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -118,6 +123,8 @@ export function userRoute(router: Router) {
             await userController.checkUserName(req, res);
         }
     );
+
+
 
     return router;
 }
