@@ -7,6 +7,11 @@ import { userController } from './injections/userInjection';
 import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 
+
+
+
+
+
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -101,7 +106,7 @@ export function userRoute(router: Router) {
     });
 
     router.post('/protect', protect.protectUser, async (req: Req, res: Res) => {
-        console.log('entered protected route');
+        
         res.send('entered protected router');
     });
 
@@ -112,12 +117,11 @@ export function userRoute(router: Router) {
             .withMessage('User name must be atleast 3 character long'),
         validateRequest,
         async (req: Req, res: Res) => {
-            
-            console.log(req.body);
-            
             await userController.checkUserName(req, res);
         }
     );
+
+ 
 
     return router;
 }
