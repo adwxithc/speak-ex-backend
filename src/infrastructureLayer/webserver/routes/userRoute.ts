@@ -6,8 +6,7 @@ import { validateRequest } from '../middlewares';
 import { userController } from './injections/userInjection';
 import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
-import { upload } from '../middlewares/multer';
-import { uploadImageToS3 } from '../../services/fileBucket';
+
 
 
 
@@ -122,19 +121,6 @@ export function userRoute(router: Router) {
         }
     );
 
-    router.post(
-        '/upload',
-        upload.single('image'),
-        async (req: Req, res: Res) => {
-           
-            if(!req.file) throw new Error('umfi');
-            const imageName = await uploadImageToS3({imageBuffer:req.file.buffer, mimetype:req.file.mimetype});
-            console.log(req.file);
-            console.log(req.body);
-            
-            
-        }   
-    );
  
 
     return router;

@@ -1,45 +1,59 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+    PutObjectCommand,
+    S3Client,
+    GetObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import crypto from 'crypto';
+import { IFileBucket } from '../../usecaseLayer/interface/services/IFileBucket';
 
-const randomImageName = (bytes = 32) =>
-    crypto.randomBytes(bytes).toString('hex');
+export class FileBucket implements IFileBucket {
+    BUCKET_NAME = process.env.BUCKET_NAME as string;
+    BUCKET_REGION = process.env.BUCKET_REGION as string;
+    AWS_SECRET_KEY = process.env.S3_SECRET_ACCESS_KEY as string;
+    AWS_ACCESS_KEY = process.env.S3_ACCESS_KEY as string;
+    private s3: S3Client;
 
-const
-    BUCKET_NAME=process.env.BUCKET_NAME as string,
-    BUCKET_REGION=process.env.BUCKET_REGION as string,
-    AWS_SECRET_KEY=process.env.S3_SECRET_ACCESS_KEY as string,
-    AWS_ACCESS_KEY=process.env.S3_ACCESS_KEY as string,
-    RESIZED_IMAGE_BUCKET_NAME='';
+    constructor() {
+        this.s3 = new S3Client({
+            credentials: {
+                accessKeyId: this.AWS_ACCESS_KEY,
+                secretAccessKey: this.AWS_SECRET_KEY,
+            },
+            region: this.BUCKET_REGION,
+        });
+    }
 
+    randomImageName(bytes=32): string {
+        return crypto.randomBytes(bytes).toString('hex');
+    }
 
+    async uploadImage({
+        mimetype,
+        imageBuffer,
+    }: {
+        mimetype: string;
+        imageBuffer: Buffer;
+    }) {
+        const imageName = this.randomImageName();
 
-  
-const s3 = new S3Client({
-    credentials: {
-        accessKeyId: AWS_ACCESS_KEY,
-        secretAccessKey: AWS_SECRET_KEY,
-    },
-    region: BUCKET_REGION,
-});
+        const command = new PutObjectCommand({
+            Bucket: this.BUCKET_NAME,
+            Key: imageName,
+            Body: imageBuffer,
+            ContentType: mimetype,
+        });
+        await this.s3.send(command);
+        return imageName;
+    }
 
-export async function uploadImageToS3({
-    mimetype,
-    imageBuffer,
-}: {
-    mimetype: string;
-    imageBuffer: Buffer;
-}) {
-    const imageName = randomImageName();
-
-    const command = new PutObjectCommand({
-        Bucket: BUCKET_NAME,
-        Key: imageName,
-        Body: imageBuffer,
-        ContentType: mimetype,
-    });
-
-    await s3.send(command);
-    const command=
-    // const url = `https://${RESIZED_IMAGE_BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${imageName}`;
-    return imageName;
+    async getFileAccessURL(Key: string) {
+        const getObjectParams = {
+            Bucket: this.BUCKET_NAME,
+            Key,
+        };
+        const command = new GetObjectCommand(getObjectParams);
+        const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+        return url;
+    }
 }
