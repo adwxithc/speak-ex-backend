@@ -32,6 +32,8 @@ export class PostController{
     async getPost(req:Req, res:Res){
         const {postId} = req.params;
         const post = await this.postUseCase.getPost({postId});
+        console.log(post);
+        
         res.json({
             success:true,
             data:post

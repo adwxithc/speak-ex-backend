@@ -28,10 +28,15 @@ export const createPost = async ({
         });
     }
  
-    return await postRepository.createPost({
+    const post= await postRepository.createPost({
         title,
         image,
         content,
         userId:new mongoose.Types.ObjectId(userId)
+
+      
     });
+
+    post.image= fileBucket.getFileAccessURL(post.image as string);
+    return post;
 };

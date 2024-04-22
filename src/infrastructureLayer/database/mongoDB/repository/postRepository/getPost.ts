@@ -35,7 +35,7 @@ export const getPost = async(
                 _id: 0,
                 title:1,
                 content:1,
-                image:1,
+                image:1, 
                 likes:1,
                 comments:1,
                 createdAt:1,

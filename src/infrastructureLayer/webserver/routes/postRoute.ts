@@ -43,6 +43,7 @@ export function postRoute(router: Router) {
         '/:postId',
         protect.protectUser,
         async(req:Req, res:Res)=>{
+            
             await postController.getPost(req,res);
             
         }
