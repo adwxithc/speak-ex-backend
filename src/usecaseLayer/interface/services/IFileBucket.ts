@@ -7,5 +7,5 @@ export interface IFileBucket {
         mimetype: string;
         imageBuffer: Buffer;
     }): Promise<string>;
-    getFileAccessURL(Key: string): Promise<string>;
+    getFileAccessURL(Key: string): string;
 }

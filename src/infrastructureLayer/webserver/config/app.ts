@@ -8,6 +8,7 @@ import { errorHandler } from '../middlewares/error-handler';
 import { NotFoundError } from '../../../usecaseLayer/errors';
 
 import dotenv from 'dotenv';
+import { Req } from '../../types/expressTypes';
 
 
 dotenv.config();
@@ -24,7 +25,9 @@ app.use('/api/user', userRoute(express.Router()));
 app.use('/api/admin', adminRoute(express.Router()));
 app.use('/api/post', postRoute(express.Router()));
 
-app.all('*', () => {
+app.all('*', (req:Req) => {
+    console.log(req.originalUrl,'original url');
+    
     throw new NotFoundError();
 });
 

@@ -102,6 +102,8 @@ export function userRoute(router: Router) {
     );
 
     router.post('/refresh', async (req: Req, res: Res) => {
+        console.log('refresj==============================================================================================');
+        
         await userController.renewAccess(req, res);
     });
 

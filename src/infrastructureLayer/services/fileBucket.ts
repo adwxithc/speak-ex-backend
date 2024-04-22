@@ -1,9 +1,9 @@
 import {
     PutObjectCommand,
     S3Client,
-    GetObjectCommand,
+    // GetObjectCommand,
 } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+// import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import crypto from 'crypto';
 import { IFileBucket } from '../../usecaseLayer/interface/services/IFileBucket';
 
@@ -47,13 +47,15 @@ export class FileBucket implements IFileBucket {
         return imageName;
     }
 
-    async getFileAccessURL(Key: string) {
-        const getObjectParams = {
-            Bucket: this.BUCKET_NAME,
-            Key,
-        };
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+    getFileAccessURL(Key: string) {
+        // const getObjectParams = {
+        //     Bucket: this.BUCKET_NAME,
+        //     Key,
+        // };
+        // const command = new GetObjectCommand(getObjectParams);
+        // const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+        const url= `https://${this.BUCKET_NAME}.s3.${this.BUCKET_REGION}.amazonaws.com/${Key}`;
         return url;
     }
 }
+

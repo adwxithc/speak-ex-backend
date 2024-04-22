@@ -7,15 +7,16 @@ const postSchema = new Schema<IPost>(
             type: String,
             required: true,
         },
-        description: {
+        content: {
             type: String,
             required: true,
         },
-        imageName: {
+        image: {
             type: String,
         },
         userId: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: true,
         },
         likes: {
@@ -26,7 +27,7 @@ const postSchema = new Schema<IPost>(
             type: [mongoose.Schema.ObjectId],
             default: [],
         },
-    },
+    }, 
     {
         timestamps: true,
         toJSON: {
