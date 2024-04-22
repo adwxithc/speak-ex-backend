@@ -163,7 +163,7 @@ export class UserController {
         res.cookie('accessToken',accessToken,accessTokenOptions);
         
         
-        res.json({
+        res.json({ 
             success:true
         });
     }

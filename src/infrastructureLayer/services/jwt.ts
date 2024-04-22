@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 // import IUser from '../../domainLayer/user';
 import {IAccessRefreshToken, IJwt, IToken, IVerificationJwt } from '../../usecaseLayer/interface/services/IJwt.types';
-import { BadRequestError } from '../../usecaseLayer/errors';
+import { BadRequestError, ForbiddenRequestError } from '../../usecaseLayer/errors';
 
 
 
@@ -53,7 +53,7 @@ export class JWTToken implements IJwt {
             jwt.verify(token, this.JWT_ACCESS_KEY,(err, decoded)=>{
                 if(err){
                     
-                    reject(new BadRequestError('in valid token..!'));
+                    reject(new ForbiddenRequestError());
                 }else{
                    
                     resolve(decoded as IAccessRefreshToken | null);
