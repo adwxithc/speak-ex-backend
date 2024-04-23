@@ -1,14 +1,15 @@
-import { registerUser } from './registerUser';
-import { createUser } from './createUser';
-import { login } from './login';
-import { sendPasswordResetMail } from './sendPasswordResetMail';
-import { verifyPasswordReset } from './verifyPasswordReset';
-import { createNewPassword } from './createNewPassword';
-import { resendOtp } from './resendOtp';
+import { registerUser } from './auth/registerUser';
+import { createUser } from './auth/createUser';
+import { login } from './auth/login';
+import { sendPasswordResetMail } from './auth/sendPasswordResetMail';
+import { verifyPasswordReset } from './auth/verifyPasswordReset';
+import { createNewPassword } from './auth/createNewPassword';
+import { resendOtp } from './auth/resendOtp';
 import { listUsers } from './listUsers';
-import {updateUser} from './updateUser';
-import { renewAccess } from './renewAccess';
-import { checkUserName } from './checkUserName';
+import {updateUser} from './profile/updateUser';
+import { renewAccess } from './auth/renewAccess';
+import { checkUserName } from './auth/checkUserName';
+import { updateProfile } from './profile/updateProfile';
 
 export {
     registerUser,
@@ -21,5 +22,6 @@ export {
     listUsers,
     updateUser,
     renewAccess,
-    checkUserName
+    checkUserName,
+    updateProfile
 };

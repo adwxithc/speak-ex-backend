@@ -27,7 +27,7 @@ const postSchema = new Schema<IPost>(
             type: [mongoose.Schema.ObjectId],
             default: [],
         },
-    }, 
+    },
     {
         timestamps: true,
         toJSON: {

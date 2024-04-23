@@ -13,7 +13,8 @@ import {
     listUsers,
     updateUser,
     renewAccess,
-    checkUserName
+    checkUserName,
+    updateProfile,
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -21,6 +22,7 @@ import { ISendMail } from '../interface/services/ISendMail';
 import { IJwt, IToken } from '../interface/services/IJwt.types';
 import { IUnverifiedUserRepository } from '../interface/repository/IUnverifiedUserRepository';
 import { IUserOtpRepository } from '../interface/repository/IUserOtp';
+import { IFileBucket } from '../interface/services/IFileBucket';
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -30,8 +32,18 @@ export class UserUseCase implements IUserUseCase {
     private readonly unverifiedUserRepository: IUnverifiedUserRepository;
     private readonly jwtToken: IJwt;
     private readonly userOtpRepository: IUserOtpRepository;
+    private readonly fileBucket: IFileBucket;
 
-    constructor(
+    constructor({
+        userRepository,
+        bcrypt,
+        otpGenerator,
+        sendMail,
+        unverifiedUserRepository,
+        jwtToken,
+        userOtpRepository,
+        fileBucket
+    }:{
         userRepository: IUserRepository,
         bcrypt: IHashpassword,
         otpGenerator: IcreateOTP,
@@ -39,6 +51,8 @@ export class UserUseCase implements IUserUseCase {
         unverifiedUserRepository: IUnverifiedUserRepository,
         jwtToken: IJwt,
         userOtpRepository: IUserOtpRepository
+        fileBucket:IFileBucket
+    }
     ) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -47,6 +61,7 @@ export class UserUseCase implements IUserUseCase {
         this.unverifiedUserRepository = unverifiedUserRepository;
         this.jwtToken = jwtToken;
         this.userOtpRepository = userOtpRepository;
+        this.fileBucket=fileBucket;
     }
 
     //register user
@@ -102,6 +117,7 @@ export class UserUseCase implements IUserUseCase {
             bcrypt: this.bcrypt,
             jwtToken: this.jwtToken,
             userRepository: this.userRepository,
+            fileBucket:this.fileBucket,
             email: email,
             password: password,
         });
@@ -188,17 +204,31 @@ export class UserUseCase implements IUserUseCase {
     }
 
     async renewAccess(token: string): Promise<string | undefined> {
-        return await renewAccess(
-            {
-                token,
-                jwtToken:this.jwtToken,
-                UserRepository:this.userRepository
-            });
+        return await renewAccess({
+            token,
+            jwtToken: this.jwtToken,
+            UserRepository: this.userRepository,
+        });
     }
     async checkUserName(userName: string): Promise<boolean> {
         return await checkUserName({
             userName,
-            UserRepository:this.userRepository
+            UserRepository: this.userRepository,
+        });
+    }
+
+    async updateProfile({
+        imageFile,
+        userId,
+    }: {
+        imageFile: Express.Multer.File | undefined;
+        userId: string;
+    }): Promise<string> {
+        return await updateProfile({
+            imageFile,
+            userId,
+            fileBucket:this.fileBucket,
+            userRepository:this.userRepository
         });
     }
 }

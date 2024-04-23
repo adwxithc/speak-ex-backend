@@ -1,9 +1,9 @@
 
-import { BadRequestError } from '../../errors';
-import { IUnverifiedUserRepository } from '../../interface/repository/IUnverifiedUserRepository';
-import { IcreateOTP } from '../../interface/services/ICreateOtp';
-import { IJwt } from '../../interface/services/IJwt.types';
-import { ISendMail } from '../../interface/services/ISendMail';
+import { BadRequestError } from '../../../errors';
+import { IUnverifiedUserRepository } from '../../../interface/repository/IUnverifiedUserRepository';
+import { IcreateOTP } from '../../../interface/services/ICreateOtp';
+import { IJwt } from '../../../interface/services/IJwt.types';
+import { ISendMail } from '../../../interface/services/ISendMail';
 
 export const resendOtp = async ({
     unverifiedUserRepository,

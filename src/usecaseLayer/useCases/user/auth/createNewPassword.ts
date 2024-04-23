@@ -1,8 +1,8 @@
 
-import { BadRequestError } from '../../errors';
-import { IUserRepository } from '../../interface/repository/IUserRepository';
-import { IHashpassword } from '../../interface/services/IHashPassword';
-import { IJwt } from '../../interface/services/IJwt.types';
+import { BadRequestError } from '../../../errors';
+import { IUserRepository } from '../../../interface/repository/IUserRepository';
+import { IHashpassword } from '../../../interface/services/IHashPassword';
+import { IJwt } from '../../../interface/services/IJwt.types';
 
 export const createNewPassword = async ({
     UserRepository,

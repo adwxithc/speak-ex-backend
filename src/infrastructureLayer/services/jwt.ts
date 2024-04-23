@@ -23,7 +23,7 @@ export class JWTToken implements IJwt {
 
     createAccessAndRefreshToken(data: IAccessRefreshToken): IToken {
         const accessToken = jwt.sign(data,this.JWT_ACCESS_KEY,{
-            expiresIn:'10h'
+            expiresIn:'1h'
         });
         const refreshToken =jwt.sign(data,this.JWT_REFRESH_KEY,{
             expiresIn:'1y'

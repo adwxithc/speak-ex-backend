@@ -1,6 +1,7 @@
 import { Req, Res } from '../infrastructureLayer/types/expressTypes';
 import { accessTokenOptions, refreshTokenOptions } from '../infrastructureLayer/utils/tokenOptions';
 import { BadRequestError } from '../usecaseLayer/errors';
+import { IAccessRefreshToken } from '../usecaseLayer/interface/services/IJwt.types';
 import { IUserUseCase } from '../usecaseLayer/interface/usecase/userUseCase';
 
 export class UserController {
@@ -175,6 +176,21 @@ export class UserController {
         res.json({
             success:true,
             data:{available}
+        });
+    }
+
+    async updateProfile(req:Req, res:Res){
+        const {id} = req.user as IAccessRefreshToken;
+        const {file} = req;
+
+        const url= await this.userUseCase.updateProfile({
+            imageFile:file,
+            userId:id
+        });
+        res.json({
+            success:true,
+            data:url,
+            message:'profile updated successfully'
         });
     }
 

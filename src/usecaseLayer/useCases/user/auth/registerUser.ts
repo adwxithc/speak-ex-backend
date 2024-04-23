@@ -1,14 +1,14 @@
-import IUser from '../../../domain/user';
+import IUser from '../../../../domain/user';
 // import { IUnverifiedUser } from '../../../domainLayer/unverifiedUser';
 
-import { BadRequestError } from '../../errors';
+import { BadRequestError } from '../../../errors';
 // import { Ilogger, Next } from "../../../infrastructureLayer/types/serverPackageTypes";
-import { IUnverifiedUserRepository } from '../../interface/repository/IUnverifiedUserRepository';
-import { IUserRepository } from '../../interface/repository/IUserRepository';
-import { IcreateOTP } from '../../interface/services/ICreateOtp';
-import { IHashpassword } from '../../interface/services/IHashPassword';
-import { IJwt } from '../../interface/services/IJwt.types';
-import { ISendMail } from '../../interface/services/ISendMail';
+import { IUnverifiedUserRepository } from '../../../interface/repository/IUnverifiedUserRepository';
+import { IUserRepository } from '../../../interface/repository/IUserRepository';
+import { IcreateOTP } from '../../../interface/services/ICreateOtp';
+import { IHashpassword } from '../../../interface/services/IHashPassword';
+import { IJwt } from '../../../interface/services/IJwt.types';
+import { ISendMail } from '../../../interface/services/ISendMail';
 
 export const registerUser = async (
     unverifiedUserRepository: IUnverifiedUserRepository,

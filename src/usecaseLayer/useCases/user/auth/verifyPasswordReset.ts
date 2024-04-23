@@ -1,6 +1,6 @@
-import { BadRequestError } from '../../errors';
-import { IUserOtpRepository } from '../../interface/repository/IUserOtp';
-import { IJwt } from '../../interface/services/IJwt.types';
+import { BadRequestError } from '../../../errors';
+import { IUserOtpRepository } from '../../../interface/repository/IUserOtp';
+import { IJwt } from '../../../interface/services/IJwt.types';
 
 export const verifyPasswordReset = async ({
     UserOtpRepository,

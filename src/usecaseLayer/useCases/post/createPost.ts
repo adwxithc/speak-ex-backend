@@ -1,4 +1,3 @@
-
 import mongoose from 'mongoose';
 import { IPostRepository } from '../../interface/repository/IPostRepository';
 import { IUserRepository } from '../../interface/repository/IUserRepository';
@@ -13,30 +12,28 @@ export const createPost = async ({
     userId,
 }: {
     postRepository: IPostRepository;
-    userRepository:IUserRepository;
+    userRepository: IUserRepository;
     fileBucket: IFileBucket;
     title: string;
     content: string;
     imageFile: Express.Multer.File;
     userId: string;
 }) => {
-    let image='';
+    let image = '';
     if (imageFile) {
         image = await fileBucket.uploadImage({
             mimetype: imageFile.mimetype,
             imageBuffer: imageFile.buffer,
         });
     }
- 
-    const post= await postRepository.createPost({
+
+    const post = await postRepository.createPost({
         title,
         image,
         content,
-        userId:new mongoose.Types.ObjectId(userId)
-
-      
+        userId: new mongoose.Types.ObjectId(userId),
     });
 
-    post.image= fileBucket.getFileAccessURL(post.image as string);
+    post.image = fileBucket.getFileAccessURL(post.image as string);
     return post;
 };

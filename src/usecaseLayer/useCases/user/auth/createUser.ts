@@ -1,8 +1,8 @@
 
-import { IUnverifiedUserRepository } from '../../interface/repository/IUnverifiedUserRepository';
-import { IUserRepository } from '../../interface/repository/IUserRepository';
-import { IJwt } from '../../interface/services/IJwt.types';
-import { BadRequestError} from '../../errors';
+import { IUnverifiedUserRepository } from '../../../interface/repository/IUnverifiedUserRepository';
+import { IUserRepository } from '../../../interface/repository/IUserRepository';
+import { IJwt } from '../../../interface/services/IJwt.types';
+import { BadRequestError} from '../../../errors';
 
 export const createUser = async ({
     UserRepository,

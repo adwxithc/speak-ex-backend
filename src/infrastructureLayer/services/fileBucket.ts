@@ -1,4 +1,5 @@
 import {
+    DeleteObjectCommand,
     PutObjectCommand,
     S3Client,
     // GetObjectCommand,
@@ -56,6 +57,18 @@ export class FileBucket implements IFileBucket {
         // const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
         const url= `https://${this.BUCKET_NAME}.s3.${this.BUCKET_REGION}.amazonaws.com/${Key}`;
         return url;
+    }
+
+    async deleteFile(Key: string): Promise<boolean> {
+
+        const command = new DeleteObjectCommand({
+            Bucket: this.BUCKET_NAME,
+            Key: Key,
+        });
+        const res = await this.s3.send(command);
+        console.log(res);
+        
+        return true;
     }
 }
 

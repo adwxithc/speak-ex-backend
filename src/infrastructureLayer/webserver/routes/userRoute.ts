@@ -6,11 +6,7 @@ import { validateRequest } from '../middlewares';
 import { userController } from './injections/userInjection';
 import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
-
-
-
-
-
+import { upload } from '../middlewares/multer';
 
 export function userRoute(router: Router) {
     router.post(
@@ -101,14 +97,11 @@ export function userRoute(router: Router) {
         }
     );
 
-    router.post('/refresh', async (req: Req, res: Res) => {
-        console.log('refresj==============================================================================================');
-        
+    router.get('/refresh', async (req: Req, res: Res) => {
         await userController.renewAccess(req, res);
     });
 
     router.post('/protect', protect.protectUser, async (req: Req, res: Res) => {
-        
         res.send('entered protected router');
     });
 
@@ -123,7 +116,14 @@ export function userRoute(router: Router) {
         }
     );
 
- 
+    router.put(
+        '/profile',
+        protect.protectUser,
+        upload.single('image'),
+        async(req:Req, res:Res)=>{
+            await userController.updateProfile(req, res);
+        }
+    );
 
     return router;
 }
