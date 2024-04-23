@@ -58,15 +58,17 @@ export class UserRepository implements IUserRepository {
         lastName,
         email,
         blocked,
+        profile
     }: {
         id: string;
         firstName?: string;
         lastName?: string;
         email?: string;
         blocked?: boolean;
+        profile:string
     }): Promise<IUser> {
         return await updateUser(
-            { id, firstName, lastName, email, blocked },
+            { id, firstName, lastName, email, blocked,profile },
             this.userModels
         );
     }

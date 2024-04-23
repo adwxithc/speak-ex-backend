@@ -1,9 +1,9 @@
-import { BadRequestError } from '../../errors';
-import { IUserOtpRepository } from '../../interface/repository/IUserOtp';
-import { IUserRepository } from '../../interface/repository/IUserRepository';
-import { IcreateOTP } from '../../interface/services/ICreateOtp';
-import { IJwt } from '../../interface/services/IJwt.types';
-import { ISendMail } from '../../interface/services/ISendMail';
+import { BadRequestError } from '../../../errors';
+import { IUserOtpRepository } from '../../../interface/repository/IUserOtp';
+import { IUserRepository } from '../../../interface/repository/IUserRepository';
+import { IcreateOTP } from '../../../interface/services/ICreateOtp';
+import { IJwt } from '../../../interface/services/IJwt.types';
+import { ISendMail } from '../../../interface/services/ISendMail';
 
 export const sendPasswordResetMail = async ({
     email,

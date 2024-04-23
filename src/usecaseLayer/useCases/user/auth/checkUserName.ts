@@ -1,6 +1,6 @@
 
 
-import { IUserRepository } from '../../interface/repository/IUserRepository';
+import { IUserRepository } from '../../../interface/repository/IUserRepository';
 
 export const checkUserName = async ({
     UserRepository,

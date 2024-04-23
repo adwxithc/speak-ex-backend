@@ -59,7 +59,7 @@ export class PostUseCase implements IPostUseCase {
         });
     }
 
-    async getPost({ postId }: { postId: string }): Promise<IPost> {
+    async getPost({ postId }: { postId: string }): Promise<IPost & {user:{userName:string,email:string,profile:string}} | null> {
         return await getPost({
             fileBucket: this.fileBucket,
             postRepository: this.postRepository,

@@ -65,4 +65,6 @@ export interface IUserUseCase {
     renewAccess(token: string): Promise<string | undefined>;
 
     checkUserName(userName:string): Promise<boolean>;
+
+    updateProfile({imageFile,userId}:{imageFile:Express.Multer.File | undefined,userId:string}):Promise<string>
 }

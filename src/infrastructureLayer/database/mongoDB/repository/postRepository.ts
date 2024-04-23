@@ -14,7 +14,7 @@ export class PostRepository implements IPostRepository {
         return await getUsersPosts(userId, this.postModel);
     }
 
-    async getPost(postId: string): Promise<IPost | null> {
+    async getPost(postId: string): Promise<IPost & {user:{userName:string,email:string,profile:string}} | null>{
         return await getPost(postId, PostModel);
     }
 }

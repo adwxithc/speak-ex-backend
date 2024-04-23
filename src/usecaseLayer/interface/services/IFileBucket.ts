@@ -8,4 +8,5 @@ export interface IFileBucket {
         imageBuffer: Buffer;
     }): Promise<string>;
     getFileAccessURL(Key: string): string;
+    deleteFile(Key:string):Promise<boolean>
 }

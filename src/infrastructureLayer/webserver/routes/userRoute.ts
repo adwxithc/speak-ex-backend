@@ -6,6 +6,7 @@ import { validateRequest } from '../middlewares';
 import { userController } from './injections/userInjection';
 import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
+import { upload } from '../middlewares/multer';
 
 export function userRoute(router: Router) {
     router.post(
@@ -112,6 +113,15 @@ export function userRoute(router: Router) {
         validateRequest,
         async (req: Req, res: Res) => {
             await userController.checkUserName(req, res);
+        }
+    );
+
+    router.put(
+        '/profile',
+        protect.protectUser,
+        upload.single('image'),
+        async(req:Req, res:Res)=>{
+            await userController.updateProfile(req, res);
         }
     );
 
