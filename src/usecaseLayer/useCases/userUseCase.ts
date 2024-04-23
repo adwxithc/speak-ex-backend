@@ -23,6 +23,7 @@ import { IJwt, IToken } from '../interface/services/IJwt.types';
 import { IUnverifiedUserRepository } from '../interface/repository/IUnverifiedUserRepository';
 import { IUserOtpRepository } from '../interface/repository/IUserOtp';
 import { IFileBucket } from '../interface/services/IFileBucket';
+import { ILanguageRepository } from '../interface/repository/ILanguageRepository';
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -33,6 +34,7 @@ export class UserUseCase implements IUserUseCase {
     private readonly jwtToken: IJwt;
     private readonly userOtpRepository: IUserOtpRepository;
     private readonly fileBucket: IFileBucket;
+    private readonly languageRepository: ILanguageRepository;
 
     constructor({
         userRepository,
@@ -42,18 +44,19 @@ export class UserUseCase implements IUserUseCase {
         unverifiedUserRepository,
         jwtToken,
         userOtpRepository,
-        fileBucket
-    }:{
-        userRepository: IUserRepository,
-        bcrypt: IHashpassword,
-        otpGenerator: IcreateOTP,
-        sendMail: ISendMail,
-        unverifiedUserRepository: IUnverifiedUserRepository,
-        jwtToken: IJwt,
-        userOtpRepository: IUserOtpRepository
-        fileBucket:IFileBucket
-    }
-    ) {
+        fileBucket,
+        languageRepository
+    }: {
+        userRepository: IUserRepository;
+        bcrypt: IHashpassword;
+        otpGenerator: IcreateOTP;
+        sendMail: ISendMail;
+        unverifiedUserRepository: IUnverifiedUserRepository;
+        jwtToken: IJwt;
+        userOtpRepository: IUserOtpRepository;
+        fileBucket: IFileBucket;
+        languageRepository:ILanguageRepository
+    }) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
         this.otpGenerator = otpGenerator;
@@ -61,7 +64,8 @@ export class UserUseCase implements IUserUseCase {
         this.unverifiedUserRepository = unverifiedUserRepository;
         this.jwtToken = jwtToken;
         this.userOtpRepository = userOtpRepository;
-        this.fileBucket=fileBucket;
+        this.fileBucket = fileBucket;
+        this.languageRepository=languageRepository;
     }
 
     //register user
@@ -117,7 +121,7 @@ export class UserUseCase implements IUserUseCase {
             bcrypt: this.bcrypt,
             jwtToken: this.jwtToken,
             userRepository: this.userRepository,
-            fileBucket:this.fileBucket,
+            fileBucket: this.fileBucket,
             email: email,
             password: password,
         });
@@ -182,24 +186,33 @@ export class UserUseCase implements IUserUseCase {
         id,
         firstName,
         lastName,
-        email,
-        blocked,
+        userName,
+        password,
+        focusLanguage,
+        proficientLanguage,
     }: {
         id: string;
-        firstName?: string;
-        lastName?: string;
-        email?: string;
-        blocked?: boolean;
-    }): Promise<Omit<IUser, 'password'>> {
+        firstName?: string | undefined;
+        lastName?: string | undefined;
+        userName?: string | undefined;
+        password?: string | undefined;
+        focusLanguage?: string | undefined;
+        proficientLanguage?: string[] | undefined;
+    }): Promise<Omit<IUser, 'password'> | null> {
+
         return await updateUser(
             {
                 id,
                 firstName,
                 lastName,
-                email,
-                blocked,
-            },
-            this.userRepository
+                userName,
+                password,
+                focusLanguage,
+                proficientLanguage,
+                userRepository:this.userRepository,
+                languageRepository:this.languageRepository
+            }
+            
         );
     }
 
@@ -227,8 +240,8 @@ export class UserUseCase implements IUserUseCase {
         return await updateProfile({
             imageFile,
             userId,
-            fileBucket:this.fileBucket,
-            userRepository:this.userRepository
+            fileBucket: this.fileBucket,
+            userRepository: this.userRepository,
         });
     }
 }

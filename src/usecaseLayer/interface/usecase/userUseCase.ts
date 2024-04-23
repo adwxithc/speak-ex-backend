@@ -51,14 +51,19 @@ export interface IUserUseCase {
         id,
         firstName,
         lastName,
-        email,
-        blocked,
+        userName,
+        password,
+        focusLanguage,
+        proficientLanguage,
     }: {
         id: string;
         firstName?: string;
         lastName?: string;
-        email?: string;
-        blocked?: boolean;
+        userName?:string,
+        password?:string,
+        focusLanguage?:string,
+        proficientLanguage?:string[],
+        
     }): Promise<Omit<IUser, 'password'> | null>;
 
     //renewAccess token

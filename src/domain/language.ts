@@ -1,5 +1,5 @@
 interface ILanguage{
-    id?:number;
+    id?:string;
     name:string;
     basePrice:number;
 }

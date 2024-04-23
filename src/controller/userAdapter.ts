@@ -1,5 +1,8 @@
 import { Req, Res } from '../infrastructureLayer/types/expressTypes';
-import { accessTokenOptions, refreshTokenOptions } from '../infrastructureLayer/utils/tokenOptions';
+import {
+    accessTokenOptions,
+    refreshTokenOptions,
+} from '../infrastructureLayer/utils/tokenOptions';
 import { BadRequestError } from '../usecaseLayer/errors';
 import { IAccessRefreshToken } from '../usecaseLayer/interface/services/IJwt.types';
 import { IUserUseCase } from '../usecaseLayer/interface/usecase/userUseCase';
@@ -8,8 +11,6 @@ export class UserController {
     constructor(private userUseCase: IUserUseCase) {}
 
     async registerUser(req: Req, res: Res) {
-
-
         const token = await this.userUseCase.registerUser(req.body);
 
         res.cookie('verficationToken', token, {
@@ -22,30 +23,27 @@ export class UserController {
             success: true,
             message: 'verification otp has been send to the mail',
         });
-        
     }
 
-    async createUser(req: Req, res:Res){
-        
-        
+    async createUser(req: Req, res: Res) {
         const token = req.cookies?.verficationToken;
-        if(!token){
+        if (!token) {
             throw new BadRequestError('No verification token found');
-
         }
-        const {otp}= req.body;
+        const { otp } = req.body;
 
-        const result = await this.userUseCase.createUser(otp,token);
+        const result = await this.userUseCase.createUser(otp, token);
 
-        if(result) res.clearCookie('verificationToken').status(200).json({
-            success:true,
-            data:result
-        });
-    } 
+        if (result)
+            res.clearCookie('verificationToken').status(200).json({
+                success: true,
+                data: result,
+            });
+    }
 
-    async resendOtp(req:Req,res:Res){
+    async resendOtp(req: Req, res: Res) {
         const token = req.cookies?.verficationToken;
-        const newToken = await  this.userUseCase.resendOtp(token);
+        const newToken = await this.userUseCase.resendOtp(token);
 
         res.cookie('verficationToken', newToken, {
             httpOnly: true,
@@ -59,32 +57,39 @@ export class UserController {
         });
     }
 
-    async signin(req:Req,res:Res){
-        const {email, password} = req.body;
+    async signin(req: Req, res: Res) {
+        const { email, password } = req.body;
 
-        const result = await this.userUseCase.signin({email,password});
-        res.cookie('accessToken',result?.token.accessToken,accessTokenOptions);
-        res.cookie('refreshToken',result.token.refreshToken,refreshTokenOptions);
-    
-        
+        const result = await this.userUseCase.signin({ email, password });
+        res.cookie(
+            'accessToken',
+            result?.token.accessToken,
+            accessTokenOptions
+        );
+        res.cookie(
+            'refreshToken',
+            result.token.refreshToken,
+            refreshTokenOptions
+        );
+
         res.json({
-            succes:true,
-            data:result.user,
-            message:'login successfully'
+            succes: true,
+            data: result.user,
+            message: 'login successfully',
         });
     }
 
-    async signout(req:Req, res:Res){
+    async signout(req: Req, res: Res) {
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
         res.json({
-            success:true,
-            message:'successfully logout'
+            success: true,
+            message: 'successfully logout',
         });
     }
 
-    async sendPasswordResetMail(req:Req, res:Res){
-        const {email} = req.body;
+    async sendPasswordResetMail(req: Req, res: Res) {
+        const { email } = req.body;
         const token = await this.userUseCase.sendPasswordResetMail(email);
         res.cookie('forgotPasswordToken', token, {
             httpOnly: true,
@@ -98,10 +103,13 @@ export class UserController {
         });
     }
 
-    async verifyPasswordReset(req:Req, res:Res){
+    async verifyPasswordReset(req: Req, res: Res) {
         const token = req.cookies?.forgotPasswordToken;
-        const {otp} = req.body;
-        const passwordResetToken =await this.userUseCase.verifyPasswordReset(otp,token);
+        const { otp } = req.body;
+        const passwordResetToken = await this.userUseCase.verifyPasswordReset(
+            otp,
+            token
+        );
 
         res.cookie('passwordResetToken', passwordResetToken, {
             httpOnly: true,
@@ -115,83 +123,104 @@ export class UserController {
         });
     }
 
-    async resetPassword(req:Req, res:Res){
-        const {password} = req.body;
+    async resetPassword(req: Req, res: Res) {
+        const { password } = req.body;
         const token = req.cookies?.passwordResetToken;
-        await this.userUseCase.createNewPassword(password,token);
+        await this.userUseCase.createNewPassword(password, token);
 
         res.json({
-            success:true,
-            message:'new password created please login'
+            success: true,
+            message: 'new password created please login',
         });
-
     }
 
     // controller for admin
-    async listUsers (req:Req, res:Res){
+    async listUsers(req: Req, res: Res) {
+        const { page = 1, limit = 5, key = '' } = req.query;
 
-        const {page =1,limit=5,key=''}=req.query;
-        
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
 
-        if(typeof pageNumber !== 'number' || typeof limitNumber !== 'number' || typeof key !== 'string'){
+        if (
+            typeof pageNumber !== 'number' ||
+            typeof limitNumber !== 'number' ||
+            typeof key !== 'string'
+        ) {
             throw new BadRequestError('invalid parameters');
         }
 
-        const usersData = await this.userUseCase.listUsers({page:pageNumber,limit:limitNumber,key});
+        const usersData = await this.userUseCase.listUsers({
+            page: pageNumber,
+            limit: limitNumber,
+            key,
+        });
 
         res.status(200).json({
-            success:true,
-            data:usersData
+            success: true,
+            data: usersData,
         });
     }
 
-    async adminUpdateUser(req:Req, res:Res){
-        const {id} = req.params;
-        const {email,firstName,lastName, blocked }=req.body;
-        const userData= await this.userUseCase.updateUser({id,email,firstName,lastName,blocked});
 
-        res.status(200).json({
-            success:true,
-            data:userData
-        });
-    }
-
-    async renewAccess(req:Req, res:Res){
+    async renewAccess(req: Req, res: Res) {
         const { refreshToken } = req.cookies;
-        const accessToken = await this.userUseCase.renewAccess(refreshToken); 
-        res.cookie('accessToken',accessToken,accessTokenOptions);
-        
-        
-        res.json({ 
-            success:true
+        const accessToken = await this.userUseCase.renewAccess(refreshToken);
+        res.cookie('accessToken', accessToken, accessTokenOptions);
+
+        res.json({
+            success: true,
         });
     }
-    async checkUserName(req:Req, res:Res){
+    async checkUserName(req: Req, res: Res) {
         const { userName } = req.body;
-        
+
         const available = await this.userUseCase.checkUserName(userName);
-        
+
         res.json({
-            success:true,
-            data:{available}
+            success: true,
+            data: { available },
         });
     }
 
-    async updateProfile(req:Req, res:Res){
-        const {id} = req.user as IAccessRefreshToken;
-        const {file} = req;
+    async updateProfile(req: Req, res: Res) {
+        const { id } = req.user as IAccessRefreshToken;
+        const { file } = req;
 
-        const url= await this.userUseCase.updateProfile({
-            imageFile:file,
-            userId:id
+        const url = await this.userUseCase.updateProfile({
+            imageFile: file,
+            userId: id,
         });
         res.json({
-            success:true,
-            data:url,
-            message:'profile updated successfully'
+            success: true,
+            data: url,
+            message: 'profile updated successfully',
         });
     }
 
+    async updateUser(req: Req, res: Res) {
+        const { id } = req.user as IAccessRefreshToken;
+        const {
+            firstName,
+            lastName,
+            userName,
+            password,
+            focusLanguage,
+            proficientLanguage,
+        } = req.body;
+
+        const user = await this.userUseCase.updateUser({
+            id,
+            firstName,
+            lastName,
+            userName,
+            password,
+            focusLanguage,
+            proficientLanguage,
+        });
+
+        res.json({
+            success:true,
+            data:user
+        });
+    }
 }

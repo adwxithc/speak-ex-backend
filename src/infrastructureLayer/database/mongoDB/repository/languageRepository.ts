@@ -3,7 +3,7 @@ import LanguageModel from '../models/languageModel';
 import { ILanguageRepository } from '../../../../usecaseLayer/interface/repository/ILanguageRepository';
 import ILanguage from '../../../../domain/language';
 
-import { createLanguage, listLanguages } from './languageRepository/index';
+import { createLanguage, listLanguages,getLanguages } from './languageRepository/index';
 
 export class LanguageRepository implements ILanguageRepository {
     constructor(private languageModel: typeof LanguageModel) {}
@@ -21,5 +21,12 @@ export class LanguageRepository implements ILanguageRepository {
         key: string;
     }): Promise<{ languages: ILanguage[]; totalLanguages: number }> {
         return await listLanguages({ page, limit, key }, this.languageModel);
+    }
+
+    async getLanguages({ languageIds }: { languageIds: string[]; }): Promise<ILanguage[]> {
+        return await getLanguages(
+            {languageIds},
+            this.languageModel
+        );
     }
 }

@@ -11,5 +11,7 @@ export interface IUserRepository {
     changePassword(password:string, userId:string):Promise<boolean>
     listUsers({page,limit,key}:{page:number,limit:number,key:string}):Promise<{users: Omit<IUser, 'password'>[];totalUsers: number;}>;
     countUsers():Promise<number>;
-    updateUser({id,firstName,lastName,email,blocked, profile}:{id:string,firstName?:string,lastName?:string,email?:string,blocked?:boolean,profile?:string}):Promise<IUser>;
+    updateUser(user:Required<Pick<IUser, 'id'>> & Partial<Omit<IUser ,'email'>>):Promise<IUser>;
 }
+
+

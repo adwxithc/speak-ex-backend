@@ -52,23 +52,28 @@ export class UserRepository implements IUserRepository {
         return await countUsers(this.userModels);
     }
 
-    async updateUser({
+
+    async updateUser({ 
         id,
         firstName,
         lastName,
-        email,
+        userName,
         blocked,
-        profile
-    }: {
-        id: string;
-        firstName?: string;
-        lastName?: string;
-        email?: string;
-        blocked?: boolean;
-        profile:string
-    }): Promise<IUser> {
+        profile,
+        proficientLanguage,
+        focusLanguage,
+    }: Required<Pick<IUser, 'id'>> & Partial<Omit<IUser ,'email'>>): Promise<IUser> {
         return await updateUser(
-            { id, firstName, lastName, email, blocked,profile },
+            {   
+                id,
+                firstName,
+                lastName,
+                userName,
+                blocked,
+                profile,
+                proficientLanguage,
+                focusLanguage,
+            },
             this.userModels
         );
     }

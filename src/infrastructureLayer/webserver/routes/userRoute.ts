@@ -120,8 +120,45 @@ export function userRoute(router: Router) {
         '/profile',
         protect.protectUser,
         upload.single('image'),
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await userController.updateProfile(req, res);
+        }
+    );
+
+    router.put(
+        '/',
+        [
+
+            body('firstName')
+                .optional()
+                .isLength({ min: 3 })
+                .withMessage('Name must be atleast 3 characters long'),
+            body('userName')
+                .optional()
+                .isLength({ min: 3 })
+                .withMessage('User name must be atleast 3 character long'),
+            body('blocked')
+                .optional()
+                .isBoolean()
+                .withMessage('Blocked must be a boolean'),
+            body('password')
+                .optional()
+                .trim()
+                .isLength({ min: 4, max: 20 })
+                .withMessage('password must be between 4 and 20 characters'),
+            body('focusLanguage')
+                .optional()
+                .isString()
+                .withMessage('Focus language must be a string'),
+            body('proficientLanguage')
+                .optional()
+                .isArray()
+                .withMessage('invalid Proficient languages entry')
+        ],
+        validateRequest,
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await userController.updateUser(req, res);
         }
     );
 
