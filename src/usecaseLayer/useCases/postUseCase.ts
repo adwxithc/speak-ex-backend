@@ -4,9 +4,8 @@ import { IPostRepository } from '../interface/repository/IPostRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IPostUseCase } from '../interface/usecase/postUseCase';
-import {createPost, getUsersPosts, getPost} from './post';
+import { createPost, getUsersPosts, getPost } from './post';
 export class PostUseCase implements IPostUseCase {
-
     private readonly postRepository: IPostRepository;
     private readonly userRepository: IUserRepository;
     private readonly fileBucket: IFileBucket;
@@ -15,14 +14,13 @@ export class PostUseCase implements IPostUseCase {
         postRepository,
         userRepository,
         fileBucket,
-
     }: {
         postRepository: IPostRepository;
-        userRepository:IUserRepository
+        userRepository: IUserRepository;
         fileBucket: IFileBucket;
     }) {
         this.postRepository = postRepository;
-        this.userRepository=userRepository;
+        this.userRepository = userRepository;
         this.fileBucket = fileBucket;
     }
 
@@ -39,29 +37,33 @@ export class PostUseCase implements IPostUseCase {
     }): Promise<IPost> {
         return await createPost({
             content,
-            fileBucket:this.fileBucket,
+            fileBucket: this.fileBucket,
             imageFile,
-            postRepository:this.postRepository,
-            userRepository:this.userRepository,
+            postRepository: this.postRepository,
+            userRepository: this.userRepository,
             title,
-            userId
+            userId,
         });
     }
 
-    async getUsersPosts({ userName }: { userName: string; }): Promise<{posts:IPost[],user:IUser}> {
+    async getUsersPosts({
+        userName,
+    }: {
+        userName: string;
+    }): Promise<{ posts: IPost[]; user: IUser }> {
         return await getUsersPosts({
-            fileBucket:this.fileBucket,
-            postRepository:this.postRepository,
-            userRePository:this.userRepository,
-            userName
+            fileBucket: this.fileBucket,
+            postRepository: this.postRepository,
+            userRePository: this.userRepository,
+            userName,
         });
     }
 
-    async getPost({ postId }: { postId: string; }): Promise<IPost > {
+    async getPost({ postId }: { postId: string }): Promise<IPost> {
         return await getPost({
-            fileBucket:this.fileBucket,
-            postRepository:this.postRepository,
-            postId
+            fileBucket: this.fileBucket,
+            postRepository: this.postRepository,
+            postId,
         });
     }
 }

@@ -7,11 +7,6 @@ import { userController } from './injections/userInjection';
 import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 
-
-
-
-
-
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -101,14 +96,11 @@ export function userRoute(router: Router) {
         }
     );
 
-    router.post('/refresh', async (req: Req, res: Res) => {
-        console.log('refresj==============================================================================================');
-        
+    router.get('/refresh', async (req: Req, res: Res) => {
         await userController.renewAccess(req, res);
     });
 
     router.post('/protect', protect.protectUser, async (req: Req, res: Res) => {
-        
         res.send('entered protected router');
     });
 
@@ -122,8 +114,6 @@ export function userRoute(router: Router) {
             await userController.checkUserName(req, res);
         }
     );
-
- 
 
     return router;
 }

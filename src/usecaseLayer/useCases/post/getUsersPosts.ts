@@ -7,24 +7,21 @@ export const getUsersPosts = async ({
     postRepository,
     userRePository,
     fileBucket,
-    userName
+    userName,
 }: {
     postRepository: IPostRepository;
-    userRePository:IUserRepository
+    userRePository: IUserRepository;
     fileBucket: IFileBucket;
-    userName:string;
+    userName: string;
 }) => {
+    const user = await userRePository.findUserByUserName(userName);
 
-    const user=  await userRePository.findUserByUserName(userName);
-
-    
-    if(!user) throw new BadRequestError('invalid user name');
+    if (!user) throw new BadRequestError('invalid user name');
     const posts = await postRepository.getUsersPosts(user.id as string);
-    const postsWithUrl= posts.map(post =>{
-        if(post.image)
-            post.image=fileBucket.getFileAccessURL(post.image);
-            
+    const postsWithUrl = posts.map((post) => {
+        if (post.image) post.image = fileBucket.getFileAccessURL(post.image);
+
         return post;
     });
-    return {posts:postsWithUrl,user};
+    return { posts: postsWithUrl, user };
 };
