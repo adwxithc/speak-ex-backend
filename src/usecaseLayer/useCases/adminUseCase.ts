@@ -2,11 +2,12 @@ import IAdmin from '../../domain/admin';
 import { IAdminUseCase } from '../interface/usecase/adminUseCase';
 import { IAdminRepository } from '../interface/repository/IAdminRepository';
 
-import { login } from './admin';
+import { login,updateUser } from './admin';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IJwt, IToken } from '../interface/services/IJwt.types';
 
 import { IUserRepository } from '../interface/repository/IUserRepository';
+import IUser from '../../domain/user';
 
 export class AdminUseCase implements IAdminUseCase {
     private readonly adminRepository: IAdminRepository;
@@ -46,6 +47,16 @@ export class AdminUseCase implements IAdminUseCase {
             email: email,
             password: password,
         });
+    }
+
+    async updateUser({ id, blocked, }: { id: string; blocked?: boolean | undefined; }): Promise<Omit<IUser, 'password'> | null> {
+        return await updateUser(
+            {
+                id,
+                blocked,
+            },
+            this.userRepository
+        );
     }
 
 }

@@ -29,22 +29,18 @@ export function adminRoute(router: Router) {
         await adminController.signout(req, res);
     });
 
-    router.get('/users', async (req: Req, res: Res) => {
-        await userController.listUsers(req, res);
-    });
+    router.get(
+        '/users',
+        protect.protectAdmin,
+        async (req: Req, res: Res) => {
+            await userController.listUsers(req, res);
+        }
+    );
 
     router.put(
         '/user/:id',
         protect.protectAdmin,
         [
-            body('email')
-                .optional()
-                .isEmail()
-                .withMessage('Email must be valid'),
-            body('firstName')
-                .optional()
-                .isLength({ min: 3 })
-                .withMessage('Name must be atleast 3 characters long'),
             body('blocked')
                 .optional()
                 .isBoolean()
@@ -52,7 +48,8 @@ export function adminRoute(router: Router) {
         ],
         validateRequest,
         async (req: Req, res: Res) => {
-            await userController.adminUpdateUser(req, res);
+            await adminController.updateUser(req, res);
+            
         }
     );
 

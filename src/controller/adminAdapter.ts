@@ -30,6 +30,7 @@ export class AdminController {
             message: 'login successfully',
         });
     }
+
     async signout(req: Req, res: Res) {
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
@@ -75,4 +76,18 @@ export class AdminController {
     //         data:userData
     //     });
     // }
+
+    async updateUser(req: Req, res: Res) {
+        const { id } = req.params;
+        const {blocked } = req.body;
+        const userData = await this.adminUseCase.updateUser({
+            id,
+            blocked,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: userData,
+        });
+    }
 }
