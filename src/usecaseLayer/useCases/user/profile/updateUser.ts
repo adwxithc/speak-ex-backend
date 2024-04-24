@@ -2,6 +2,7 @@
 import { BadRequestError } from '../../../errors';
 import { ILanguageRepository } from '../../../interface/repository/ILanguageRepository';
 import { IUserRepository } from '../../../interface/repository/IUserRepository';
+import { IFileBucket } from '../../../interface/services/IFileBucket';
 
 
 export const updateUser = async ({
@@ -13,7 +14,8 @@ export const updateUser = async ({
     focusLanguage,
     proficientLanguage,
     userRepository,
-    languageRepository
+    languageRepository,
+    fileBucket
 
 }: {
     id: string;
@@ -24,26 +26,10 @@ export const updateUser = async ({
     focusLanguage?:string,
     proficientLanguage?:string[],
     userRepository: IUserRepository,
-    languageRepository:ILanguageRepository
+    languageRepository:ILanguageRepository,
+    fileBucket:IFileBucket
 
 }) => {
-    console.log(   id,
-        firstName,
-        lastName,
-        userName,
-        password,
-        focusLanguage,
-        proficientLanguage,
-        userRepository,
-        languageRepository,`   id,
-        firstName,
-        lastName,
-        userName,
-        password,
-        focusLanguage,
-        proficientLanguage,
-        userRepository,
-        languageRepository`);
     
 
     if (proficientLanguage && proficientLanguage.length > 0 || focusLanguage) {
@@ -67,7 +53,7 @@ export const updateUser = async ({
     }
      
 
-    return await userRepository.updateUser({
+    const newUserData= await userRepository.updateUser({
         id,
         firstName,
         lastName,
@@ -77,4 +63,6 @@ export const updateUser = async ({
         proficientLanguage,
     });
 
+    newUserData.profile=fileBucket.getFileAccessURL(newUserData.profile || '');
+    return newUserData;
 };

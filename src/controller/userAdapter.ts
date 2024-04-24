@@ -5,10 +5,18 @@ import {
 } from '../infrastructureLayer/utils/tokenOptions';
 import { BadRequestError } from '../usecaseLayer/errors';
 import { IAccessRefreshToken } from '../usecaseLayer/interface/services/IJwt.types';
+import { ILanguageUseCase } from '../usecaseLayer/interface/usecase/languageUseCase';
 import { IUserUseCase } from '../usecaseLayer/interface/usecase/userUseCase';
 
+
 export class UserController {
-    constructor(private userUseCase: IUserUseCase) {}
+    private userUseCase: IUserUseCase;
+    private languageUseCase: ILanguageUseCase;
+
+    constructor({userUseCase,languageUseCase}:{userUseCase: IUserUseCase;languageUseCase:ILanguageUseCase}) {
+        this.userUseCase=userUseCase;
+        this.languageUseCase=languageUseCase;
+    }
 
     async registerUser(req: Req, res: Res) {
         const token = await this.userUseCase.registerUser(req.body);
@@ -223,4 +231,13 @@ export class UserController {
             data:user
         });
     }
+
+    async listLanguages(req: Req, res: Res){
+        const languages= await this.languageUseCase.getAllLanguages();
+        res.json({
+            success:true,
+            data:languages
+        });
+    }
+  
 }

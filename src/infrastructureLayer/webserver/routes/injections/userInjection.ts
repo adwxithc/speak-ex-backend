@@ -15,6 +15,7 @@ import { UserOtpRepository } from '../../../database/mongoDB/repository/UserOtpR
 import { FileBucket } from '../../../services/fileBucket';
 import { LanguageRepository } from '../../../database/mongoDB/repository/languageRepository';
 import LanguageModel from '../../../database/mongoDB/models/languageModel';
+import { LanguageUseCase } from '../../../../usecaseLayer/useCases/languageUseCase';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -39,6 +40,13 @@ const userUseCase = new UserUseCase({
     languageRepository
 });
 
-const userController = new UserController(userUseCase);
+
+
+const languageUseCase = new LanguageUseCase(
+    languageRepository,
+
+);
+
+const userController = new UserController({userUseCase,languageUseCase});
 
 export { userController };

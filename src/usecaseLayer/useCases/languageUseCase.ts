@@ -2,7 +2,7 @@ import ILanguage from '../../domain/language';
 import { ILanguageRepository } from '../interface/repository/ILanguageRepository';
 import { ILanguageUseCase } from '../interface/usecase/languageUseCase';
 
-import { createLanguage,listLanguages } from './language';
+import { createLanguage,listLanguages,getAllLanguages } from './language';
 
 export class LanguageUseCase implements ILanguageUseCase {
     private readonly languageRepository: ILanguageRepository;
@@ -32,5 +32,8 @@ export class LanguageUseCase implements ILanguageUseCase {
             limit,
         });
         return languagesData;
+    }
+    async getAllLanguages(): Promise<ILanguage[]> {
+        return await getAllLanguages({languageRepository:this.languageRepository});
     }
 }

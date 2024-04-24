@@ -8,6 +8,7 @@ import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 import { upload } from '../middlewares/multer';
 
+
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -128,7 +129,6 @@ export function userRoute(router: Router) {
     router.put(
         '/',
         [
-
             body('firstName')
                 .optional()
                 .isLength({ min: 3 })
@@ -158,7 +158,16 @@ export function userRoute(router: Router) {
         validateRequest,
         protect.protectUser,
         async(req:Req, res:Res)=>{
+            
             await userController.updateUser(req, res);
+        }
+    );
+
+    router.get(
+        '/languages',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await userController.listLanguages(req, res);
         }
     );
 

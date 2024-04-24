@@ -210,8 +210,9 @@ export class UserUseCase implements IUserUseCase {
                 focusLanguage,
                 proficientLanguage,
                 userRepository:this.userRepository,
-                languageRepository:this.languageRepository
-            }
+                languageRepository:this.languageRepository,
+                fileBucket:this.fileBucket
+            } 
             
         );
     }
