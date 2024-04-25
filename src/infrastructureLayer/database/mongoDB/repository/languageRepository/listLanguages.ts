@@ -14,7 +14,6 @@ export const listLanguages = async (
         .select('-password');
 
     const totalLanguages = await languageModel.countDocuments({name: { $regex: new RegExp(`^${key}`, 'i') } });
-    console.log(languages,totalLanguages, 'repository');
     
     return {languages,totalLanguages};
 };

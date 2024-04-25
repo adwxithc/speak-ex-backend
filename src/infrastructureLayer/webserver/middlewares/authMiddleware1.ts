@@ -23,7 +23,6 @@ export class Protect implements IProtect {
 
     protectUser = async (req: Req, res: Res, next: Next) => {
         const token = req.cookies.accessToken;
-        console.log(token,'token-----------------------------------token');
         
         const decoded = await this.jwt.verifyAccessJwt(token);
 

@@ -16,6 +16,7 @@ import { FileBucket } from '../../../services/fileBucket';
 import { LanguageRepository } from '../../../database/mongoDB/repository/languageRepository';
 import LanguageModel from '../../../database/mongoDB/models/languageModel';
 import { LanguageUseCase } from '../../../../usecaseLayer/useCases/languageUseCase';
+import { ValidateDbObjects } from '../../../services/validateDbObjects';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -23,6 +24,7 @@ const generateOTP = new GenerateOTP();
 const sendMail = new SendMail();
 const unverifiedUserRepository = new UnverifiedUserRepository();
 const jwtToken = new JWTToken();
+const validateDbObjects= new ValidateDbObjects();
 const fileBucket = new FileBucket();
 
 const userOtpRepository = new UserOtpRepository();
@@ -37,7 +39,8 @@ const userUseCase = new UserUseCase({
     jwtToken,
     userOtpRepository,
     fileBucket,
-    languageRepository
+    languageRepository,
+    validateDbObjects
 });
 
 

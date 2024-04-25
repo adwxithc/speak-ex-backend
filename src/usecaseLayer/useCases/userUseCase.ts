@@ -24,6 +24,7 @@ import { IUnverifiedUserRepository } from '../interface/repository/IUnverifiedUs
 import { IUserOtpRepository } from '../interface/repository/IUserOtp';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { ILanguageRepository } from '../interface/repository/ILanguageRepository';
+import { IValidateDbObjects } from '../interface/services/validateDbObjects';
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -35,6 +36,7 @@ export class UserUseCase implements IUserUseCase {
     private readonly userOtpRepository: IUserOtpRepository;
     private readonly fileBucket: IFileBucket;
     private readonly languageRepository: ILanguageRepository;
+    private readonly validateDbObjects: IValidateDbObjects;
 
     constructor({
         userRepository,
@@ -45,7 +47,8 @@ export class UserUseCase implements IUserUseCase {
         jwtToken,
         userOtpRepository,
         fileBucket,
-        languageRepository
+        languageRepository,
+        validateDbObjects
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -56,6 +59,7 @@ export class UserUseCase implements IUserUseCase {
         userOtpRepository: IUserOtpRepository;
         fileBucket: IFileBucket;
         languageRepository:ILanguageRepository
+        validateDbObjects:IValidateDbObjects
     }) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -66,6 +70,7 @@ export class UserUseCase implements IUserUseCase {
         this.userOtpRepository = userOtpRepository;
         this.fileBucket = fileBucket;
         this.languageRepository=languageRepository;
+        this.validateDbObjects=validateDbObjects;
     }
 
     //register user
@@ -175,6 +180,7 @@ export class UserUseCase implements IUserUseCase {
     }> {
         const usersData = await listUsers({
             UserRepository: this.userRepository,
+            fileBucket:this.fileBucket,
             page,
             key,
             limit,
@@ -199,7 +205,8 @@ export class UserUseCase implements IUserUseCase {
         focusLanguage?: string | undefined;
         proficientLanguage?: string[] | undefined;
     }): Promise<Omit<IUser, 'password'> | null> {
-
+       
+        
         return await updateUser(
             {
                 id,
@@ -211,7 +218,8 @@ export class UserUseCase implements IUserUseCase {
                 proficientLanguage,
                 userRepository:this.userRepository,
                 languageRepository:this.languageRepository,
-                fileBucket:this.fileBucket
+                fileBucket:this.fileBucket,
+                validateDbObjects:this.validateDbObjects
             } 
             
         );

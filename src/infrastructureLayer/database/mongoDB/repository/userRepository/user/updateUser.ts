@@ -29,6 +29,8 @@ export const updateUser = async(
     user.focusLanguage=focusLanguage || user.focusLanguage;
     user.proficientLanguage=proficientLanguage || user.proficientLanguage;
 
+    
+
     const updatedUser =await user.save();
     updatedUser.password='';
 

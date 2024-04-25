@@ -55,6 +55,7 @@ export class FileBucket implements IFileBucket {
         // };
         // const command = new GetObjectCommand(getObjectParams);
         // const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+        if(!Key) return '';
         const url= `https://${this.BUCKET_NAME}.s3.${this.BUCKET_REGION}.amazonaws.com/${Key}`;
         return url;
     }
