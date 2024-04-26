@@ -16,7 +16,20 @@ export const renewAccess = async ({
         
         const decoded = await jwtToken.verifyRefreshJwt(token);
         
-        if (decoded?.id && ['user'].includes(decoded.role)) {
+        if (decoded?.id && ['user','admin'].includes(decoded.role)) {
+            if(decoded.role=='admin'){
+
+                const data = {
+                    id: decoded.id,
+                    role: 'admin',
+                };
+
+                const accessToken = jwtToken.createAccessToken(
+                    data as IAccessRefreshToken
+                );
+                return accessToken;
+            }
+
             const user = await UserRepository.findUserById(decoded.id);
 
             if (!user || user.blocked) throw new NotAuthorizedError();

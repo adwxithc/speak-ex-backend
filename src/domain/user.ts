@@ -11,4 +11,4 @@ interface IUser{
     proficientLanguage?:string[]
 }
 
-export default IUser;
+export default IUser; 

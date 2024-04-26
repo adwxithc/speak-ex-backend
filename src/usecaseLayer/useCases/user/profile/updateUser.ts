@@ -2,6 +2,8 @@
 import { BadRequestError } from '../../../errors';
 import { ILanguageRepository } from '../../../interface/repository/ILanguageRepository';
 import { IUserRepository } from '../../../interface/repository/IUserRepository';
+import { IFileBucket } from '../../../interface/services/IFileBucket';
+import { IValidateDbObjects } from '../../../interface/services/validateDbObjects';
 
 
 export const updateUser = async ({
@@ -13,7 +15,9 @@ export const updateUser = async ({
     focusLanguage,
     proficientLanguage,
     userRepository,
-    languageRepository
+    languageRepository,
+    fileBucket,
+    validateDbObjects
 
 }: {
     id: string;
@@ -24,37 +28,24 @@ export const updateUser = async ({
     focusLanguage?:string,
     proficientLanguage?:string[],
     userRepository: IUserRepository,
-    languageRepository:ILanguageRepository
+    languageRepository:ILanguageRepository,
+    fileBucket:IFileBucket,
+    validateDbObjects:IValidateDbObjects
 
 }) => {
-    console.log(   id,
-        firstName,
-        lastName,
-        userName,
-        password,
-        focusLanguage,
-        proficientLanguage,
-        userRepository,
-        languageRepository,`   id,
-        firstName,
-        lastName,
-        userName,
-        password,
-        focusLanguage,
-        proficientLanguage,
-        userRepository,
-        languageRepository`);
     
-
+   
+    
     if (proficientLanguage && proficientLanguage.length > 0 || focusLanguage) {
         // Combine proficient and focus language IDs
-        const allLanguageIds = [...(proficientLanguage || []), focusLanguage].filter(Boolean); 
+        const allLanguageIds = [...(proficientLanguage || []), focusLanguage].filter((id)=>validateDbObjects.validateId(id)); 
         const fetchedLanguages = await languageRepository.getLanguages({ languageIds: allLanguageIds as string[] });
 
         // Check for missing languages
         const fetchedLanguageIds = fetchedLanguages.map(doc => doc.id);
         const missingLanguageIds = allLanguageIds.filter(id => !fetchedLanguageIds.includes(id));
 
+        
         if (missingLanguageIds.length > 0) {
             throw new BadRequestError('Invalid language option(s)');
         }
@@ -67,7 +58,7 @@ export const updateUser = async ({
     }
      
 
-    return await userRepository.updateUser({
+    const newUserData= await userRepository.updateUser({
         id,
         firstName,
         lastName,
@@ -77,4 +68,6 @@ export const updateUser = async ({
         proficientLanguage,
     });
 
+    newUserData.profile=fileBucket.getFileAccessURL(newUserData.profile || '');
+    return newUserData;
 };

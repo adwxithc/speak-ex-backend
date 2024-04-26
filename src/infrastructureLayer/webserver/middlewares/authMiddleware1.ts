@@ -23,7 +23,7 @@ export class Protect implements IProtect {
 
     protectUser = async (req: Req, res: Res, next: Next) => {
         const token = req.cookies.accessToken;
-
+        
         const decoded = await this.jwt.verifyAccessJwt(token);
 
         if (decoded?.id && ['user', 'admin'].includes(decoded.role)) {

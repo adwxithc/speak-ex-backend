@@ -20,7 +20,7 @@ export class LanguageController {
 
     async listLanguages (req:Req, res:Res){
 
-        const {page =1,limit=100,key=''}=req.query;
+        const {page =1,limit=5,key=''}=req.query;
         
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
