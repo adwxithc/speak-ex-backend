@@ -239,5 +239,42 @@ export class UserController {
             data:languages
         });
     }
+
+    async searchUsers(req:Req, res:Res){
+
+        const { page = 1, limit = 5, key = '' } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (
+            typeof pageNumber !== 'number' ||
+            typeof limitNumber !== 'number' ||
+            typeof key !== 'string'
+        ) {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const usersData = await this.userUseCase.searchUsers({
+            page: pageNumber,
+            limit: limitNumber,
+            key,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: usersData,
+        });
+    }
+
+    async getUser(req:Req, res:Res){
+        const {userName} = req.params;
+        const user = await this.userUseCase.getUser(userName); 
+
+        res.json({
+            succes:true,
+            data:user
+        });
+    }
   
 }

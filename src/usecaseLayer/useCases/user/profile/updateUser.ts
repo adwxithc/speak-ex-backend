@@ -38,8 +38,11 @@ export const updateUser = async ({
     
     if (proficientLanguage && proficientLanguage.length > 0 || focusLanguage) {
         // Combine proficient and focus language IDs
-        const allLanguageIds = [...(proficientLanguage || []), focusLanguage].filter((id)=>validateDbObjects.validateId(id)); 
-        const fetchedLanguages = await languageRepository.getLanguages({ languageIds: allLanguageIds as string[] });
+        const allLanguageIds=[]
+        if(proficientLanguage && proficientLanguage.length>0) allLanguageIds.push(...proficientLanguage);
+        if(focusLanguage)allLanguageIds.push(focusLanguage);
+        const validatedIds=allLanguageIds.filter((id)=>validateDbObjects.validateId(id)); 
+        const fetchedLanguages = await languageRepository.getLanguages({ languageIds: validatedIds });
 
         // Check for missing languages
         const fetchedLanguageIds = fetchedLanguages.map(doc => doc.id);
@@ -48,7 +51,7 @@ export const updateUser = async ({
         
         if (missingLanguageIds.length > 0) {
             throw new BadRequestError('Invalid language option(s)');
-        }
+        } 
     }
 
     if(userName){

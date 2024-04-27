@@ -171,6 +171,22 @@ export function userRoute(router: Router) {
         }
     );
 
+    router.get(
+        '/',
+        protect.protectUser,
+        async (req:Req, res:Res)=>{
+            await userController.searchUsers(req, res);
+        }
+    );
+    router.get(
+        '/:userName',
+        protect.protectUser,
+        async (req:Req, res:Res)=>{
+            
+            await userController.getUser(req, res);
+        }
+    );
+
     return router;
 }
  

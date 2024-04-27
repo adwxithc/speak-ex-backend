@@ -5,6 +5,6 @@ export const findUserByUserName = async(
     userName:string,
     userModel:typeof UserModel
 )=>{
-    const existingUser = await userModel.findOne({userName});
+    const existingUser = await userModel.findOne({userName}).select('-password');
     return existingUser;
 };

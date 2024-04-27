@@ -11,6 +11,7 @@ import {
     countUsers,
     updateUser,
     findUserById,
+    searchUser
 } from './userRepository/user';
 import { getAllUser } from './userRepository/admin';
 
@@ -48,12 +49,24 @@ export class UserRepository implements IUserRepository {
     }): Promise<{ users: Omit<IUser, 'password'>[]; totalUsers: number }> {
         return await listUsers({ page, limit, key }, this.userModels);
     }
+
+    async searchUser({
+        page,
+        limit,
+        key,
+    }: {
+        page: number;
+        limit: number;
+        key: string;
+    }): Promise<{ users: Omit<IUser, 'password'>[]; totalUsers: number }> {
+        return await searchUser({ page, limit, key }, this.userModels);
+    }
+
     async countUsers(): Promise<number> {
         return await countUsers(this.userModels);
     }
 
-
-    async updateUser({ 
+    async updateUser({
         id,
         firstName,
         lastName,
@@ -62,9 +75,10 @@ export class UserRepository implements IUserRepository {
         profile,
         proficientLanguage,
         focusLanguage,
-    }: Required<Pick<IUser, 'id'>> & Partial<Omit<IUser ,'email'>>): Promise<IUser> {
+    }: Required<Pick<IUser, 'id'>> &
+        Partial<Omit<IUser, 'email'>>): Promise<IUser> {
         return await updateUser(
-            {   
+            {
                 id,
                 firstName,
                 lastName,
