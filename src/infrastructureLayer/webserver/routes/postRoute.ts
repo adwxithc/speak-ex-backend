@@ -45,5 +45,45 @@ export function postRoute(router: Router) {
         }
     );
 
+    router.put(
+        '/:postId/downvote',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await postController.downvote(req, res); 
+        }
+    );
+
+    router.post(
+        '/:postId/comment',
+        [
+            body('text').isLength({ min: 1 }).withMessage('text is required'),
+        ],
+        validateRequest,
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await postController.addComment(req, res);
+        }
+    );
+
+    router.delete(
+        '/:postId/comment/:commentId',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await postController.deleteComment(req, res);
+        }
+    );
+
+    router.put(
+        '/:postId/comment/:commentId',
+        protect.protectUser,
+        [
+            body('text').isLength({ min: 1 }).withMessage('text is required'),
+        ],
+        validateRequest,
+        async(req:Req, res:Res)=>{
+            await postController.updateComment(req, res);
+        }
+    );
+
     return router;
-}
+} 
