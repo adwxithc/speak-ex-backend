@@ -19,4 +19,5 @@ export interface IPostUseCase {
         userName: string;
     }): Promise<{ posts: IPost[]; user: IUser }>;
     getPost({ postId }: { postId: string }): Promise<IPost & {user:{userName:string,email:string,profile:string}} | null>;
+    upvote({postId, userId}:{postId:string, userId:string}):Promise<IPost | never>
 }

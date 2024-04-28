@@ -8,7 +8,7 @@ interface IPost{
     content:string;
     image?:string;
     userId:DbId;
-    likes?:string[];
+    upvotes?:DbId[];
     comments?:string[];
     createdAt?:string;
     updatedAt?:string;

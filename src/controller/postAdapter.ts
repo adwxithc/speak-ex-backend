@@ -41,4 +41,14 @@ export class PostController {
             data: post,
         });
     }
+    async upvote(req:Req, res:Res){
+        const {postId} = req.params;
+        const {id} = req.user as IAccessRefreshToken;
+        const post= await this.postUseCase.upvote({postId,userId:id});
+        res.json({
+            success:true,
+            data:post
+        });
+    }
 }
+ 

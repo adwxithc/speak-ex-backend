@@ -4,7 +4,7 @@ import { IPostRepository } from '../interface/repository/IPostRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IPostUseCase } from '../interface/usecase/postUseCase';
-import { createPost, getUsersPosts, getPost } from './post';
+import { createPost, getUsersPosts, getPost,upvote } from './post';
 export class PostUseCase implements IPostUseCase {
     private readonly postRepository: IPostRepository;
     private readonly userRepository: IUserRepository;
@@ -64,6 +64,14 @@ export class PostUseCase implements IPostUseCase {
             fileBucket: this.fileBucket,
             postRepository: this.postRepository,
             postId,
+        });
+    }
+    async upvote({ postId,userId }: { postId: string;userId:string }): Promise<IPost> {
+        return await upvote({
+            fileBucket: this.fileBucket,
+            postRepository: this.postRepository,
+            postId,
+            userId
         });
     }
 }

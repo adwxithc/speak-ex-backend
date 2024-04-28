@@ -282,4 +282,5 @@ export class UserUseCase implements IUserUseCase {
             userRepository: this.userRepository,
         });
     }
+    
 }

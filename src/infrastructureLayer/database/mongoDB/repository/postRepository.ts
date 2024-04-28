@@ -1,7 +1,8 @@
-import PostModel from '../models/post';
+
 import IPost from '../../../../domain/post';
 import { IPostRepository } from '../../../../usecaseLayer/interface/repository/IPostRepository';
-import { createPost, getPost, getUsersPosts } from './postRepository/';
+import PostModel from '../models/post';
+import { createPost, getPost, getUsersPosts, upvote } from './postRepository/';
 
 export class PostRepository implements IPostRepository {
     constructor(private postModel: typeof PostModel) {}
@@ -15,6 +16,14 @@ export class PostRepository implements IPostRepository {
     }
 
     async getPost(postId: string): Promise<IPost & {user:{userName:string,email:string,profile:string}} | null>{
-        return await getPost(postId, PostModel);
+        return await getPost(postId, this.postModel);
+    }
+
+    upvote({ postId, userId }: { postId: string; userId: string; }): Promise<IPost | null> {
+        return upvote({
+            postId,
+            userId,
+            postModel:this.postModel
+        });
     }
 }

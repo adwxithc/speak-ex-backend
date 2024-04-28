@@ -37,5 +37,13 @@ export function postRoute(router: Router) {
         await postController.getPost(req, res);
     });
 
+    router.put(
+        '/:postId/upvote',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await postController.upvote(req, res); 
+        }
+    );
+
     return router;
 }

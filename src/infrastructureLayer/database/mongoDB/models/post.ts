@@ -19,8 +19,9 @@ const postSchema = new Schema<IPost>(
             ref: 'User',
             required: true,
         },
-        likes: {
+        upvotes: {
             type: [mongoose.Schema.ObjectId],
+            ref: 'User',
             default: [],
         },
         comments: {
