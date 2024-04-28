@@ -47,6 +47,21 @@ export interface IUserUseCase {
         lastPage: number;
     }>;
 
+    //searchUsers list of users
+    searchUsers({
+        page,
+        key,
+        limit,
+    }: {
+        page: number;
+        key: string;
+        limit: number;
+    }): Promise<{
+        users: Pick<IUser, 'userName' | 'profile'>[];
+        totalUsers: number;
+        lastPage: number;
+    }>;
+
     updateUser({
         id,
         firstName,
@@ -72,4 +87,6 @@ export interface IUserUseCase {
     checkUserName(userName:string): Promise<boolean>;
 
     updateProfile({imageFile,userId}:{imageFile:Express.Multer.File | undefined,userId:string}):Promise<string>
+
+    getUser(userName:string):Promise<Omit<IUser, 'password'>>
 }

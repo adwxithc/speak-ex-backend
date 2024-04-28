@@ -6,6 +6,8 @@ import { listUsers } from './listUsers';
 import { countUsers } from './countUsers';
 import { updateUser } from './updateUser';
 import { findUserById } from './findUserById';
+import { searchUser } from './searchUser';
+
 
 
 export {
@@ -16,5 +18,6 @@ export {
     listUsers,
     countUsers,
     updateUser,
-    findUserById
+    findUserById,
+    searchUser
 };

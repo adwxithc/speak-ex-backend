@@ -52,7 +52,7 @@ export class FileBucket implements IFileBucket {
         // const getObjectParams = {
         //     Bucket: this.BUCKET_NAME,
         //     Key,
-        // };
+        // }; 
         // const command = new GetObjectCommand(getObjectParams);
         // const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
         if(!Key) return '';

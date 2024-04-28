@@ -10,6 +10,8 @@ import {updateUser} from './profile/updateUser';
 import { renewAccess } from './auth/renewAccess';
 import { checkUserName } from './auth/checkUserName';
 import { updateProfile } from './profile/updateProfile';
+import { searchUsers } from './general/searchUsers';
+import { getUser } from './profile/getUser';
 
 export {
     registerUser,
@@ -23,5 +25,7 @@ export {
     updateUser,
     renewAccess,
     checkUserName,
-    updateProfile
+    updateProfile,
+    searchUsers,
+    getUser
 };

@@ -10,6 +10,7 @@ export interface IUserRepository {
     getAllUser(): Promise<IUser[]>;
     changePassword(password:string, userId:string):Promise<boolean>
     listUsers({page,limit,key}:{page:number,limit:number,key:string}):Promise<{users: Omit<IUser, 'password'>[];totalUsers: number;}>;
+    searchUser({page,limit,key}:{page:number,limit:number,key:string}):Promise<{users: Omit<IUser, 'password'>[];totalUsers: number;}>;
     countUsers():Promise<number>;
     updateUser(user:Required<Pick<IUser, 'id'>> & Partial<Omit<IUser ,'email'>>):Promise<IUser>;
 }

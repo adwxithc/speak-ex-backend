@@ -1,7 +1,7 @@
 import IUser from '../../../../../../domain/user';
 import UserModel from '../../../models/userModel';
 
-export const listUsers = async (
+export const searchUser = async (
     {
         page,
         limit,
@@ -11,14 +11,14 @@ export const listUsers = async (
     userModels: typeof UserModel
 ): Promise<{ users: Omit<IUser, 'password'>[]; totalUsers: number }> => {
 
-    const filter= { userName: { $regex: new RegExp(`^${key}`, 'i') } };
+    const filter = { userName: { $regex: new RegExp(`^${key}`, 'i') },blocked:false };
 
     const users = await userModels
         .find(filter)
         .sort({ updatedAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
-        .select('-password');
+        .select('userName profile');
 
     const totalUsers = await UserModel.countDocuments({
         userName: { $regex: new RegExp(`^${key}`, 'i') },

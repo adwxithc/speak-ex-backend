@@ -15,6 +15,8 @@ import {
     renewAccess,
     checkUserName,
     updateProfile,
+    searchUsers,
+    getUser
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -48,7 +50,7 @@ export class UserUseCase implements IUserUseCase {
         userOtpRepository,
         fileBucket,
         languageRepository,
-        validateDbObjects
+        validateDbObjects,
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -58,8 +60,8 @@ export class UserUseCase implements IUserUseCase {
         jwtToken: IJwt;
         userOtpRepository: IUserOtpRepository;
         fileBucket: IFileBucket;
-        languageRepository:ILanguageRepository
-        validateDbObjects:IValidateDbObjects
+        languageRepository: ILanguageRepository;
+        validateDbObjects: IValidateDbObjects;
     }) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -69,8 +71,8 @@ export class UserUseCase implements IUserUseCase {
         this.jwtToken = jwtToken;
         this.userOtpRepository = userOtpRepository;
         this.fileBucket = fileBucket;
-        this.languageRepository=languageRepository;
-        this.validateDbObjects=validateDbObjects;
+        this.languageRepository = languageRepository;
+        this.validateDbObjects = validateDbObjects;
     }
 
     //register user
@@ -180,12 +182,36 @@ export class UserUseCase implements IUserUseCase {
     }> {
         const usersData = await listUsers({
             UserRepository: this.userRepository,
-            fileBucket:this.fileBucket,
+            fileBucket: this.fileBucket,
             page,
             key,
             limit,
         });
         return usersData;
+    }
+
+    async searchUsers({
+        page,
+        key,
+        limit,
+    }: {
+        page: number;
+        key: string;
+        limit: number;
+    }): Promise<{
+        users: Pick<IUser, 'userName' | 'profile'>[];
+        totalUsers: number;
+        lastPage: number;
+    }> {
+
+        return await searchUsers({
+            UserRepository: this.userRepository,
+            fileBucket: this.fileBucket,
+            page,
+            key,
+            limit,
+        });
+
     }
 
     async updateUser({
@@ -205,24 +231,19 @@ export class UserUseCase implements IUserUseCase {
         focusLanguage?: string | undefined;
         proficientLanguage?: string[] | undefined;
     }): Promise<Omit<IUser, 'password'> | null> {
-       
-        
-        return await updateUser(
-            {
-                id,
-                firstName,
-                lastName,
-                userName,
-                password,
-                focusLanguage,
-                proficientLanguage,
-                userRepository:this.userRepository,
-                languageRepository:this.languageRepository,
-                fileBucket:this.fileBucket,
-                validateDbObjects:this.validateDbObjects
-            } 
-            
-        );
+        return await updateUser({
+            id,
+            firstName,
+            lastName,
+            userName,
+            password,
+            focusLanguage,
+            proficientLanguage,
+            userRepository: this.userRepository,
+            languageRepository: this.languageRepository,
+            fileBucket: this.fileBucket,
+            validateDbObjects: this.validateDbObjects,
+        });
     }
 
     async renewAccess(token: string): Promise<string | undefined> {
@@ -253,4 +274,13 @@ export class UserUseCase implements IUserUseCase {
             userRepository: this.userRepository,
         });
     }
+
+    async getUser(userName: string): Promise<Omit<IUser, 'password'>> {
+        return await getUser({
+            userName,
+            fileBucket: this.fileBucket,
+            userRepository: this.userRepository,
+        });
+    }
+    
 }

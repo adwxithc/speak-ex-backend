@@ -41,4 +41,65 @@ export class PostController {
             data: post,
         });
     }
+    async upvote(req:Req, res:Res){
+        const {postId} = req.params;
+        const {id} = req.user as IAccessRefreshToken;
+        const post= await this.postUseCase.upvote({postId,userId:id});
+        res.json({
+            success:true,
+            data:post
+        });
+    }
+
+    async downvote(req:Req, res:Res){
+        const {postId} = req.params;
+        const {id} = req.user as IAccessRefreshToken;
+        const post= await this.postUseCase.downvote({postId,userId:id});
+        res.json({
+            success:true,
+            data:post
+        });
+    }
+
+    async addComment(req:Req, res:Res){
+        const {postId} = req.params;
+        const {id} = req.user as IAccessRefreshToken;
+        const {text,parentId=null} = req.body;
+        
+        const comment  = await this.postUseCase.addComment({postId,userId:id,text,parentId});
+
+        res.json({
+            success:true,
+            data:comment
+        });
+    }
+
+    async deleteComment(req:Req, res:Res){
+        const {postId,commentId} = req.params;
+        const {id} = req.user as IAccessRefreshToken;
+        
+        await this.postUseCase.deleteComment({postId,commentId,userId:id});
+
+        res.json({
+            success:true,
+            message:'commente deleted'
+        });
+    }
+
+    async updateComment(req:Req, res:Res){
+        const {postId,commentId} = req.params;
+        const {text}  = req.body;
+        const {id} = req.user as IAccessRefreshToken;
+        
+        const comment = await this.postUseCase.updateComment({postId,commentId,userId:id,text});
+
+        res.json({
+            success:true,
+            message:'commete updated',
+            data:comment
+        });
+    }
+
+
 }
+ 
