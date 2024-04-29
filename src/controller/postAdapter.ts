@@ -104,15 +104,16 @@ export class PostController {
     async getComments(req:Req, res:Res){
         const {postId} = req.params;
 
-        const { page = 1, limit = 5, key = '' } = req.query;
-
+        const { page = 1, limit = 5 } = req.query;
+        console.log(page,limit);
+        
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
 
         if (
             typeof pageNumber !== 'number' ||
-            typeof limitNumber !== 'number' ||
-            typeof key !== 'string'
+            typeof limitNumber !== 'number'
+           
         ) {
             throw new BadRequestError('invalid parameters');
         }

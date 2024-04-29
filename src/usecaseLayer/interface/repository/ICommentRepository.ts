@@ -7,5 +7,5 @@ export interface ICommentRepository {
     deleteComment({commentId}:{commentId:string}):Promise<boolean>
     findById(commentId:string):Promise<IComment | null>
     updateComment({postId, commentId, text}:{postId:string, commentId:string, text:string}):Promise<IComment | null>
-    getComments({limit,page,postId}:{limit:number,page:number,postId:string}):Promise<{comments:IComment[],totalComments:number}>
+    getComments({limit,page,postId}:{limit:number,page:number,postId:string}):Promise<{comments:IComment & {userName:string,profile:string}[],totalComments:number}>
 }
