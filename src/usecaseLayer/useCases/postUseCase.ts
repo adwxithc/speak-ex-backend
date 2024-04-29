@@ -6,8 +6,10 @@ import { IPostRepository } from '../interface/repository/IPostRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IPostUseCase } from '../interface/usecase/postUseCase';
-import { createPost, getUsersPosts, getPost,upvote,downvote, addComment, deleteComment, updateComment } from './post';
+import { createPost, getUsersPosts, getPost,upvote,downvote, addComment, deleteComment, updateComment, getComments } from './post';
+
 export class PostUseCase implements IPostUseCase {
+
     private readonly postRepository: IPostRepository;
     private readonly userRepository: IUserRepository;
     private readonly commentRepository: ICommentRepository;
@@ -117,6 +119,23 @@ export class PostUseCase implements IPostUseCase {
             commentId,
             userId,
             text,
+            commentRepository:this.commentRepository,
+        });
+    }
+
+    async getComments({
+        page,
+        limit,
+        postId
+    }:{
+        page:number,
+        limit:number,
+        postId:string
+    }){
+        return await getComments({
+            page,
+            limit,
+            postId,
             commentRepository:this.commentRepository,
         });
     }

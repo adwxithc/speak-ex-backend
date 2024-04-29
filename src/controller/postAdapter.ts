@@ -1,4 +1,5 @@
 import { Req, Res } from '../infrastructureLayer/types/expressTypes';
+import { BadRequestError } from '../usecaseLayer/errors';
 import { IAccessRefreshToken } from '../usecaseLayer/interface/services/IJwt.types';
 import { IPostUseCase } from '../usecaseLayer/interface/usecase/postUseCase';
 
@@ -100,6 +101,33 @@ export class PostController {
         });
     }
 
+    async getComments(req:Req, res:Res){
+        const {postId} = req.params;
+
+        const { page = 1, limit = 5, key = '' } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (
+            typeof pageNumber !== 'number' ||
+            typeof limitNumber !== 'number' ||
+            typeof key !== 'string'
+        ) {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const comments = await this.postUseCase.getComments({
+            page: pageNumber,
+            limit: limitNumber,
+            postId
+        });
+
+        res.json({
+            success:true,
+            data:comments
+        });
+    }
 
 }
  

@@ -1,7 +1,7 @@
 import { IComment } from '../../../../domain/comment';
 import { ICommentRepository } from '../../../../usecaseLayer/interface/repository/ICommentRepository';
 import CommentModel from '../models/commentModel';
-import { createComment, deleteComment,findById, updateComment } from './commentRepository/';
+import { createComment, deleteComment,findById, updateComment,getComments } from './commentRepository/';
 
 
 export class CommentRepository implements ICommentRepository {
@@ -35,6 +35,10 @@ export class CommentRepository implements ICommentRepository {
             text,
             commentModel: this.commentModel,
         });
+    }
+
+    async getComments({ limit, page, postId }: { limit: number; page: number; postId: string; }): Promise<{comments:IComment[],totalComments:number}> {
+        return await getComments({limit, page, postId ,commentModel:this.commentModel});
     }
     
 }

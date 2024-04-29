@@ -12,6 +12,7 @@ export const getPost = async ({
     postId: string;
 }) => {
     const post = await postRepository.getPost(postId);
+    
     if (post) {
         post.image = fileBucket.getFileAccessURL(post.image as string);
         post.user.profile=fileBucket.getFileAccessURL(post.user.profile || '');
