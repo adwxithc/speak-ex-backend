@@ -65,6 +65,8 @@ export function postRoute(router: Router) {
         }
     );
 
+
+
     router.get(
         '/:postId/comments',
         protect.protectUser,
@@ -73,8 +75,10 @@ export function postRoute(router: Router) {
         }
     );
 
+ 
+
     router.delete(
-        '/:postId/comment/:commentId',
+        '/comment/:commentId',
         protect.protectUser,
         async(req:Req, res:Res)=>{
             await postController.deleteComment(req, res);

@@ -38,8 +38,8 @@ export class CommentRepository implements ICommentRepository {
         });
     }
 
-    async getComments({ limit, page, postId }: { limit: number; page: number; postId: string; }): Promise<{comments:IComment & {userName:string,profile:string}[],totalComments:number}> {
-        return await getComments({limit, page, postId ,commentModel:this.commentModel});
+    async getComments({ limit, page, postId,parentId }: { limit: number; page: number; postId: string;parentId:string | null }): Promise<{comments:IComment & {user:{userName:string,profile:string}}[],totalComments:number}> {
+        return await getComments({limit, page, postId,parentId ,commentModel:this.commentModel});
     }
     
 }

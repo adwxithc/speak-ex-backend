@@ -7,26 +7,27 @@ export const getComments = async ({
     limit,
     page,
     postId,
+    parentId,
     commentModel,
 }: {
     page: number;
-    limit: number;
+    limit: number; 
     postId: string;
+    parentId:string| null;
     commentModel: typeof CommentModel;
-}): Promise<{comments:IComment & {userName:string,profile:string}[],totalComments:number}> => {
+}): Promise<{comments:IComment & {user:{userName:string,profile:string}}[],totalComments:number}> => {
 
-
-    console.log(postId);
-    
+    const formatedParentId= parentId && mongoose.Types.ObjectId.isValid(parentId)?new mongoose.Types.ObjectId(parentId):null;
+    const sortOrder=formatedParentId?1:-1;
     const comments = await commentModel.aggregate([
         {
             $match: {
                 postId:new mongoose.Types.ObjectId(postId),
-                parentId: null,
+                parentId: formatedParentId,
             },
         },
         {
-            $sort: { updatedAt: -1 },
+            $sort: { createdAt: sortOrder },
         },
         { $skip: (page - 1) * limit },
         { $limit: limit },
@@ -42,14 +43,20 @@ export const getComments = async ({
             $unwind: '$user',
         },
         {
-            $project: { 'user.userName': 1,'user.profile':1,postId:1,text:1,parentId:1,createdAt:1 },
+            $addFields: {
+                'user.id': '$user._id',
+                'id':'$_id'
+            },
         },
-    ]) as IComment & { userName: string; profile: string; }[] ;
+        { 
+            $project: { 'user.userName': 1,'user.profile':1,postId:1,text:1,parentId:1,createdAt:1, replys:1,'user.id':1,id:1,_id:0 },
+        },
+    ]) as IComment & {user:{ userName: string; profile: string; }}[] ;
 
     const totalComments = await commentModel.countDocuments({
         postId,
-        parentId: null,
+        parentId:formatedParentId,
     });
 
-    return { comments, totalComments };
+    return { comments, totalComments }; 
 };

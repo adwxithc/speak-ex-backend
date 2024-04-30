@@ -7,7 +7,7 @@ export const getPost = async (
     postId: string,
     postModel: typeof PostModel
 ): Promise<IPost & {user:{userName:string,email:string,profile:string}} | null> => {
-    // const post = await postModel.findById(postId);
+    
     const [postData] = await postModel.aggregate([
         {
             $match: {

@@ -22,6 +22,10 @@ const commentSchema = new Schema<IComment>(
             required:true,
             ref:'User'
         },
+        replys:{
+            type:Number,
+            default:0
+        }
 
     },
     {

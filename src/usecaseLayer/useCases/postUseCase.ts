@@ -103,11 +103,10 @@ export class PostUseCase implements IPostUseCase {
         });
     }
 
-    async deleteComment({ postId, commentId, userId }: { postId: string; commentId: string; userId:string }): Promise<boolean> {
+    async deleteComment({ commentId, userId }: { commentId: string; userId:string }): Promise<boolean> {
         return await deleteComment({
             postRepository: this.postRepository,
             commetnRepository:this.commentRepository,
-            postId,
             commentId,
             userId
         });
@@ -126,17 +125,21 @@ export class PostUseCase implements IPostUseCase {
     async getComments({
         page,
         limit,
-        postId
+        postId,
+        parentId
     }:{
         page:number,
         limit:number,
-        postId:string
+        postId:string,
+        parentId:string | null
     }){
         return await getComments({
             page,
             limit,
             postId,
             commentRepository:this.commentRepository,
+            fileBucket:this.fileBucket,
+            parentId
         });
     }
 }

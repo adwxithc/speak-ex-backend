@@ -7,13 +7,11 @@ import { IPostRepository } from '../../interface/repository/IPostRepository';
 export const deleteComment = async ({
     postRepository,
     commetnRepository,
-    postId,
     commentId,
     userId
 }: {
     postRepository: IPostRepository,
     commetnRepository:ICommentRepository,
-    postId:string,
     commentId:string,
     userId:string
 }) => {
@@ -25,7 +23,8 @@ export const deleteComment = async ({
 
     const res = await commetnRepository.deleteComment({commentId});
     if(!res) throw new BadRequestError('invalid request');
-    return await postRepository.removeComment({postId,commentId});
+
+    return await postRepository.removeComment({commentId,postId:comment.postId.toString()});
 
 };
  

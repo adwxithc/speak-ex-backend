@@ -76,10 +76,10 @@ export class PostController {
     }
 
     async deleteComment(req:Req, res:Res){
-        const {postId,commentId} = req.params;
+        const {commentId} = req.params;
         const {id} = req.user as IAccessRefreshToken;
         
-        await this.postUseCase.deleteComment({postId,commentId,userId:id});
+        await this.postUseCase.deleteComment({commentId,userId:id});
 
         res.json({
             success:true,
@@ -103,9 +103,9 @@ export class PostController {
 
     async getComments(req:Req, res:Res){
         const {postId} = req.params;
+        
 
-        const { page = 1, limit = 5 } = req.query;
-        console.log(page,limit);
+        const { page = 1, limit = 5,parentId=null } = req.query ;
         
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
@@ -121,7 +121,8 @@ export class PostController {
         const comments = await this.postUseCase.getComments({
             page: pageNumber,
             limit: limitNumber,
-            postId
+            postId,
+            parentId :parentId as string | null
         });
 
         res.json({
@@ -129,6 +130,7 @@ export class PostController {
             data:comments
         });
     }
+
 
 }
  

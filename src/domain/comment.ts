@@ -5,6 +5,7 @@ export interface IComment{
     text:string,
     userId:DbId,
     postId:DbId,
+    replys?:number
     parentId:null|string
     createdAt?:string,
     updatedAt?:string
