@@ -22,8 +22,12 @@ export const addComment = async ({
     parentId:string
 }) => {
 
+
+    
     const post = await postRepository.getPost(postId);
     if(!post) throw new BadRequestError('invalid post');
+
+
 
     const comment = {
         parentId,

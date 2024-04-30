@@ -24,6 +24,7 @@ export interface IPostUseCase {
     downvote({postId, userId}:{postId:string, userId:string}):Promise<IPost | never>
 
     addComment({postId,userId,text,parentId}:{postId:string,userId:string,text:string, parentId:string}):Promise<IComment | null>
-    deleteComment({postId, commentId, userId}:{postId:string, commentId:string, userId:string}):Promise<boolean>
+    deleteComment({ commentId, userId}:{ commentId:string, userId:string}):Promise<boolean>
     updateComment({postId, commentId, userId,text}:{postId:string, commentId:string, userId:string,text:string}):Promise<IComment | null>
+    getComments({ page,limit,postId,parentId}:{ page:number,limit:number,postId:string,parentId:string | null}):Promise<{comments:IComment & {user:{userName:string,profile:string}}[],totalComments:number}>
 }

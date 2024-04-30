@@ -1,4 +1,5 @@
 import { Req, Res } from '../infrastructureLayer/types/expressTypes';
+import { BadRequestError } from '../usecaseLayer/errors';
 import { IAccessRefreshToken } from '../usecaseLayer/interface/services/IJwt.types';
 import { IPostUseCase } from '../usecaseLayer/interface/usecase/postUseCase';
 
@@ -75,10 +76,10 @@ export class PostController {
     }
 
     async deleteComment(req:Req, res:Res){
-        const {postId,commentId} = req.params;
+        const {commentId} = req.params;
         const {id} = req.user as IAccessRefreshToken;
         
-        await this.postUseCase.deleteComment({postId,commentId,userId:id});
+        await this.postUseCase.deleteComment({commentId,userId:id});
 
         res.json({
             success:true,
@@ -97,6 +98,36 @@ export class PostController {
             success:true,
             message:'commete updated',
             data:comment
+        });
+    }
+
+    async getComments(req:Req, res:Res){
+        const {postId} = req.params;
+        
+
+        const { page = 1, limit = 5,parentId=null } = req.query ;
+        
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (
+            typeof pageNumber !== 'number' ||
+            typeof limitNumber !== 'number'
+           
+        ) {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const comments = await this.postUseCase.getComments({
+            page: pageNumber,
+            limit: limitNumber,
+            postId,
+            parentId :parentId as string | null
+        });
+
+        res.json({
+            success:true,
+            data:comments
         });
     }
 
