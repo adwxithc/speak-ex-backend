@@ -9,6 +9,7 @@ import { NotFoundError } from '../../../usecaseLayer/errors';
 
 import dotenv from 'dotenv';
 import { Req } from '../../types/expressTypes';
+import { chatRoute } from '../routes/chatRoute';
 
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use('/api/user', userRoute(express.Router()));
 app.use('/api/admin', adminRoute(express.Router()));
 app.use('/api/post', postRoute(express.Router()));
+app.use('/api/chat',chatRoute(express.Router()));
 
 app.all('*', (req:Req) => {
     console.log(req.originalUrl,'original url');
