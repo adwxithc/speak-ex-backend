@@ -55,8 +55,6 @@ export function chatRoute(router: Router) {
         '/:roomId/messages',
         protect.protectUser,
         async(req:Req, res:Res)=>{
-         
-            console.log(req.params.roomId);
             
             await chatController.getMessages(req, res);
         }

@@ -1,5 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
+import cors from 'cors';
+import http from 'http';
 import cookieParser from 'cookie-parser';
 import { userRoute } from '../routes/userRoute';
 import { adminRoute } from '../routes/adminRoute';
@@ -10,6 +12,7 @@ import { NotFoundError } from '../../../usecaseLayer/errors';
 import dotenv from 'dotenv';
 import { Req } from '../../types/expressTypes';
 import { chatRoute } from '../routes/chatRoute';
+import { SocketManager } from '../../services/socketManager';
 
 
 dotenv.config();
@@ -19,7 +22,12 @@ app.use(express.json());
 // app.set('trust proxy', true);
 app.use(cookieParser());
 
+app.use(cors());
 
+const httpServer = http.createServer(app);
+
+//socket.io connection
+new SocketManager(httpServer);
 
 
 app.use('/api/user', userRoute(express.Router()));
@@ -35,4 +43,4 @@ app.all('*', (req:Req) => {
 
 app.use(errorHandler);
 
-export { app };
+export { app,httpServer };
