@@ -1,9 +1,9 @@
-import { DbId } from '../usecaseLayer/interface/db/dbTypes';
+
 
 interface IMessage{
     id?:string;
-    roomId:DbId;
-    sender:DbId;
+    roomId:string;
+    senderId:string;
     text:string;
     createdAt:string;
     updatedAt:string

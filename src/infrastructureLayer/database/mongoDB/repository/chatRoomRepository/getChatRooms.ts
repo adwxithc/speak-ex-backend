@@ -9,12 +9,15 @@ export const getChatRooms = async(
     chatRoomModel:typeof ChatRoomModel
 ):Promise<IChatList>=>{
    
+   
+ 
     
+
 
     const chatRooms = await chatRoomModel.aggregate([
         {
             $match: {
-                members: new mongoose.Types.ObjectId(userId) 
+                members: new mongoose.Types.ObjectId(userId)
             }
         },
         {
@@ -24,7 +27,8 @@ export const getChatRooms = async(
                         { $setDifference: ['$members', [new mongoose.Types.ObjectId(userId)]] },
                         0
                     ]
-                }
+                },
+                id:'$_id'
             }
         },
         {
@@ -40,7 +44,8 @@ export const getChatRooms = async(
         },
         {
             $project: {
-                _id: 1,
+                _id: 0,
+                id:1,
                 members: 1,
                 createdAt: 1,
                 updatedAt: 1,
