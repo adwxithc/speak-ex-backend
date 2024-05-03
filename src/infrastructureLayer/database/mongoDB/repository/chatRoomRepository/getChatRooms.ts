@@ -4,17 +4,25 @@ import { IChatList } from '../../../../../usecaseLayer/interface/repository/ICha
 
 
 
-export const getChatRooms = async(
+export const getChatRooms = async({
+    userId,
+    key,
+    chatRoomModel
+}:{
     userId:string,
+    key:string,
     chatRoomModel:typeof ChatRoomModel
-):Promise<IChatList>=>{
+}):Promise<IChatList>=>{
    
+   
+ 
     
+
 
     const chatRooms = await chatRoomModel.aggregate([
         {
             $match: {
-                members: new mongoose.Types.ObjectId(userId) 
+                members: new mongoose.Types.ObjectId(userId)
             }
         },
         {
@@ -24,7 +32,8 @@ export const getChatRooms = async(
                         { $setDifference: ['$members', [new mongoose.Types.ObjectId(userId)]] },
                         0
                     ]
-                }
+                },
+                id:'$_id'
             }
         },
         {
@@ -39,8 +48,12 @@ export const getChatRooms = async(
             $unwind:'$user'
         },
         {
+            $match:{'user.userName': { $regex: new RegExp(`^${key}`, 'i') }}
+        },
+        {
             $project: {
-                _id: 1,
+                _id: 0,
+                id:1,
                 members: 1,
                 createdAt: 1,
                 updatedAt: 1,
@@ -51,7 +64,6 @@ export const getChatRooms = async(
         }
     ]) as IChatList;
     
-
     return chatRooms;
 
 };

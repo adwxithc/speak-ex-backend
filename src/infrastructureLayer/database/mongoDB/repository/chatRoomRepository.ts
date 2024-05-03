@@ -13,8 +13,8 @@ export class ChatRoomRepository implements IChatRoomRepository {
     async createChatRoom(newChatRoom: IChatRoom): Promise<IChatRoom> {
         return await createChatRoom(newChatRoom,this.chatRoomModel);
     }
-    async getChatRooms(userId: string): Promise<IChatList> {
-        return await getChatRooms(userId,this.chatRoomModel);
+    async getChatRooms({userId, key}:{userId: string,key:string}): Promise<IChatList> {
+        return await getChatRooms({userId,key,chatRoomModel:this.chatRoomModel});
     }
   
 }

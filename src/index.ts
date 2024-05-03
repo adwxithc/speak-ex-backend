@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { app } from '../src/infrastructureLayer/webserver/config/app';
+import { httpServer } from '../src/infrastructureLayer/webserver/config/app';
 import connectDB from './infrastructureLayer/webserver/config/db';
 
 const PORT = process.env.PORT || 3000;
@@ -16,7 +16,7 @@ const start = async () => {
         console.error(error,'database connection failed..');
     }
 
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
         console.log(`listening on port ${PORT}.!`);
     });
 };

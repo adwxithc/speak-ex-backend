@@ -1,20 +1,25 @@
 
 import { IChatRoomRepository } from '../../interface/repository/IChatRoomRepository';
 import { IFileBucket } from '../../interface/services/IFileBucket';
+import { IValidateDbObjects } from '../../interface/services/validateDbObjects';
 
 
 
 export const getChatRooms = async ({
     chatRoomRepository,
+    key,
     userId,
-    fileBucket
+    fileBucket,
+    validateDbObjects
 }:{
     chatRoomRepository: IChatRoomRepository,
+    key:string,
     userId:string,
-    fileBucket:IFileBucket
+    fileBucket:IFileBucket,
+    validateDbObjects:IValidateDbObjects
 }) => {
-    
-    const chatRooms=await chatRoomRepository.getChatRooms(userId);
+    validateDbObjects.validateId(userId);
+    const chatRooms=await chatRoomRepository.getChatRooms({userId,key});
     chatRooms.forEach(room=>room.user.profile=fileBucket.getFileAccessURL(room.user.profile));
 
     return chatRooms;

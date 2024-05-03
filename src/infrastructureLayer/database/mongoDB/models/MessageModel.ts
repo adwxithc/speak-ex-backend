@@ -5,14 +5,18 @@ import IMessage from '../../../../domain/message';
 const messageSchema = new Schema<IMessage>(
     {
         roomId:{
-            type:mongoose.Schema.ObjectId,
+            type:String,
             required:true,
             ref:'ChatRooms'
         },
-        sender:{
-            type:mongoose.Schema.ObjectId,
+        senderId:{
+            type:String,
             required:true,
             ref:'Users',
+        },
+        seen:{
+            type:Boolean,
+            default:false,
         },
         text:{
             type:String,
@@ -31,6 +35,6 @@ const messageSchema = new Schema<IMessage>(
     }
 );
 
-const messageModel = mongoose.model<IMessage>('Message', messageSchema);
+const MessageModel = mongoose.model<IMessage>('Message', messageSchema);
 
-export default messageModel;
+export default MessageModel;

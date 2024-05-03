@@ -23,11 +23,49 @@ export function chatRoute(router: Router) {
         }
     );
 
+
     router.get(
         '/:userId',
         protect.protectUser,
         async(req:Req,res:Res)=>{
+            
             await chatController.getChatRooms(req, res);
+        }
+    );
+
+    router.post(
+        '/:roomId/message',
+        protect.protectUser,
+        [
+            body('text')
+                .isLength({ min: 1 })
+                .withMessage('text is required'),
+            body('senderId')
+                .isLength({min:1})
+                .withMessage('sender id is required')
+            
+        ],
+        validateRequest,
+        async (req:Req, res:Res)=>{
+            await chatController.createMessage(req, res);
+        }
+    );
+
+    router.get(
+        '/:roomId/messages',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            
+            await chatController.getMessages(req, res);
+        }
+    );
+
+    router.put(
+        '/:roomId/chat/seen',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            
+            await chatController.setMessageSeen(req,res);
         }
     );
 
