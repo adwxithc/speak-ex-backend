@@ -9,7 +9,7 @@ export class SocketManager {
     constructor(httpServer: HttpServer) {
         this.users = [];
         this.httpServer = httpServer;
-        this.io = new Server(httpServer, {
+        this.io = new Server(this.httpServer, {
             cors: {
                 origin: 'http://localhost:3000',
                 methods: ['GET', 'POST'],
@@ -20,16 +20,14 @@ export class SocketManager {
         this.io.on('connection', (socket) => {
             console.log('a user connected');
 
-            socket.on('addUser', ({userId}) => {
+            socket.on('addUser', ({ userId }) => {
                 this.addUser(userId, socket.id);
-                
+
                 this.io.emit('getUsers', this.users);
             });
 
             //send and get message
             socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-              
-                
                 const user = this.getUser(receiverId);
                 this.io.to(user?.socketId || '').emit('getMessage', {
                     senderId,
@@ -47,23 +45,20 @@ export class SocketManager {
     }
 
     addUser(userId: string, socketId: string) {
-        const user = this.users.find(user => user.userId === userId);
-        
-        
-        if(user){
-            user.socketId=socketId;
-        }else{
+        const user = this.users.find((user) => user.userId === userId);
+
+        if (user) {
+            user.socketId = socketId;
+        } else {
             this.users.push({ userId, socketId });
         }
-        
-        
     }
 
     removeUser(socketId: string) {
         this.users = this.users.filter((user) => user.socketId !== socketId);
     }
 
-    getUser(userId:string){
-        return this.users.find((user) => user.userId === userId) ;
+    getUser(userId: string) {
+        return this.users.find((user) => user.userId === userId);
     }
 }

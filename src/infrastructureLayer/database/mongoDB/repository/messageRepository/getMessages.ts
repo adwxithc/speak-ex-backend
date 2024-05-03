@@ -25,10 +25,13 @@ export const getMessages = async({
             },
         },
         {
-            $sort: { createdAt: 1 },
+            $sort: { createdAt: -1 },
         },
         { $skip: (page - 1) * limit },
-        { $limit: limit }
+        { $limit: limit },
+        {
+            $sort:{createdAt:1}
+        }
     ]) as IMessage[];
 
     const totalMessages = await messageModel.countDocuments({

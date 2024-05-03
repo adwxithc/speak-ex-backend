@@ -60,6 +60,15 @@ export function chatRoute(router: Router) {
         }
     );
 
+    router.put(
+        '/:roomId/chat/seen',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            
+            await chatController.setMessageSeen(req,res);
+        }
+    );
+
 
     
     return router;

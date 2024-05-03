@@ -14,6 +14,10 @@ const messageSchema = new Schema<IMessage>(
             required:true,
             ref:'Users',
         },
+        seen:{
+            type:Boolean,
+            default:false,
+        },
         text:{
             type:String,
             required:true

@@ -4,10 +4,15 @@ import { IChatList } from '../../../../../usecaseLayer/interface/repository/ICha
 
 
 
-export const getChatRooms = async(
+export const getChatRooms = async({
+    userId,
+    key,
+    chatRoomModel
+}:{
     userId:string,
+    key:string,
     chatRoomModel:typeof ChatRoomModel
-):Promise<IChatList>=>{
+}):Promise<IChatList>=>{
    
    
  
@@ -43,6 +48,9 @@ export const getChatRooms = async(
             $unwind:'$user'
         },
         {
+            $match:{'user.userName': { $regex: new RegExp(`^${key}`, 'i') }}
+        },
+        {
             $project: {
                 _id: 0,
                 id:1,
@@ -56,7 +64,6 @@ export const getChatRooms = async(
         }
     ]) as IChatList;
     
-
     return chatRooms;
 
 };
