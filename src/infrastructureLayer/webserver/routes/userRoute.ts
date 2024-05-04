@@ -185,6 +185,25 @@ export function userRoute(router: Router) {
             await userController.getUser(req, res);
         }
     );
+
+    router.put(
+        '/follow/:userId',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await userController.follow(req, res);
+        }
+    );
+
+    router.put(
+        '/unfollow/:userId',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await userController.unfollow(req, res);
+
+        }
+    );
+
+   
  
     return router;  
 }

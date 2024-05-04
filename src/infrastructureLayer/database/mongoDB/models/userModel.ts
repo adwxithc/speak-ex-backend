@@ -39,7 +39,8 @@ const userSchema = new Schema<IUser>(
         proficientLanguage: {
             type: [String],
         },
-        
+        followers: [{type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique:true}],
+        following: [{type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique:true}]
     },
     {
         timestamps: true,

@@ -12,7 +12,8 @@ import { checkUserName } from './auth/checkUserName';
 import { updateProfile } from './profile/updateProfile';
 import { searchUsers } from './general/searchUsers';
 import { getUser } from './profile/getUser';
-
+import { follow } from './general/follow';
+import { unfollow } from './general/unfollow';
 export {
     registerUser,
     createUser,
@@ -27,5 +28,7 @@ export {
     checkUserName,
     updateProfile,
     searchUsers,
-    getUser
+    getUser,
+    follow,
+    unfollow
 };

@@ -13,6 +13,8 @@ export interface IUserRepository {
     searchUser({page,limit,key}:{page:number,limit:number,key:string}):Promise<{users: Omit<IUser, 'password'>[];totalUsers: number;}>;
     countUsers():Promise<number>;
     updateUser(user:Required<Pick<IUser, 'id'>> & Partial<Omit<IUser ,'email'>>):Promise<IUser>;
+    follow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>;
+    unfollow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>;
 }
 
 

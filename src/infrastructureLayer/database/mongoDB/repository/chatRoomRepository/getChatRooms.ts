@@ -49,6 +49,48 @@ export const getChatRooms = async({
         },
         {
             $match:{'user.userName': { $regex: new RegExp(`^${key}`, 'i') }}
+        }, 
+        {
+            $lookup:{
+                from:'messages',
+                localField:'_id',
+                foreignField:'roomId',
+                as:'messages'
+            }
+        },
+        {
+            $addFields: {
+                unseenMessageCount: {
+                    $size: {
+                        $filter: {
+                            input: '$messages',
+                            as: 'message',
+                            cond: {
+                                $and: [
+                                    { $eq: ['$$message.seen', false] },
+                                    { $eq: ['$$message.senderId', { $toString: '$otherUserId' }] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $addFields: {
+                lastMessage: {
+                    $let: {
+                        vars: {
+                            lastMsg: { $arrayElemAt: [ { $slice: ['$messages', -1] }, 0 ] }
+                        },
+                        in: {
+                            text: '$$lastMsg.text',
+                            createdAt: '$$lastMsg.createdAt',
+                            senderId: '$$lastMsg.senderId'
+                        }
+                    }
+                }
+            }
         },
         {
             $project: {
@@ -59,10 +101,13 @@ export const getChatRooms = async({
                 updatedAt: 1,
                 otherUserId: 1,
                 'user.userName': 1,
-                'user.profile': 1
+                'user.profile': 1,
+                'unseenMessageCount':1,
+                'lastMessage':1
             }
         }
     ]) as IChatList;
+   
     
     return chatRooms;
 

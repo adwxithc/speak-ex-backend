@@ -276,5 +276,23 @@ export class UserController {
             data:user
         });
     }
+
+    async follow(req:Req, res:Res){
+        const{id} =  req.user || {};
+        const {userId} = req.params;
+        await this.userUseCase.follow({followedUserId:userId, followerId:id || ''});
+        res.json({
+            success:true
+        });
+    }
+
+    async unfollow(req:Req, res:Res){
+        const{id} =  req.user || {};
+        const {userId} = req.params;
+        await this.userUseCase.unfollow({followedUserId:userId, followerId:id || ''});
+        res.json({
+            success:true
+        });
+    }
   
 }

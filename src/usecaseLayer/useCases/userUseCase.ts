@@ -16,7 +16,9 @@ import {
     checkUserName,
     updateProfile,
     searchUsers,
-    getUser
+    getUser,
+    follow,
+    unfollow
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -281,6 +283,15 @@ export class UserUseCase implements IUserUseCase {
             fileBucket: this.fileBucket,
             userRepository: this.userRepository,
         });
+    }
+
+    async follow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
+        return await follow({followerId,followedUserId, userRepository:this.userRepository });
+    }
+
+    async unfollow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
+        
+        return await unfollow({followerId,followedUserId, userRepository:this.userRepository });
     }
     
 }
