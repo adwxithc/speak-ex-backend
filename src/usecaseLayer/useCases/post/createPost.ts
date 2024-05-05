@@ -29,7 +29,8 @@ export const createPost = async ({
             imageBuffer: imageFile.buffer,
         });
     }
-    const tagArray=tags.split('#');  
+    const tagArray=tags.split('#').filter(Boolean);
+
     const post = await postRepository.createPost({
         title,
         image,
