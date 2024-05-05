@@ -1,6 +1,8 @@
 import { Req, Res } from '../infrastructureLayer/types/expressTypes';
 import { IChatUseCase } from '../usecaseLayer/interface/usecase/chatUseCase';
 import IMessage from '../domain/message';
+import { DbId } from '../usecaseLayer/interface/db/dbTypes';
+
 
 export class ChatController {
     constructor(private chatUseCase: IChatUseCase) {}
@@ -17,9 +19,12 @@ export class ChatController {
 
     async getChatRooms(req: Req, res: Res) {
         const { userId } = req.params;
-        const {key=''} = req.query;
-        
-        const chatRooms = await this.chatUseCase.getChatRooms({userId,key:String(key)});
+        const { key = '' } = req.query;
+
+        const chatRooms = await this.chatUseCase.getChatRooms({
+            userId,
+            key: String(key),
+        });
 
         res.json({
             success: true,
@@ -28,11 +33,11 @@ export class ChatController {
     }
 
     async createMessage(req: Req, res: Res) {
-        const { roomId } = req.params;
+        const { roomId } = req.params ;
         const { senderId, text } = req.body;
-
+    
         const message = await this.chatUseCase.createMessage({
-            roomId,
+            roomId:roomId as unknown as DbId,
             senderId,
             text,
         } as IMessage);
@@ -46,7 +51,6 @@ export class ChatController {
         const { roomId } = req.params;
 
         const { page = 1, limit = 10 } = req.query || {};
-        console.log(page, limit);
 
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
@@ -64,17 +68,16 @@ export class ChatController {
         });
     }
 
-
     async setMessageSeen(req: Req, res: Res) {
         const { roomId } = req.params;
-        const{senderId}=req.body;
+        const { senderId } = req.body;
         const updated = await this.chatUseCase.setMessageSeen({
             senderId,
             roomId,
         });
 
         res.json({
-            success: updated
+            success: updated,
         });
     }
 }

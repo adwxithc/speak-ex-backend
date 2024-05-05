@@ -5,7 +5,7 @@ import IMessage from '../../../../domain/message';
 const messageSchema = new Schema<IMessage>(
     {
         roomId:{
-            type:String,
+            type:mongoose.Schema.ObjectId,
             required:true,
             ref:'ChatRooms'
         },

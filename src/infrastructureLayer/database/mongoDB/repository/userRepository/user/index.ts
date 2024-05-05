@@ -7,8 +7,10 @@ import { countUsers } from './countUsers';
 import { updateUser } from './updateUser';
 import { findUserById } from './findUserById';
 import { searchUser } from './searchUser';
-
-
+import { follow } from './follow'; 
+import { unfollow } from './unfollow';
+import { getFollowers } from './getFollowers';
+import { getFollowings } from './getFollowings';
 
 export {
     findUserByEmail,
@@ -19,5 +21,9 @@ export {
     countUsers,
     updateUser,
     findUserById,
-    searchUser
+    searchUser,
+    follow,
+    unfollow,
+    getFollowers,
+    getFollowings
 };

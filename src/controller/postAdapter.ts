@@ -7,13 +7,14 @@ export class PostController {
     constructor(private postUseCase: IPostUseCase) {}
 
     async createPost(req: Req, res: Res) {
-        const { title, content } = req.body;
+        const { title, content,tags } = req.body;
         const { id } = req.user as IAccessRefreshToken;
 
         const { file } = req;
         const post = await this.postUseCase.createPost({
             title,
             content,
+            tags,
             imageFile: file as Express.Multer.File,
             userId: id,
         });
@@ -128,6 +129,27 @@ export class PostController {
         res.json({
             success:true,
             data:comments
+        });
+    }
+
+    async getTags(req:Req, res:Res){
+
+        const { page = 1, limit = 5,key='' } = req.query ;
+
+        
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        const tagData = await this.postUseCase.getTags({
+            page: pageNumber,
+            limit: limitNumber,
+            key:key as string
+        });
+        const lastPage = Math.ceil(tagData.totalTags / limitNumber);
+
+        res.json({
+            success: true,
+            data: { ...tagData, lastPage },
         });
     }
 

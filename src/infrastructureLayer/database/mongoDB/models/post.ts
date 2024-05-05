@@ -28,6 +28,10 @@ const postSchema = new Schema<IPost>(
             type: [mongoose.Schema.ObjectId],
             default: [],
         },
+        tags:{
+            type:[String],
+            default:[],
+        }
     },
     {
         timestamps: true,

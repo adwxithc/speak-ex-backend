@@ -97,6 +97,15 @@ export function postRoute(router: Router) {
         }
     );
 
+    router.get(
+        '/tags/search',
+        protect.protectUser,
+        async (req:Req, res:Res)=>{
+            
+            await postController.getTags(req,res);
+        }
+    );
+
     
     return router;
 } 

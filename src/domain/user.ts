@@ -1,3 +1,5 @@
+import { DbId } from '../usecaseLayer/interface/db/dbTypes';
+
 interface IUser{
     id?:string;
     firstName:string;
@@ -9,6 +11,8 @@ interface IUser{
     blocked?:boolean;
     focusLanguage?:string;
     proficientLanguage?:string[]
+    followers?: DbId[],
+    following?: DbId[]
 }
 
 export default IUser; 

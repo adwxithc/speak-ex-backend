@@ -21,6 +21,8 @@ export class SocketManager {
             console.log('a user connected');
 
             socket.on('addUser', ({ userId }) => {
+                console.log(userId);
+                
                 this.addUser(userId, socket.id);
 
                 this.io.emit('getUsers', this.users);
@@ -29,10 +31,18 @@ export class SocketManager {
             //send and get message
             socket.on('sendMessage', ({ senderId, receiverId, text }) => {
                 const user = this.getUser(receiverId);
+                console.log('sendMessage',user);
+                
                 this.io.to(user?.socketId || '').emit('getMessage', {
                     senderId,
                     text,
                 });
+            });
+            socket.on('setMessageSeen', ({receiverId}) => {
+                
+                
+                const user = this.getUser(receiverId);
+                this.io.to(user?.socketId || '').emit('getMessageSeen');
             });
 
             socket.on('disconnect', () => {
@@ -52,6 +62,8 @@ export class SocketManager {
         } else {
             this.users.push({ userId, socketId });
         }
+        console.log(this.users);
+        
     }
 
     removeUser(socketId: string) {

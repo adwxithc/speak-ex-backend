@@ -1,20 +1,23 @@
 import mongoose from 'mongoose';
 import { IPostRepository } from '../../interface/repository/IPostRepository';
-import { IUserRepository } from '../../interface/repository/IUserRepository';
 import { IFileBucket } from '../../interface/services/IFileBucket';
+import { ITagRepository } from '../../interface/repository/ITagRepository';
 
 export const createPost = async ({
     postRepository,
+    tagRepository,
     fileBucket,
     title,
+    tags,
     content,
     imageFile,
     userId,
 }: {
     postRepository: IPostRepository;
-    userRepository: IUserRepository;
+    tagRepository:ITagRepository
     fileBucket: IFileBucket;
     title: string;
+    tags:string;
     content: string;
     imageFile: Express.Multer.File;
     userId: string;
@@ -26,13 +29,16 @@ export const createPost = async ({
             imageBuffer: imageFile.buffer,
         });
     }
-
+    const tagArray=tags.split('#');  
     const post = await postRepository.createPost({
         title,
         image,
+        tags:tagArray,
         content,
         userId: new mongoose.Types.ObjectId(userId),
     });
+
+    await tagRepository.addTag({tags:tagArray});
 
     post.image = fileBucket.getFileAccessURL(post.image as string);
     return post;

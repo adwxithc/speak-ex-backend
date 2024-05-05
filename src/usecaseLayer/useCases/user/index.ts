@@ -12,7 +12,10 @@ import { checkUserName } from './auth/checkUserName';
 import { updateProfile } from './profile/updateProfile';
 import { searchUsers } from './general/searchUsers';
 import { getUser } from './profile/getUser';
-
+import { follow } from './general/follow';
+import { unfollow } from './general/unfollow';
+import { getFollowers } from './general/getFollowers';
+import { getFollowings } from './general/getFollowings';
 export {
     registerUser,
     createUser,
@@ -27,5 +30,9 @@ export {
     checkUserName,
     updateProfile,
     searchUsers,
-    getUser
+    getUser,
+    follow,
+    unfollow,
+    getFollowers,
+    getFollowings
 };

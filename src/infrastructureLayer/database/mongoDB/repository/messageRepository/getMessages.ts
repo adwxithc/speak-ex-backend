@@ -1,4 +1,5 @@
 
+import mongoose from 'mongoose';
 import IMessage from '../../../../../domain/message';
 import MessageModel from '../../models/MessageModel';
 
@@ -20,7 +21,7 @@ export const getMessages = async({
     const messages= await messageModel.aggregate([
         {
             $match: {
-                roomId:roomId,
+                roomId: new mongoose.Types.ObjectId(roomId),
                
             },
         },

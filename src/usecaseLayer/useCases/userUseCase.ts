@@ -16,7 +16,11 @@ import {
     checkUserName,
     updateProfile,
     searchUsers,
-    getUser
+    getUser,
+    follow,
+    unfollow,
+    getFollowers,
+    getFollowings
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -74,6 +78,7 @@ export class UserUseCase implements IUserUseCase {
         this.languageRepository = languageRepository;
         this.validateDbObjects = validateDbObjects;
     }
+  
 
     //register user
     async registerUser(newUser: IUser): Promise<string | void | never> {
@@ -224,12 +229,12 @@ export class UserUseCase implements IUserUseCase {
         proficientLanguage,
     }: {
         id: string;
-        firstName?: string | undefined;
-        lastName?: string | undefined;
-        userName?: string | undefined;
-        password?: string | undefined;
-        focusLanguage?: string | undefined;
-        proficientLanguage?: string[] | undefined;
+        firstName?: string ;
+        lastName?: string ;
+        userName?: string ;
+        password?: string ;
+        focusLanguage?: string ;
+        proficientLanguage?: string[] ;
     }): Promise<Omit<IUser, 'password'> | null> {
         return await updateUser({
             id,
@@ -281,6 +286,25 @@ export class UserUseCase implements IUserUseCase {
             fileBucket: this.fileBucket,
             userRepository: this.userRepository,
         });
+    }
+
+    async follow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
+        return await follow({followerId,followedUserId, userRepository:this.userRepository });
+    }
+
+    async unfollow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
+        
+        return await unfollow({followerId,followedUserId, userRepository:this.userRepository });
+    }
+
+    async getFollowers({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
+        
+        
+        return await getFollowers({ userName, page, limit, userRepository:this.userRepository,fileBucket:this.fileBucket });
+    }
+
+    async getFollowings({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
+        return await getFollowings({ userName, page, limit, userRepository:this.userRepository , fileBucket:this.fileBucket});
     }
     
 }

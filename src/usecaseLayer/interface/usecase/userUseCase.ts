@@ -89,4 +89,10 @@ export interface IUserUseCase {
     updateProfile({imageFile,userId}:{imageFile:Express.Multer.File | undefined,userId:string}):Promise<string>
 
     getUser(userName:string):Promise<Omit<IUser, 'password'>>
+
+    follow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>
+    unfollow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>
+    getFollowers({  userName,page,limit}:{  userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string;firstName:string, lastName:string,focusLanguage?:string }[],totalUsers:number}>
+                
+    getFollowings({  userName,page,limit}:{  userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string;firstName:string, lastName:string,focusLanguage?:string }[],totalUsers:number}>
 }
