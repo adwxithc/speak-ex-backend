@@ -6,7 +6,7 @@ export const getTags =async ({ page, limit, key,tagModel }:{ page:number, limit:
     const filter = { name: { $regex: new RegExp(`^${key}`, 'i') }};
     const tags = await tagModel
         .find(filter)
-        .sort({ updatedAt: -1 })
+        .sort({ count: -1 })
         .skip((page - 1) * limit)
         .limit(limit) as ITag[];
 

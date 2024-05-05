@@ -101,7 +101,6 @@ export function postRoute(router: Router) {
         '/tags/search',
         protect.protectUser,
         async (req:Req, res:Res)=>{
-            
             await postController.getTags(req,res);
         }
     );
