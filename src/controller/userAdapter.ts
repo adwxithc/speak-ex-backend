@@ -191,7 +191,7 @@ export class UserController {
     }
 
     async updateProfile(req: Req, res: Res) {
-        const { id } = req.user as IAccessRefreshToken;
+        const { id } = req.user as IAccessRefreshToken || {}; 
         const { file } = req;
 
         const url = await this.userUseCase.updateProfile({
@@ -292,6 +292,50 @@ export class UserController {
         await this.userUseCase.unfollow({followedUserId:userId, followerId:id || ''});
         res.json({
             success:true
+        });
+    }
+
+    async getFollowers(req:Req, res:Res){
+        const { userName } = req.params;
+        
+        const { page = 1, limit = 10 } = req.query || {};
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        const usersData = await this.userUseCase.getFollowers({
+            userName,
+            page: pageNumber,
+            limit: limitNumber,
+        });
+        const lastPage = Math.ceil(usersData.totalUsers / limitNumber);
+
+        res.json({
+            success: true,
+            data: { ...usersData, lastPage },
+        });
+    }
+
+    
+    async getFollowings(req:Req, res:Res){
+        const { userName } = req.params;
+        
+        const { page = 1, limit = 10 } = req.query || {};
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        const usersData = await this.userUseCase.getFollowings({
+            userName,
+            page: pageNumber,
+            limit: limitNumber,
+        });
+        const lastPage = Math.ceil(usersData.totalUsers / limitNumber);
+        
+        
+        res.json({
+            success: true,
+            data: { ...usersData, lastPage },
         });
     }
   

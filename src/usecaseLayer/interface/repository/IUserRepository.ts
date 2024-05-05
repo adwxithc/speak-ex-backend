@@ -15,6 +15,8 @@ export interface IUserRepository {
     updateUser(user:Required<Pick<IUser, 'id'>> & Partial<Omit<IUser ,'email'>>):Promise<IUser>;
     follow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>;
     unfollow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>;
+    getFollowers({ userName,page,limit}:{ userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string; firstName:string; lastName:string,focusLanguage:string }[],totalUsers:number}>
+    getFollowings({ userName,page,limit}:{ userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string; firstName:string, lastName:string ,focusLanguage:string}[],totalUsers:number}>
 }
 
 

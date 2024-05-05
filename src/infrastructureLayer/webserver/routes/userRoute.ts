@@ -9,6 +9,7 @@ import { Req, Res } from '../../types/expressTypes';
 import { upload } from '../middlewares/multer';
 
 
+
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -200,6 +201,25 @@ export function userRoute(router: Router) {
         async(req:Req, res:Res)=>{
             await userController.unfollow(req, res);
 
+        }
+    );
+
+    router.get(
+        '/:userName/followers',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await userController.getFollowers(req, res);
+        }
+    );
+
+    router.get(
+        '/:userName/followings',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+          
+            await userController.getFollowings(req, res);
+           
+            
         }
     );
 

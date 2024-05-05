@@ -13,7 +13,9 @@ import {
     findUserById,
     searchUser,
     follow,
-    unfollow
+    unfollow,
+    getFollowings,
+    getFollowers
 } from './userRepository/user';
 import { getAllUser } from './userRepository/admin';
 
@@ -99,10 +101,18 @@ export class UserRepository implements IUserRepository {
     }
 
     async follow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
-        return follow({followerId,followedUserId,userModel:this.userModels});
+        return await follow({followerId,followedUserId,userModel:this.userModels});
     }
     async unfollow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
-        return unfollow({followerId,followedUserId,userModel:this.userModels});
+        return await unfollow({followerId,followedUserId,userModel:this.userModels});
         
+    }
+
+    async getFollowers({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
+        return await getFollowers({ userName, page, limit,userModel:this.userModels });
+    }
+
+    async getFollowings({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
+        return await getFollowings({ userName, page, limit,userModel:this.userModels });
     }
 }

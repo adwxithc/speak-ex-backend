@@ -9,6 +9,8 @@ import { findUserById } from './findUserById';
 import { searchUser } from './searchUser';
 import { follow } from './follow'; 
 import { unfollow } from './unfollow';
+import { getFollowers } from './getFollowers';
+import { getFollowings } from './getFollowings';
 
 export {
     findUserByEmail,
@@ -21,5 +23,7 @@ export {
     findUserById,
     searchUser,
     follow,
-    unfollow
+    unfollow,
+    getFollowers,
+    getFollowings
 };

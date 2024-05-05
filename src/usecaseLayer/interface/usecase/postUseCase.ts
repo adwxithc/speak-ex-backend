@@ -1,3 +1,4 @@
+import ITag from '../../../domain/Tag';
 import { IComment } from '../../../domain/comment';
 import IPost from '../../../domain/post';
 import IUser from '../../../domain/user';
@@ -6,11 +7,13 @@ export interface IPostUseCase {
     createPost({
         title,
         content,
+        tags,
         imageFile,
         userId,
     }: {
         title: string;
         content: string;
+        tags:string;
         imageFile: Express.Multer.File;
         userId: string;
     }): Promise<IPost | never>;
@@ -27,4 +30,5 @@ export interface IPostUseCase {
     deleteComment({ commentId, userId}:{ commentId:string, userId:string}):Promise<boolean>
     updateComment({postId, commentId, userId,text}:{postId:string, commentId:string, userId:string,text:string}):Promise<IComment | null>
     getComments({ page,limit,postId,parentId}:{ page:number,limit:number,postId:string,parentId:string | null}):Promise<{comments:IComment & {user:{userName:string,profile:string}}[],totalComments:number}>
+    getTags({page,limit,key}:{page:number,limit:number,key:string}):Promise<{tags:ITag[],totalTags:number}>
 }

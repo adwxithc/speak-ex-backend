@@ -1,16 +1,19 @@
+
 import { IComment } from '../../domain/comment';
 import IPost from '../../domain/post';
 import IUser from '../../domain/user';
 import { ICommentRepository } from '../interface/repository/ICommentRepository';
 import { IPostRepository } from '../interface/repository/IPostRepository';
+import { ITagRepository } from '../interface/repository/ITagRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IPostUseCase } from '../interface/usecase/postUseCase';
-import { createPost, getUsersPosts, getPost,upvote,downvote, addComment, deleteComment, updateComment, getComments } from './post';
+import { createPost, getUsersPosts, getPost,upvote,downvote, addComment, deleteComment, updateComment, getComments, getTags } from './post';
 
 export class PostUseCase implements IPostUseCase {
 
     private readonly postRepository: IPostRepository;
+    private readonly tagRepository: ITagRepository;
     private readonly userRepository: IUserRepository;
     private readonly commentRepository: ICommentRepository;
     private readonly fileBucket: IFileBucket;
@@ -18,15 +21,18 @@ export class PostUseCase implements IPostUseCase {
     constructor({
         postRepository,
         userRepository,
+        tagRepository,
         fileBucket,
         commentRepository
     }: {
         postRepository: IPostRepository;
+        tagRepository:ITagRepository;
         userRepository: IUserRepository;
         fileBucket: IFileBucket;
         commentRepository:ICommentRepository
     }) {
         this.postRepository = postRepository;
+        this.tagRepository=tagRepository;
         this.userRepository = userRepository;
         this.fileBucket = fileBucket;
         this.commentRepository=commentRepository;
@@ -35,20 +41,23 @@ export class PostUseCase implements IPostUseCase {
     async createPost({
         title,
         content,
+        tags,
         imageFile,
         userId,
     }: {
         title: string;
         content: string;
+        tags:string;
         imageFile: Express.Multer.File;
         userId: string;
     }): Promise<IPost> {
         return await createPost({
             content,
+            tags,
             fileBucket: this.fileBucket,
             imageFile,
             postRepository: this.postRepository,
-            userRepository: this.userRepository,
+            tagRepository:this.tagRepository,
             title,
             userId,
         });
@@ -141,5 +150,9 @@ export class PostUseCase implements IPostUseCase {
             fileBucket:this.fileBucket,
             parentId
         });
+    }
+
+    async getTags({ page, limit, key }: { page: number; limit: number; key: string; }) {
+        return await getTags({ page, limit, key,tagRepository:this.tagRepository, });
     }
 }

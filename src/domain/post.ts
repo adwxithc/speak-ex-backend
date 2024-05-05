@@ -10,7 +10,9 @@ interface IPost{
     userId:DbId;
     upvotes?:DbId[];
     comments?:string[];
+    tags?:string[];
     createdAt?:string;
     updatedAt?:string;
+    
 } 
 export default IPost;

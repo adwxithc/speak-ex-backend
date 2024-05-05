@@ -38,6 +38,8 @@ export const getPost = async (
                 'user.userName': 1,
                 'user.email': 1,
                 'user.profile': 1,
+                'user.followers':1,
+                'user.id':'$user._id'
             },
         },
     ]);

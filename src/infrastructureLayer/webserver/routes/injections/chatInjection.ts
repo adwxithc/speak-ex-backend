@@ -2,7 +2,7 @@
 import { ChatRoomRepository } from '../../../database/mongoDB/repository/chatRoomRepository';
 import ChatRoomModel from '../../../database/mongoDB/models/ChatRoom';
 import { ChatUseCase } from '../../../../usecaseLayer/useCases/chatUseCase';
-import { ChatController } from '../../../../controller/chatController';
+import { ChatController } from '../../../../controller/chatAdapter';
 import { ValidateDbObjects } from '../../../services/validateDbObjects';
 import { FileBucket } from '../../../services/fileBucket';
 import { MessageRepository } from '../../../database/mongoDB/repository/MessageRepository';

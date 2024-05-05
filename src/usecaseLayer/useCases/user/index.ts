@@ -14,6 +14,8 @@ import { searchUsers } from './general/searchUsers';
 import { getUser } from './profile/getUser';
 import { follow } from './general/follow';
 import { unfollow } from './general/unfollow';
+import { getFollowers } from './general/getFollowers';
+import { getFollowings } from './general/getFollowings';
 export {
     registerUser,
     createUser,
@@ -30,5 +32,7 @@ export {
     searchUsers,
     getUser,
     follow,
-    unfollow
+    unfollow,
+    getFollowers,
+    getFollowings
 };

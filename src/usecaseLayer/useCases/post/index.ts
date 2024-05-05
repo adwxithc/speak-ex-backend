@@ -7,6 +7,7 @@ import { addComment } from './addComment';
 import { deleteComment } from './deleteComment';
 import { updateComment } from './updateComment';
 import { getComments } from './getComments';
+import { getTags } from './getTags';
 
 export {
     createPost,
@@ -17,6 +18,7 @@ export {
     addComment,
     deleteComment,
     updateComment,
-    getComments
+    getComments,
+    getTags
 };
 
