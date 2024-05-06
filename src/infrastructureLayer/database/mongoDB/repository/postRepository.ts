@@ -8,8 +8,7 @@ import {
     upvote,
     downvote,
     insertComment,
-    removeComment
-
+    removeComment,
 } from './postRepository/';
 
 export class PostRepository implements IPostRepository {
@@ -74,12 +73,19 @@ export class PostRepository implements IPostRepository {
         });
     }
 
-    async removeComment({ postId, commentId }: { postId: string; commentId: string; }): Promise<boolean> {
+    async removeComment({
+        postId,
+        commentId,
+    }: {
+        postId: string;
+        commentId: string;
+    }): Promise<boolean> {
         return await removeComment({
             postId,
             commentId,
             postModel: this.postModel,
         });
     }
+
 
 }

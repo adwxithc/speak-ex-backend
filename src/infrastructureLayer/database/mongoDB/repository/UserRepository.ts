@@ -15,7 +15,8 @@ import {
     follow,
     unfollow,
     getFollowings,
-    getFollowers
+    getFollowers,
+    getFollowingPosts,
 } from './userRepository/user';
 import { getAllUser } from './userRepository/admin';
 
@@ -100,19 +101,81 @@ export class UserRepository implements IUserRepository {
         return await findUserById(id, this.userModels);
     }
 
-    async follow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
-        return await follow({followerId,followedUserId,userModel:this.userModels});
+    async follow({
+        followerId,
+        followedUserId,
+    }: {
+        followerId: string;
+        followedUserId: string;
+    }): Promise<void> {
+        return await follow({
+            followerId,
+            followedUserId,
+            userModel: this.userModels,
+        });
     }
-    async unfollow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
-        return await unfollow({followerId,followedUserId,userModel:this.userModels});
-        
+    async unfollow({
+        followerId,
+        followedUserId,
+    }: {
+        followerId: string;
+        followedUserId: string;
+    }): Promise<void> {
+        return await unfollow({
+            followerId,
+            followedUserId,
+            userModel: this.userModels,
+        });
     }
 
-    async getFollowers({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
-        return await getFollowers({ userName, page, limit,userModel:this.userModels });
+    async getFollowers({
+        userName,
+        page,
+        limit,
+    }: {
+        userName: string;
+        page: number;
+        limit: number;
+    }) {
+        return await getFollowers({
+            userName,
+            page,
+            limit,
+            userModel: this.userModels,
+        });
     }
 
-    async getFollowings({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
-        return await getFollowings({ userName, page, limit,userModel:this.userModels });
+    async getFollowings({
+        userName,
+        page,
+        limit,
+    }: {
+        userName: string;
+        page: number;
+        limit: number;
+    }) {
+        return await getFollowings({
+            userName,
+            page,
+            limit,
+            userModel: this.userModels,
+        });
+    }
+
+    async getFollowingPosts({
+        page,
+        limit,
+        userId,
+    }: {
+        page: number;
+        limit: number;
+        userId: string;
+    }) {
+        return await getFollowingPosts({
+            page,
+            limit,
+            userId,
+            userModel: this.userModels,
+        });
     }
 }

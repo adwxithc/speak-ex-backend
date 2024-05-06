@@ -7,7 +7,7 @@ export class PostController {
     constructor(private postUseCase: IPostUseCase) {}
 
     async createPost(req: Req, res: Res) {
-        const { title, content,tags } = req.body;
+        const { title, content, tags } = req.body;
         const { id } = req.user as IAccessRefreshToken;
 
         const { file } = req;
@@ -43,79 +43,84 @@ export class PostController {
             data: post,
         });
     }
-    async upvote(req:Req, res:Res){
-        const {postId} = req.params;
-        const {id} = req.user as IAccessRefreshToken;
-        const post= await this.postUseCase.upvote({postId,userId:id});
+    async upvote(req: Req, res: Res) {
+        const { postId } = req.params;
+        const { id } = req.user as IAccessRefreshToken;
+        const post = await this.postUseCase.upvote({ postId, userId: id });
         res.json({
-            success:true,
-            data:post
+            success: true,
+            data: post,
         });
     }
 
-    async downvote(req:Req, res:Res){
-        const {postId} = req.params;
-        const {id} = req.user as IAccessRefreshToken;
-        const post= await this.postUseCase.downvote({postId,userId:id});
+    async downvote(req: Req, res: Res) {
+        const { postId } = req.params;
+        const { id } = req.user as IAccessRefreshToken;
+        const post = await this.postUseCase.downvote({ postId, userId: id });
         res.json({
-            success:true,
-            data:post
+            success: true,
+            data: post,
         });
     }
 
-    async addComment(req:Req, res:Res){
-        const {postId} = req.params;
-        const {id} = req.user as IAccessRefreshToken;
-        const {text,parentId=null} = req.body;
-        
-        const comment  = await this.postUseCase.addComment({postId,userId:id,text,parentId});
+    async addComment(req: Req, res: Res) {
+        const { postId } = req.params;
+        const { id } = req.user as IAccessRefreshToken;
+        const { text, parentId = null } = req.body;
+
+        const comment = await this.postUseCase.addComment({
+            postId,
+            userId: id,
+            text,
+            parentId,
+        });
 
         res.json({
-            success:true,
-            data:comment
+            success: true,
+            data: comment,
         });
     }
 
-    async deleteComment(req:Req, res:Res){
-        const {commentId} = req.params;
-        const {id} = req.user as IAccessRefreshToken;
-        
-        await this.postUseCase.deleteComment({commentId,userId:id});
+    async deleteComment(req: Req, res: Res) {
+        const { commentId } = req.params;
+        const { id } = req.user as IAccessRefreshToken;
+
+        await this.postUseCase.deleteComment({ commentId, userId: id });
 
         res.json({
-            success:true,
-            message:'commente deleted'
+            success: true,
+            message: 'commente deleted',
         });
     }
 
-    async updateComment(req:Req, res:Res){
-        const {postId,commentId} = req.params;
-        const {text}  = req.body;
-        const {id} = req.user as IAccessRefreshToken;
-        
-        const comment = await this.postUseCase.updateComment({postId,commentId,userId:id,text});
+    async updateComment(req: Req, res: Res) {
+        const { postId, commentId } = req.params;
+        const { text } = req.body;
+        const { id } = req.user as IAccessRefreshToken;
+
+        const comment = await this.postUseCase.updateComment({
+            postId,
+            commentId,
+            userId: id,
+            text,
+        });
 
         res.json({
-            success:true,
-            message:'commete updated',
-            data:comment
+            success: true,
+            message: 'commete updated',
+            data: comment,
         });
     }
 
-    async getComments(req:Req, res:Res){
-        const {postId} = req.params;
-        
+    async getComments(req: Req, res: Res) {
+        const { postId } = req.params;
 
-        const { page = 1, limit = 5,parentId=null } = req.query ;
-        
+        const { page = 1, limit = 5, parentId = null } = req.query;
+
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
 
-        if (
-            typeof pageNumber !== 'number' ||
-            typeof limitNumber !== 'number'
-           
-        ) {
+        if (typeof pageNumber !== 'number' || typeof limitNumber !== 'number') {
             throw new BadRequestError('invalid parameters');
         }
 
@@ -123,27 +128,25 @@ export class PostController {
             page: pageNumber,
             limit: limitNumber,
             postId,
-            parentId :parentId as string | null
+            parentId: parentId as string | null,
         });
 
         res.json({
-            success:true,
-            data:comments
+            success: true,
+            data: comments,
         });
     }
 
-    async getTags(req:Req, res:Res){
+    async getTags(req: Req, res: Res) {
+        const { page = 1, limit = 5, key = '' } = req.query;
 
-        const { page = 1, limit = 5,key='' } = req.query ;
-
-        
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
 
         const tagData = await this.postUseCase.getTags({
             page: pageNumber,
             limit: limitNumber,
-            key:key as string
+            key: key as string,
         });
         const lastPage = Math.ceil(tagData.totalTags / limitNumber);
 
@@ -152,7 +155,26 @@ export class PostController {
             data: { ...tagData, lastPage },
         });
     }
+    async getFeed(req: Req, res: Res) {
+        const { page = 1, limit = 5 } = req.query;
+        const { id } = (req.user as IAccessRefreshToken) || {};
 
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
 
+        const feedData = await this.postUseCase.getFeed({
+            page: pageNumber,
+            limit: limitNumber,
+            userId: id,
+        });
+
+        
+        const lastPage = Math.ceil(feedData.totalPosts / limitNumber);
+
+        res.json({
+            success: true,
+            data: { ...feedData, lastPage },
+        });
+       
+    }
 }
- 

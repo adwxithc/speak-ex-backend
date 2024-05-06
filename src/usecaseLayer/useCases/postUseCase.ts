@@ -1,4 +1,3 @@
-
 import { IComment } from '../../domain/comment';
 import IPost from '../../domain/post';
 import IUser from '../../domain/user';
@@ -8,10 +7,21 @@ import { ITagRepository } from '../interface/repository/ITagRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IPostUseCase } from '../interface/usecase/postUseCase';
-import { createPost, getUsersPosts, getPost,upvote,downvote, addComment, deleteComment, updateComment, getComments, getTags } from './post';
+import {
+    createPost,
+    getUsersPosts,
+    getPost,
+    upvote,
+    downvote,
+    addComment,
+    deleteComment,
+    updateComment,
+    getComments,
+    getTags,
+    getFeed,
+} from './post';
 
 export class PostUseCase implements IPostUseCase {
-
     private readonly postRepository: IPostRepository;
     private readonly tagRepository: ITagRepository;
     private readonly userRepository: IUserRepository;
@@ -23,19 +33,19 @@ export class PostUseCase implements IPostUseCase {
         userRepository,
         tagRepository,
         fileBucket,
-        commentRepository
+        commentRepository,
     }: {
         postRepository: IPostRepository;
-        tagRepository:ITagRepository;
+        tagRepository: ITagRepository;
         userRepository: IUserRepository;
         fileBucket: IFileBucket;
-        commentRepository:ICommentRepository
+        commentRepository: ICommentRepository;
     }) {
         this.postRepository = postRepository;
-        this.tagRepository=tagRepository;
+        this.tagRepository = tagRepository;
         this.userRepository = userRepository;
         this.fileBucket = fileBucket;
-        this.commentRepository=commentRepository;
+        this.commentRepository = commentRepository;
     }
 
     async createPost({
@@ -47,7 +57,7 @@ export class PostUseCase implements IPostUseCase {
     }: {
         title: string;
         content: string;
-        tags:string;
+        tags: string;
         imageFile: Express.Multer.File;
         userId: string;
     }): Promise<IPost> {
@@ -57,7 +67,7 @@ export class PostUseCase implements IPostUseCase {
             fileBucket: this.fileBucket,
             imageFile,
             postRepository: this.postRepository,
-            tagRepository:this.tagRepository,
+            tagRepository: this.tagRepository,
             title,
             userId,
         });
@@ -76,58 +86,101 @@ export class PostUseCase implements IPostUseCase {
         });
     }
 
-    async getPost({ postId }: { postId: string }): Promise<IPost & {user:{userName:string,email:string,profile:string}} | null> {
+    async getPost({ postId }: { postId: string }): Promise<
+        | (IPost & {
+              user: { userName: string; email: string; profile: string };
+          })
+        | null
+    > {
         return await getPost({
             fileBucket: this.fileBucket,
             postRepository: this.postRepository,
             postId,
         });
     }
-    async upvote({ postId,userId }: { postId: string;userId:string }): Promise<IPost> {
+    async upvote({
+        postId,
+        userId,
+    }: {
+        postId: string;
+        userId: string;
+    }): Promise<IPost> {
         return await upvote({
             fileBucket: this.fileBucket,
             postRepository: this.postRepository,
             postId,
-            userId
+            userId,
         });
     }
 
-    async downvote({ postId, userId }: { postId: string; userId: string; }): Promise<IPost> {
+    async downvote({
+        postId,
+        userId,
+    }: {
+        postId: string;
+        userId: string;
+    }): Promise<IPost> {
         return await downvote({
             fileBucket: this.fileBucket,
             postRepository: this.postRepository,
             postId,
-            userId
+            userId,
         });
     }
 
-    async addComment({ postId, userId, text,parentId }: { postId: string; userId: string; text: string;parentId:string }): Promise<IComment | null> {
+    async addComment({
+        postId,
+        userId,
+        text,
+        parentId,
+    }: {
+        postId: string;
+        userId: string;
+        text: string;
+        parentId: string;
+    }): Promise<IComment | null> {
         return await addComment({
             postRepository: this.postRepository,
-            commetnRepository:this.commentRepository,
+            commetnRepository: this.commentRepository,
             text,
             postId,
             userId,
-            parentId
+            parentId,
         });
     }
 
-    async deleteComment({ commentId, userId }: { commentId: string; userId:string }): Promise<boolean> {
+    async deleteComment({
+        commentId,
+        userId,
+    }: {
+        commentId: string;
+        userId: string;
+    }): Promise<boolean> {
         return await deleteComment({
             postRepository: this.postRepository,
-            commetnRepository:this.commentRepository,
+            commetnRepository: this.commentRepository,
             commentId,
-            userId
+            userId,
         });
     }
 
-    async updateComment({ postId, commentId, userId, text }: { postId: string; commentId: string; userId: string; text: string; }): Promise<IComment | null> {
+    async updateComment({
+        postId,
+        commentId,
+        userId,
+        text,
+    }: {
+        postId: string;
+        commentId: string;
+        userId: string;
+        text: string;
+    }): Promise<IComment | null> {
         return await updateComment({
             postId,
             commentId,
             userId,
             text,
-            commentRepository:this.commentRepository,
+            commentRepository: this.commentRepository,
         });
     }
 
@@ -135,24 +188,55 @@ export class PostUseCase implements IPostUseCase {
         page,
         limit,
         postId,
-        parentId
-    }:{
-        page:number,
-        limit:number,
-        postId:string,
-        parentId:string | null
-    }){
+        parentId,
+    }: {
+        page: number;
+        limit: number;
+        postId: string;
+        parentId: string | null;
+    }) {
         return await getComments({
             page,
             limit,
             postId,
-            commentRepository:this.commentRepository,
-            fileBucket:this.fileBucket,
-            parentId
+            commentRepository: this.commentRepository,
+            fileBucket: this.fileBucket,
+            parentId,
         });
     }
 
-    async getTags({ page, limit, key }: { page: number; limit: number; key: string; }) {
-        return await getTags({ page, limit, key,tagRepository:this.tagRepository, });
+    async getTags({
+        page,
+        limit,
+        key,
+    }: {
+        page: number;
+        limit: number;
+        key: string;
+    }) {
+        return await getTags({
+            page,
+            limit,
+            key,
+            tagRepository: this.tagRepository,
+        });
+    }
+    async getFeed({
+        page,
+        limit,
+        userId,
+    }: {
+        page: number;
+        limit: number;
+        userId: string;
+    }) {
+        return await getFeed({
+            page,
+            limit,
+            fileBucket: this.fileBucket,
+            userId,
+            userRepository: this.userRepository,
+            tagRepository:this.tagRepository
+        });
     }
 }
