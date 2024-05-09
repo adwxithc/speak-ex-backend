@@ -9,7 +9,7 @@ import { JWTToken } from '../../../services/jwt';
 
 import { UserUseCase } from '../../../../usecaseLayer/useCases/userUseCase';
 
-import { UserController } from '../../../../controller/userAdapter';
+import { UserController } from '../../../../controller/restController/userController';
 
 import { UserOtpRepository } from '../../../database/mongoDB/repository/UserOtpRepository';
 import { FileBucket } from '../../../services/fileBucket';

@@ -23,16 +23,17 @@ export const getFeed = async ({
         await userRepository.getFollowingPosts({ limit, page, userId });
 
     posts.push(...followingPosts);
-    totalPosts += totalFollowingPosts;
-    console.log(totalFollowingPosts,'totalFollowingPoststotalFollowingPoststotalFollowingPosts');
+    totalPosts += totalFollowingPosts || 0;
+
     
 
-    const lastPageInFolllowingPosts = totalFollowingPosts / limit;
+    const lastPageInFolllowingPosts = (totalFollowingPosts || 0) / limit;
 
     if (followingPosts.length < limit) {
-        const newPage = (page - (lastPageInFolllowingPosts<1?0:lastPageInFolllowingPosts));
+        const newPage = Math.ceil(page - (lastPageInFolllowingPosts<1?0:lastPageInFolllowingPosts));
         const newLimit = limit - followingPosts.length;
-
+        
+        
         const { posts: popularPosts, totalPosts: totalPopularPosts } =
             await tagRepository.getPopularPosts({
                 limit: newLimit,

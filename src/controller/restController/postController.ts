@@ -1,7 +1,7 @@
-import { Req, Res } from '../infrastructureLayer/types/expressTypes';
-import { BadRequestError } from '../usecaseLayer/errors';
-import { IAccessRefreshToken } from '../usecaseLayer/interface/services/IJwt.types';
-import { IPostUseCase } from '../usecaseLayer/interface/usecase/postUseCase';
+import { Req, Res } from '../../infrastructureLayer/types/expressTypes';
+import { BadRequestError } from '../../usecaseLayer/errors';
+import { IAccessRefreshToken } from '../../usecaseLayer/interface/services/IJwt.types';
+import { IPostUseCase } from '../../usecaseLayer/interface/usecase/postUseCase';
 
 export class PostController {
     constructor(private postUseCase: IPostUseCase) {}

@@ -1,4 +1,4 @@
-import { PostController } from '../../../../controller/postAdapter';
+import { PostController } from '../../../../controller/restController/postController';
 import { PostUseCase } from '../../../../usecaseLayer/useCases/postUseCase';
 import TagModel from '../../../database/mongoDB/models/TagModel';
 import CommentModel from '../../../database/mongoDB/models/commentModel';

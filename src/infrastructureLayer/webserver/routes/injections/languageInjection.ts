@@ -4,7 +4,7 @@ import { LanguageRepository } from '../../../database/mongoDB/repository/languag
 
 import { LanguageUseCase } from '../../../../usecaseLayer/useCases/languageUseCase';
 
-import { LanguageController } from '../../../../controller/languageAdapter';
+import { LanguageController } from '../../../../controller/restController/languageController';
 
 
 

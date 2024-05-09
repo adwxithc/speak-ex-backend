@@ -42,6 +42,7 @@ export const getFollowingPosts = async({
                     {
                         $unwind: '$posts',
                     },
+                
                     {
                         $replaceRoot: { newRoot: '$posts' },
                     },
@@ -101,7 +102,6 @@ export const getFollowingPosts = async({
     
     
     const {paginatedFeeds,totalCount} = result as {paginatedFeeds:(IPost &{user:IUser})[],totalCount:number};
-    console.log(paginatedFeeds,'paginatedFeeds',totalCount,'totalCount');
     
 
     return {posts:paginatedFeeds,totalPosts:totalCount};

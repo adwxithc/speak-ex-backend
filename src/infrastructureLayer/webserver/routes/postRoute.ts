@@ -102,6 +102,7 @@ export function postRoute(router: Router) {
     );
 
     router.get('/feed', protect.protectUser, async (req: Req, res: Res) => {
+        
         await postController.getFeed(req, res);
     });
 
