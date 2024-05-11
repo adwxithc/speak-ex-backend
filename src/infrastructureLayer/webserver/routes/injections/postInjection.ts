@@ -1,4 +1,4 @@
-import { PostController } from '../../../../controller/postAdapter';
+import { PostController } from '../../../../controller/restController/postController';
 import { PostUseCase } from '../../../../usecaseLayer/useCases/postUseCase';
 import TagModel from '../../../database/mongoDB/models/TagModel';
 import CommentModel from '../../../database/mongoDB/models/commentModel';
@@ -12,7 +12,7 @@ import { FileBucket } from '../../../services/fileBucket';
 
 const postRepository = new PostRepository(PostModel);
 const userRepository = new UserRepository(UserModel);
-const tagRepository= new TageRepository(TagModel);
+const tagRepository = new TageRepository(TagModel);
 const commentRepository = new CommentRepository(CommentModel);
 const fileBucket = new FileBucket();
 
@@ -21,7 +21,8 @@ const postUseCase = new PostUseCase({
     userRepository,
     tagRepository,
     postRepository,
-    commentRepository
+
+    commentRepository,
 });
 
 const postController = new PostController(postUseCase);

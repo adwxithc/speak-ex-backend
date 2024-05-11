@@ -19,11 +19,11 @@ export const getComments = async ({
     fileBucket:IFileBucket
 }) => {
     const res= await commentRepository.getComments({limit,page,postId,parentId});
-    console.log(res);
+
     res.comments.forEach(com => {
         com.user.profile=fileBucket.getFileAccessURL(com.user.profile);
     });
-    console.log(res);
+   
     
     return res;
 };

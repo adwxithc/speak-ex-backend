@@ -1,10 +1,10 @@
-import { Req, Res } from '../infrastructureLayer/types/expressTypes';
+import { Req, Res } from '../../infrastructureLayer/types/expressTypes';
 import {
     accessTokenOptions,
     refreshTokenOptions,
-} from '../infrastructureLayer/utils/tokenOptions';
+} from '../../infrastructureLayer/utils/tokenOptions';
 // import { BadRequestError } from '../usecaseLayer/errors';
-import { IAdminUseCase } from '../usecaseLayer/interface/usecase/adminUseCase';
+import { IAdminUseCase } from '../../usecaseLayer/interface/usecase/adminUseCase';
 
 export class AdminController {
     constructor(private adminUseCase: IAdminUseCase) {}

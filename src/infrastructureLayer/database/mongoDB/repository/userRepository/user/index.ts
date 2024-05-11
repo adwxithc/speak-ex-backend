@@ -11,6 +11,8 @@ import { follow } from './follow';
 import { unfollow } from './unfollow';
 import { getFollowers } from './getFollowers';
 import { getFollowings } from './getFollowings';
+import { getFollowingPosts } from './getFollowingPosts';
+
 
 export {
     findUserByEmail,
@@ -25,5 +27,6 @@ export {
     follow,
     unfollow,
     getFollowers,
-    getFollowings
+    getFollowings,
+    getFollowingPosts
 };

@@ -33,54 +33,52 @@ export function postRoute(router: Router) {
         }
     );
 
-    router.get('/:postId', protect.protectUser, async (req: Req, res: Res) => {
-        await postController.getPost(req, res);
-    });
+    router.get(
+        '/singlePost/:postId',
+        protect.protectUser,
+        async (req: Req, res: Res) => {
+            await postController.getPost(req, res);
+        }
+    );
 
     router.put(
         '/:postId/upvote',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
-            await postController.upvote(req, res); 
+        async (req: Req, res: Res) => {
+            await postController.upvote(req, res);
         }
     );
 
     router.put(
         '/:postId/downvote',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
-            await postController.downvote(req, res); 
+        async (req: Req, res: Res) => {
+            await postController.downvote(req, res);
         }
     );
 
     router.post(
         '/:postId/comment',
-        [
-            body('text').isLength({ min: 1 }).withMessage('text is required'),
-        ],
+        [body('text').isLength({ min: 1 }).withMessage('text is required')],
         validateRequest,
         protect.protectUser,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await postController.addComment(req, res);
         }
     );
 
-
-
     router.get(
         '/:postId/comments',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await postController.getComments(req, res);
         }
     );
 
- 
-
     router.delete(
         '/comment/:commentId',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await postController.deleteComment(req, res);
         }
     );
@@ -88,11 +86,9 @@ export function postRoute(router: Router) {
     router.put(
         '/:postId/comment/:commentId',
         protect.protectUser,
-        [
-            body('text').isLength({ min: 1 }).withMessage('text is required'),
-        ],
+        [body('text').isLength({ min: 1 }).withMessage('text is required')],
         validateRequest,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await postController.updateComment(req, res);
         }
     );
@@ -100,11 +96,15 @@ export function postRoute(router: Router) {
     router.get(
         '/tags/search',
         protect.protectUser,
-        async (req:Req, res:Res)=>{
-            await postController.getTags(req,res);
+        async (req: Req, res: Res) => {
+            await postController.getTags(req, res);
         }
     );
 
-    
+    router.get('/feed', protect.protectUser, async (req: Req, res: Res) => {
+        
+        await postController.getFeed(req, res);
+    });
+
     return router;
-} 
+}

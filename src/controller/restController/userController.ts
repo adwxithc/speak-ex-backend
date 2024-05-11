@@ -1,12 +1,12 @@
-import { Req, Res } from '../infrastructureLayer/types/expressTypes';
+import { Req, Res } from '../../infrastructureLayer/types/expressTypes';
 import {
     accessTokenOptions,
     refreshTokenOptions,
-} from '../infrastructureLayer/utils/tokenOptions';
-import { BadRequestError } from '../usecaseLayer/errors';
-import { IAccessRefreshToken } from '../usecaseLayer/interface/services/IJwt.types';
-import { ILanguageUseCase } from '../usecaseLayer/interface/usecase/languageUseCase';
-import { IUserUseCase } from '../usecaseLayer/interface/usecase/userUseCase';
+} from '../../infrastructureLayer/utils/tokenOptions';
+import { BadRequestError } from '../../usecaseLayer/errors';
+import { IAccessRefreshToken } from '../../usecaseLayer/interface/services/IJwt.types';
+import { ILanguageUseCase } from '../../usecaseLayer/interface/usecase/languageUseCase';
+import { IUserUseCase } from '../../usecaseLayer/interface/usecase/userUseCase';
 
 
 export class UserController {

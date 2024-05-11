@@ -12,7 +12,7 @@ import { NotFoundError } from '../../../usecaseLayer/errors';
 import dotenv from 'dotenv';
 import { Req } from '../../types/expressTypes';
 import { chatRoute } from '../routes/chatRoute';
-import { SocketManager } from '../../services/socketManager';
+import { SocketManager } from '../../socketserver/socketServer';
 
 
 dotenv.config();
@@ -26,7 +26,7 @@ app.use(cors());
 
 const httpServer = http.createServer(app);
 
-//socket.io connection
+
 new SocketManager(httpServer);
 
 

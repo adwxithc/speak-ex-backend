@@ -1,7 +1,7 @@
-import { Req, Res } from '../infrastructureLayer/types/expressTypes';
-import { IChatUseCase } from '../usecaseLayer/interface/usecase/chatUseCase';
-import IMessage from '../domain/message';
-import { DbId } from '../usecaseLayer/interface/db/dbTypes';
+import { Req, Res } from '../../infrastructureLayer/types/expressTypes';
+import { IChatUseCase } from '../../usecaseLayer/interface/usecase/chatUseCase';
+import IMessage from '../../domain/message';
+import { DbId } from '../../usecaseLayer/interface/db/dbTypes';
 
 
 export class ChatController {

@@ -1,7 +1,7 @@
-import { Req, Res } from '../infrastructureLayer/types/expressTypes';
-import { BadRequestError } from '../usecaseLayer/errors';
+import { Req, Res } from '../../infrastructureLayer/types/expressTypes';
+import { BadRequestError } from '../../usecaseLayer/errors';
 
-import { ILanguageUseCase } from '../usecaseLayer/interface/usecase/languageUseCase';
+import { ILanguageUseCase } from '../../usecaseLayer/interface/usecase/languageUseCase';
 
 
 export class LanguageController {

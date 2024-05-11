@@ -8,7 +8,7 @@ import { JWTToken } from '../../../services/jwt';
 
 import { AdminUseCase } from '../../../../usecaseLayer/useCases/adminUseCase';
 
-import { AdminController } from '../../../../controller/adminAdapter';
+import { AdminController } from '../../../../controller/restController/adminController';
 
 
 
