@@ -12,6 +12,7 @@ import { unfollow } from './unfollow';
 import { getFollowers } from './getFollowers';
 import { getFollowings } from './getFollowings';
 import { getFollowingPosts } from './getFollowingPosts';
+import { getLearners } from './getLearners';
 
 
 export {
@@ -28,5 +29,6 @@ export {
     unfollow,
     getFollowers,
     getFollowings,
-    getFollowingPosts
+    getFollowingPosts,
+    getLearners
 };

@@ -20,6 +20,7 @@ export interface IUserRepository {
     getFollowers({ userName,page,limit}:{ userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string; firstName:string; lastName:string,focusLanguage:string }[],totalUsers:number}>
     getFollowings({ userName,page,limit}:{ userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string; firstName:string, lastName:string ,focusLanguage:string}[],totalUsers:number}>
     getFollowingPosts({page,limit,userId}:{page:number,limit:number,userId:string}):Promise<{ posts: (IPost &{user:IUser})[], totalPosts:number }>
+    getLearners({helperId}:{helperId:string}):Promise<{id:string}[]>
 }
 
 
