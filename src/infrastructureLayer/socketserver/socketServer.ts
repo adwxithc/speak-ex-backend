@@ -1,5 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
+import { videoSessionUseCase } from './socketInjection/videoSessionInjection';
 
 export class SocketManager {
     private httpServer: HttpServer;
@@ -17,18 +18,17 @@ export class SocketManager {
         });
         console.log('socket server initalized');
 
-        this.io.on('connection', this.handleConnection);
+        this.io.on('connection', this.handleConnection.bind(this));
     }
 
 
     private handleConnection(socket: Socket){
         console.log('a user connected');
 
-        socket.on('addUser', ({ userId }) => {
-            
+        socket.on('addUser', ({ userId }) => {  
+            console.log('user added',userId,'->',socket.id);
             
             this.addUser(userId, socket.id);
-
             this.io.emit('getUsers', this.users);
         });
 
@@ -57,45 +57,66 @@ export class SocketManager {
         });
 
         
-
+ 
         // webRTC
 
-        socket.on('session:start',({userId})=>{
+        socket.on('session:start',async ({userId})=>{
             console.log('new video session iniated');
-            this.addUser(userId,socket.id);
-            const sessionId=this.getUniqueString();
-            socket.join(sessionId);
-            this.io.to(socket.id).emit('session:started',{sessionId});
+            
+            const {session,learners} = await videoSessionUseCase.startSession({userId});
+            socket.join(session.sessionCode);
+            this.io.to(socket.id).emit('session:started',{sessionId:session.sessionCode});
+            
+            
+            learners.forEach(learner=>{
+                const user =this.getUser(learner.id);
+                
+                if(user){
+                    this.io.to(user.socketId).emit('session:available',{sessionId:session.sessionCode});
+                }
+            });
         });
 
-        socket.on('session:join',({userId, sessionId})=>{
+        socket.on('session:join',async({userId, sessionId})=>{
 
-            this.addUser(userId,socket.id);
-            this.io.emit('session:join-allow',{sessionId});
-            this.io.to(sessionId).emit('session:user-joined',{userId,socketId:socket.id});
+            
+            const session = await videoSessionUseCase.joinSession({userId, sessionId});
+            const allowed=Boolean(session);
+            this.io.to(socket.id).emit('session:join-allow',{sessionId, allowed});
+        
+            
+            if(allowed){
+                this.io.to(sessionId).emit('session:user-joined',{userId,socketId:socket.id});
+            }
             socket.join(sessionId);
             
-    
         });
+ 
+       
 
         socket?.on('session:call-user',({from,to, offer})=>{
             
             const {socketId}= this.getUser(to) || {};
+            console.log('incomming:call-incomming:call-incomming:call-incomming:call',socketId);
+            
             this.io.to(socketId || '').emit('incomming:call',{from,offer});
 
         });
-
+ 
         socket.on('call:accepted',({to,ans,from})=>{
-            
-            
+         
             
             const {socketId}= this.getUser(to) || {};
+          
+            //call accepted is sending hear but not getting at client side
+
+            
             this.io.to(socketId || '').emit('call:accepted',{from,ans});
+          
         });
 
         socket.on('peer:nego-needed',({from,to, offer})=>{
-            console.log('peer:nego-needed',offer);
-            
+
             const {socketId}= this.getUser(to) || {};
             this.io.to(socketId || '').emit('peer:nego-needed',{from,offer});
          
@@ -103,7 +124,7 @@ export class SocketManager {
         });
 
         socket.on('peer:nego-done',({from,to, ans})=>{
-            console.log('peer:nego-done',ans);
+           
             
             const {socketId}= this.getUser(to) || {};
             this.io.to(socketId || '').emit('peer:nego-final',{from,ans});
@@ -130,7 +151,8 @@ export class SocketManager {
     }
 
     getUser(userId: string) {
-        return this.users.find((user) => user.userId === userId);
+        if(!userId) return null
+        return this.users.find((user) => user.userId.toString() === userId.toString()) ;
     }
 
     getUniqueString = () => {

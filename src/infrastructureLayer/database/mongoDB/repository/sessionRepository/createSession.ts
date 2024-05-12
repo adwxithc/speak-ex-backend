@@ -12,6 +12,6 @@ export const createSession = async ({
     sessionModel: typeof SessionModel;
 }) => {
 
-    const post = await sessionModel.create({helper:userId,sessionCode});
-    return await post.save();
+    const session = await sessionModel.create({helper:userId,sessionCode});
+    return await session.save();
 };

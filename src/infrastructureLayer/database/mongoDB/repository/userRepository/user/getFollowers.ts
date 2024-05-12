@@ -17,7 +17,7 @@ export const getFollowers = async(
     }
 )=>{
 
-    console.log(userName);
+   
     
     const pipeline = [
         {

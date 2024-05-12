@@ -17,6 +17,7 @@ import {
     getFollowings,
     getFollowers,
     getFollowingPosts,
+    getLearners,
 } from './userRepository/user';
 import { getAllUser } from './userRepository/admin';
 
@@ -177,5 +178,8 @@ export class UserRepository implements IUserRepository {
             userId,
             userModel: this.userModels,
         });
+    }
+    async getLearners({ helperId }: { helperId: string; }) {
+        return await getLearners({helperId, userModel:this.userModels});
     }
 }

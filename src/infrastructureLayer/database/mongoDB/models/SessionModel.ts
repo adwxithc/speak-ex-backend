@@ -6,7 +6,7 @@ const sessionSchema = new Schema<ISession>(
         sessionCode:{
             type:String,
             required:true,
-
+            unique:true
         },
         helper:{
             type:mongoose.Schema.ObjectId,
