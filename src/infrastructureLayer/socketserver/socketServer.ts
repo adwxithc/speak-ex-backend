@@ -67,18 +67,19 @@ export class SocketManager {
             socket.join(session.sessionCode);
             this.io.to(socket.id).emit('session:started',{sessionId:session.sessionCode});
             
-            
+             
             learners.forEach(learner=>{
                 const user =this.getUser(learner.id);
-                
+ 
                 if(user){
                     this.io.to(user.socketId).emit('session:available',{sessionId:session.sessionCode});
                 }
             });
         });
 
-        socket.on('session:join',async({userId, sessionId})=>{
-
+        socket.on('session:join',async({userId, sessionId})=>{ 
+            console.log('session join from learner');
+            
             
             const session = await videoSessionUseCase.joinSession({userId, sessionId});
             const allowed=Boolean(session);
@@ -86,15 +87,20 @@ export class SocketManager {
         
             
             if(allowed){
+                console.log('allowed to send user joined noti in the room');
+                
                 this.io.to(sessionId).emit('session:user-joined',{userId,socketId:socket.id});
+             
             }
             socket.join(sessionId);
             
         });
  
        
+      
 
         socket?.on('session:call-user',({from,to, offer})=>{
+            console.log('call user ',offer);
             
             const {socketId}= this.getUser(to) || {};
             console.log('incomming:call-incomming:call-incomming:call-incomming:call',socketId);
@@ -105,6 +111,7 @@ export class SocketManager {
  
         socket.on('call:accepted',({to,ans,from})=>{
          
+            console.log('call accepted',ans);
             
             const {socketId}= this.getUser(to) || {};
           
@@ -116,7 +123,8 @@ export class SocketManager {
         });
 
         socket.on('peer:nego-needed',({from,to, offer})=>{
-
+            console.log('peer negosition need');
+            
             const {socketId}= this.getUser(to) || {};
             this.io.to(socketId || '').emit('peer:nego-needed',{from,offer});
          
@@ -125,6 +133,7 @@ export class SocketManager {
 
         socket.on('peer:nego-done',({from,to, ans})=>{
            
+            console.log('peer nego done');
             
             const {socketId}= this.getUser(to) || {};
             this.io.to(socketId || '').emit('peer:nego-final',{from,ans});
