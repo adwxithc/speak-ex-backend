@@ -1,14 +1,15 @@
 import { Server, Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { videoSessionUseCase } from './socketInjection/videoSessionInjection';
+import { redisDB } from '../webserver/config/redis';
+
+const client = redisDB();
 
 export class SocketManager {
     private httpServer: HttpServer;
-    private users: { userId: string; socketId: string }[];
     private io: Server;
 
     constructor(httpServer: HttpServer) {
-        this.users = [];
         this.httpServer = httpServer;
         this.io = new Server(this.httpServer, {
             cors: {
@@ -24,30 +25,31 @@ export class SocketManager {
     private handleConnection(socket: Socket) {
         console.log('a user connected');
 
-        socket.on('addUser', ({ userId }) => {
+        socket.on('addUser', async ({ userId }) => {
             this.addUser(userId, socket.id);
-            this.io.emit('getUsers', this.users);
+            const users = await this.getAllUsers();
+            this.io.emit('getUsers', users);
         });
 
         //send and get message
-        socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-            const user = this.getUser(receiverId);
+        socket.on('sendMessage', async ({ senderId, receiverId, text }) => {
+            const user = await this.getUser(receiverId);
 
             this.io.to(user?.socketId || '').emit('getMessage', {
                 senderId,
                 text,
             });
         });
-        socket.on('setMessageSeen', ({ receiverId }) => {
-            const user = this.getUser(receiverId);
+        socket.on('setMessageSeen', async ({ receiverId }) => {
+            const user = await this.getUser(receiverId);
             this.io.to(user?.socketId || '').emit('getMessageSeen');
         });
 
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
             console.log('a user disconnected');
-
             this.removeUser(socket.id);
-            this.io.emit('getUsers', this.users);
+            const users = await this.getAllUsers();
+            this.io.emit('getUsers', users);
         });
 
         // webRTC
@@ -55,7 +57,9 @@ export class SocketManager {
         socket.on('session:start', async ({ userId }) => {
             console.log('new video session iniated');
 
-            const liveUsers = this.users.map((item) => item.userId);
+            const liveUsers = (await this.getAllUsers()).map(
+                (user) => user.userId
+            );
             const session = await videoSessionUseCase.startSession({
                 userId,
                 liveUsers,
@@ -67,7 +71,7 @@ export class SocketManager {
                 .emit('session:started', { sessionId: session.sessionCode });
             const selectedLearner = session.offers[0];
 
-            const user = this.getUser(selectedLearner?.toString() || '');
+            const user = await this.getUser(selectedLearner?.toString() || '');
 
             if (user) {
                 this.io.to(user.socketId).emit('session:available', {
@@ -99,7 +103,7 @@ export class SocketManager {
         socket.on('session:rematch', async ({ sessionId }) => {
             console.log(' video session rematch iniated');
 
-            const liveUsers = this.users.map((item) => item.userId);
+            const liveUsers = (await this.getAllUsers()).map((user) => user.userId);
             const selectedLearner = await videoSessionUseCase.rematch({
                 sessionCode: sessionId,
                 liveUsers,
@@ -112,7 +116,7 @@ export class SocketManager {
                 return;
             }
 
-            const user = this.getUser(selectedLearner?.toString() || '');
+            const user = await this.getUser(selectedLearner?.toString() || '');
 
             if (user) {
                 this.io
@@ -121,51 +125,60 @@ export class SocketManager {
             }
         });
 
-        socket?.on('session:call-user', ({ from, to, offer }) => {
-            const { socketId } = this.getUser(to) || {};
+        socket?.on('session:call-user', async ({ from, to, offer }) => {
+            const { socketId } = (await this.getUser(to)) || {};
             this.io.to(socketId || '').emit('incomming:call', { from, offer });
         });
 
-        socket.on('call:accepted', ({ to, ans, from }) => {
-            const { socketId } = this.getUser(to) || {};
+        socket.on('call:accepted', async ({ to, ans, from }) => {
+            const { socketId } = (await this.getUser(to)) || {};
             this.io.to(socketId || '').emit('call:accepted', { from, ans });
         });
 
-        socket.on('peer:nego-needed', ({ from, to, offer }) => {
-            const { socketId } = this.getUser(to) || {};
+        socket.on('peer:nego-needed', async ({ from, to, offer }) => {
+            const { socketId } = (await this.getUser(to)) || {};
             this.io
                 .to(socketId || '')
                 .emit('peer:nego-needed', { from, offer });
         });
 
-        socket.on('peer:nego-done', ({ from, to, ans }) => {
-            const { socketId } = this.getUser(to) || {};
+        socket.on('peer:nego-done', async ({ from, to, ans }) => {
+            const { socketId } = (await this.getUser(to)) || {};
             this.io.to(socketId || '').emit('peer:nego-final', { from, ans });
         });
     }
 
-    addUser(userId: string, socketId: string) {
-        const user = this.users.find((user) => user.userId === userId);
-        if (user) {
-            user.socketId = socketId;
-        } else {
-            this.users.push({ userId, socketId });
+    async addUser(userId: string, socketId: string) {
+        await client.hset('userIdToSocketId', userId, socketId);
+      
+       
+    }
+
+    async removeUser(socketId: string) {
+        
+        const users = await this.getAllUsers();
+        const user = users.find(user=>user.socketId==socketId);
+        if(user){
+            await client.hdel('userIdToSocketId', user.userId);
         }
+        
+       
+     
     }
 
-    removeUser(socketId: string) {
-        this.users = this.users.filter((user) => user.socketId !== socketId);
-    }
 
-    getUser(userId: string) {
+    async getUser(userId: string) {
         if (!userId) return null;
-        return this.users.find(
-            (user) => user.userId.toString() === userId.toString()
-        );
+        const socketId = await client.hget('userIdToSocketId', userId);
+        return socketId ? { userId, socketId } : null;
     }
 
-    getUniqueString = () => {
-        const randomString = Math.random().toString(36);
-        return Date.now().toString(36) + randomString.slice(2);
-    };
+    async getAllUsers() {
+        const keyValuePairs = await client.hgetall('userIdToSocketId');
+        const pairsArray = [];
+        for (const userId in keyValuePairs) {
+            pairsArray.push({ userId, socketId: keyValuePairs[userId] });
+        }
+        return pairsArray || [];
+    }
 }
