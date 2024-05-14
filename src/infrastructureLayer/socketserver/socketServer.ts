@@ -1,14 +1,15 @@
 import { Server, Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { videoSessionUseCase } from './socketInjection/videoSessionInjection';
+import { redisDB } from '../webserver/config/redis';
+
+const client = redisDB();
 
 export class SocketManager {
     private httpServer: HttpServer;
-    private users: { userId: string; socketId: string }[];
     private io: Server;
 
     constructor(httpServer: HttpServer) {
-        this.users = [];
         this.httpServer = httpServer;
         this.io = new Server(this.httpServer, {
             cors: {
@@ -21,152 +22,163 @@ export class SocketManager {
         this.io.on('connection', this.handleConnection.bind(this));
     }
 
-
-    private handleConnection(socket: Socket){
+    private handleConnection(socket: Socket) {
         console.log('a user connected');
 
-        socket.on('addUser', ({ userId }) => {  
-            console.log('user added',userId,'->',socket.id);
-            
+        socket.on('addUser', async ({ userId }) => {
             this.addUser(userId, socket.id);
-            this.io.emit('getUsers', this.users);
+            const users = await this.getAllUsers();
+            this.io.emit('getUsers', users);
         });
 
         //send and get message
-        socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-            const user = this.getUser(receiverId);
-            
-            
+        socket.on('sendMessage', async ({ senderId, receiverId, text }) => {
+            const user = await this.getUser(receiverId);
+
             this.io.to(user?.socketId || '').emit('getMessage', {
                 senderId,
                 text,
             });
         });
-        socket.on('setMessageSeen', ({receiverId}) => {
-            
-            
-            const user = this.getUser(receiverId);
+        socket.on('setMessageSeen', async ({ receiverId }) => {
+            const user = await this.getUser(receiverId);
             this.io.to(user?.socketId || '').emit('getMessageSeen');
         });
 
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
             console.log('a user disconnected');
-
             this.removeUser(socket.id);
-            this.io.emit('getUsers', this.users);
+            const users = await this.getAllUsers();
+            this.io.emit('getUsers', users);
         });
 
-        
- 
         // webRTC
 
-        socket.on('session:start',async ({userId})=>{
+        socket.on('session:start', async ({ userId }) => {
             console.log('new video session iniated');
-            
-            const {session,learners} = await videoSessionUseCase.startSession({userId});
-            socket.join(session.sessionCode);
-            this.io.to(socket.id).emit('session:started',{sessionId:session.sessionCode});
-            
-             
-            learners.forEach(learner=>{
-                const user =this.getUser(learner.id);
- 
-                if(user){
-                    this.io.to(user.socketId).emit('session:available',{sessionId:session.sessionCode});
-                }
+
+            const liveUsers = (await this.getAllUsers()).map(
+                (user) => user.userId
+            );
+            const session = await videoSessionUseCase.startSession({
+                userId,
+                liveUsers,
             });
+
+            socket.join(session.sessionCode);
+            this.io
+                .to(socket.id)
+                .emit('session:started', { sessionId: session.sessionCode });
+            const selectedLearner = session.offers[0];
+
+            const user = await this.getUser(selectedLearner?.toString() || '');
+
+            if (user) {
+                this.io.to(user.socketId).emit('session:available', {
+                    sessionId: session.sessionCode,
+                    start: Date.now(),
+                });
+            }
         });
 
-        socket.on('session:join',async({userId, sessionId})=>{ 
-            console.log('session join from learner');
-            
-            
-            const session = await videoSessionUseCase.joinSession({userId, sessionId});
-            const allowed=Boolean(session);
-            this.io.to(socket.id).emit('session:join-allow',{sessionId, allowed});
-        
-            
-            if(allowed){
-                console.log('allowed to send user joined noti in the room');
-                
-                this.io.to(sessionId).emit('session:user-joined',{userId,socketId:socket.id});
-             
+        socket.on('session:join', async ({ userId, sessionId }) => {
+            const session = await videoSessionUseCase.joinSession({
+                userId,
+                sessionId,
+            });
+            const allowed = Boolean(session);
+            this.io
+                .to(socket.id)
+                .emit('session:join-allow', { sessionId, allowed });
+
+            if (allowed) {
+                this.io.to(sessionId).emit('session:user-joined', {
+                    userId,
+                    socketId: socket.id,
+                });
             }
             socket.join(sessionId);
-            
-        });
- 
-       
-      
-
-        socket?.on('session:call-user',({from,to, offer})=>{
-            console.log('call user ',offer);
-            
-            const {socketId}= this.getUser(to) || {};
-            console.log('incomming:call-incomming:call-incomming:call-incomming:call',socketId);
-            
-            this.io.to(socketId || '').emit('incomming:call',{from,offer});
-
-        });
- 
-        socket.on('call:accepted',({to,ans,from})=>{
-         
-            console.log('call accepted',ans);
-            
-            const {socketId}= this.getUser(to) || {};
-          
-            //call accepted is sending hear but not getting at client side
-
-            
-            this.io.to(socketId || '').emit('call:accepted',{from,ans});
-          
         });
 
-        socket.on('peer:nego-needed',({from,to, offer})=>{
-            console.log('peer negosition need');
-            
-            const {socketId}= this.getUser(to) || {};
-            this.io.to(socketId || '').emit('peer:nego-needed',{from,offer});
-         
-            
+        socket.on('session:rematch', async ({ sessionId }) => {
+            console.log(' video session rematch iniated');
+
+            const liveUsers = (await this.getAllUsers()).map((user) => user.userId);
+            const selectedLearner = await videoSessionUseCase.rematch({
+                sessionCode: sessionId,
+                liveUsers,
+            });
+
+            if (!selectedLearner) {
+                this.io
+                    .to(socket.id)
+                    .emit('session:rematch', { selectedLearner });
+                return;
+            }
+
+            const user = await this.getUser(selectedLearner?.toString() || '');
+
+            if (user) {
+                this.io
+                    .to(user.socketId)
+                    .emit('session:available', { sessionId });
+            }
         });
 
-        socket.on('peer:nego-done',({from,to, ans})=>{
-           
-            console.log('peer nego done');
-            
-            const {socketId}= this.getUser(to) || {};
-            this.io.to(socketId || '').emit('peer:nego-final',{from,ans});
-            
-            
+        socket?.on('session:call-user', async ({ from, to, offer }) => {
+            const { socketId } = (await this.getUser(to)) || {};
+            this.io.to(socketId || '').emit('incomming:call', { from, offer });
+        });
+
+        socket.on('call:accepted', async ({ to, ans, from }) => {
+            const { socketId } = (await this.getUser(to)) || {};
+            this.io.to(socketId || '').emit('call:accepted', { from, ans });
+        });
+
+        socket.on('peer:nego-needed', async ({ from, to, offer }) => {
+            const { socketId } = (await this.getUser(to)) || {};
+            this.io
+                .to(socketId || '')
+                .emit('peer:nego-needed', { from, offer });
+        });
+
+        socket.on('peer:nego-done', async ({ from, to, ans }) => {
+            const { socketId } = (await this.getUser(to)) || {};
+            this.io.to(socketId || '').emit('peer:nego-final', { from, ans });
         });
     }
 
+    async addUser(userId: string, socketId: string) {
+        await client.hset('userIdToSocketId', userId, socketId);
+      
+       
+    }
 
-    addUser(userId: string, socketId: string) {
-        const user = this.users.find((user) => user.userId === userId);
-
-        if (user) {
-            user.socketId = socketId;
-        } else {
-            this.users.push({ userId, socketId });
+    async removeUser(socketId: string) {
+        
+        const users = await this.getAllUsers();
+        const user = users.find(user=>user.socketId==socketId);
+        if(user){
+            await client.hdel('userIdToSocketId', user.userId);
         }
         
-        
+       
+     
     }
 
-    removeUser(socketId: string) {
-        this.users = this.users.filter((user) => user.socketId !== socketId);
+
+    async getUser(userId: string) {
+        if (!userId) return null;
+        const socketId = await client.hget('userIdToSocketId', userId);
+        return socketId ? { userId, socketId } : null;
     }
 
-    getUser(userId: string) {
-        if(!userId) return null
-        return this.users.find((user) => user.userId.toString() === userId.toString()) ;
+    async getAllUsers() {
+        const keyValuePairs = await client.hgetall('userIdToSocketId');
+        const pairsArray = [];
+        for (const userId in keyValuePairs) {
+            pairsArray.push({ userId, socketId: keyValuePairs[userId] });
+        }
+        return pairsArray || [];
     }
-
-    getUniqueString = () => {
-        const randomString = Math.random().toString(36);
-        return Date.now().toString(36) + randomString.slice(2);
-    };
-    
 }

@@ -2,5 +2,6 @@ import { ISession } from '../../../domain/session';
 
 
 export interface IVideoSessionUseCase{
-    startSession({userId}:{userId:string}):Promise<{session:ISession, learners:{id:string}[]}>
+    startSession({userId, liveUsers}:{userId:string, liveUsers:string[]}):Promise<ISession>
+    rematch({sessionCode,liveUsers}:{sessionCode: string,liveUsers: string[]}):Promise<string|null>
 }

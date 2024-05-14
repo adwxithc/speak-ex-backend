@@ -9,5 +9,6 @@ export interface ISession{
     endingTime?:string;
     duaration:number;
     createdAt?:string;
-    updatedAt?:string
+    updatedAt?:string;
+    offers:DbId[]
 }
