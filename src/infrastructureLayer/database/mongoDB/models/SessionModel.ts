@@ -26,7 +26,9 @@ const sessionSchema = new Schema<ISession>(
         endingTime:{
             type:String,
         },
-
+        offers:{
+            type:[mongoose.Schema.ObjectId]
+        }
     },
     {
         timestamps: true,
