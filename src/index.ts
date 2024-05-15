@@ -13,7 +13,7 @@ const start = async () => {
     try {
         await connectDB();
     } catch (error) {
-        console.error(error,'database connection failed..');
+        console.error(error, 'database connection failed..');
     }
 
     httpServer.listen(PORT, () => {

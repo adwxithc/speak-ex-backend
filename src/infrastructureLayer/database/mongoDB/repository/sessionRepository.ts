@@ -6,6 +6,7 @@ import {
     joinLearner,
     findSingleLearner,
     updateRematchedLearner,
+    terminateSession,
 } from './sessionRepository/';
 
 export class SessionRepository implements ISessionRepository {
@@ -75,5 +76,9 @@ export class SessionRepository implements ISessionRepository {
             selectedLearner,
             sessionModel: this.sessionModel,
         });
+    }
+
+    async terminateSession({ sessionCode }: { sessionCode: string; }): Promise<void> {
+        return await terminateSession({ sessionCode, sessionModel: this.sessionModel });
     }
 }

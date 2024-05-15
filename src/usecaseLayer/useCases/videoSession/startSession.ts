@@ -20,7 +20,9 @@ export const startSession = async ({
     const sessionCode= generateUniqueString.getString();
     const learners =await userRepository.getLearners({helperId:userId});
    
-    const selectedLearner = (learners.find(learner=>liveUsers.includes(learner.id.toString())))?.id || '';
+    const learnerIds = learners.map(learner=>learner.id.toString());
+    // const selectedLearner = (learners.find(learner=>liveUsers.includes(learner.id.toString())))?.id || '';
+    const selectedLearner = liveUsers.find(user=>learnerIds.includes(user)) || '';
     
     const session =  await sessionRepository.createSession({userId,sessionCode,selectedLearner});
     

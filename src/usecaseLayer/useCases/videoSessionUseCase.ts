@@ -2,8 +2,7 @@ import { ISessionRepository } from '../interface/repository/ISessionRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
 import { IVideoSessionUseCase } from '../interface/usecase/videoSessionUseCase';
-import { startSession, rematch, joinSession } from './videoSession/';
-
+import { startSession, rematch, joinSession, terminateSession } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly generateUniqueString: IGenerateUniQueString;
@@ -25,22 +24,53 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     }
 
     //startSession
-    async startSession({ userId, liveUsers }: { userId: string, liveUsers:string[] }) {
+    async startSession({
+        userId,
+        liveUsers,
+    }: {
+        userId: string;
+        liveUsers: string[];
+    }) {
         return await startSession({
             userId,
             liveUsers,
             sessionRepository: this.sessionRepository,
             userRepository: this.userRepository,
             generateUniqueString: this.generateUniqueString,
+        });  
+    }
+
+    async joinSession({
+        userId,
+        sessionId,
+    }: {
+        userId: string;
+        sessionId: string;
+    }) {
+        return await joinSession({
+            userId,
+            sessionId,
+            sessionRepository: this.sessionRepository,
         });
     }
 
-    async joinSession({userId, sessionId}:{userId: string, sessionId: string}){
-        return await joinSession({userId, sessionId, sessionRepository:this.sessionRepository});
+    //rematch new user
+    async rematch({
+        sessionCode,
+        liveUsers,
+    }: {
+        sessionCode: string;
+        liveUsers: string[];
+    }) {
+        return await rematch({
+            sessionCode,
+            liveUsers,
+            sessionRepository: this.sessionRepository,
+        
+        });
     }
 
-    //rematch new user
-    async rematch({sessionCode,liveUsers}:{sessionCode:string,liveUsers:string[]}){
-        return await rematch({sessionCode, liveUsers, sessionRepository:this.sessionRepository, userRepository:this.userRepository});
+    async terminateSession({ sessionCode }: { sessionCode: string; }): Promise<void> {
+        return await terminateSession({sessionCode,sessionRepository:this.sessionRepository});
     }
 }

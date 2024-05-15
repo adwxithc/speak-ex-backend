@@ -16,10 +16,6 @@ const sessionSchema = new Schema<ISession>(
             type:mongoose.Schema.ObjectId,
             
         },
-        duaration:{
-            type:Number,
-            default:0
-        },
         startingTime:{
             type:String,
         },
