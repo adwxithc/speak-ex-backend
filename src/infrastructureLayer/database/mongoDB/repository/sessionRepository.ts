@@ -1,3 +1,5 @@
+
+
 import { ISessionRepository } from '../../../../usecaseLayer/interface/repository/ISessionRepository';
 import SessionModel from '../models/SessionModel';
 import {
@@ -7,6 +9,7 @@ import {
     findSingleLearner,
     updateRematchedLearner,
     terminateSession,
+    rate
 } from './sessionRepository/';
 
 export class SessionRepository implements ISessionRepository {
@@ -81,4 +84,9 @@ export class SessionRepository implements ISessionRepository {
     async terminateSession({ sessionCode }: { sessionCode: string; }): Promise<void> {
         return await terminateSession({ sessionCode, sessionModel: this.sessionModel });
     }
+
+    async rate({ sessionCode, rating }: { sessionCode: string; rating: number; }){
+        return await rate({rating,sessionCode,sessionModel:this.sessionModel});
+    }
+    
 }

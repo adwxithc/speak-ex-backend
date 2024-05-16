@@ -24,6 +24,11 @@ const sessionSchema = new Schema<ISession>(
         },
         offers:{
             type:[mongoose.Schema.ObjectId]
+        },
+        rating:{
+            type:Number,
+            min: 1,
+            max: 5
         }
     },
     {

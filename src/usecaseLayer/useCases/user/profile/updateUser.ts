@@ -38,7 +38,7 @@ export const updateUser = async ({
     
     if (proficientLanguage && proficientLanguage.length > 0 || focusLanguage) {
         // Combine proficient and focus language IDs
-        const allLanguageIds=[]
+        const allLanguageIds=[];
         if(proficientLanguage && proficientLanguage.length>0) allLanguageIds.push(...proficientLanguage);
         if(focusLanguage)allLanguageIds.push(focusLanguage);
         const validatedIds=allLanguageIds.filter((id)=>validateDbObjects.validateId(id)); 
@@ -56,6 +56,7 @@ export const updateUser = async ({
 
     if(userName){
         const user= await userRepository.findUserByUserName(userName);
+        
         if(user && user.id !== id) throw new BadRequestError('user name already in use');
 
     }

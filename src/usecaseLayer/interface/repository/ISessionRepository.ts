@@ -9,4 +9,5 @@ export interface ISessionRepository {
     findSingleLearner({ sessionCode, liveUsers}:{ sessionCode: string, liveUsers: string[]}):Promise<string|null>
     updateRematchedLearner({sessionCode, selectedLearner}:{sessionCode:string, selectedLearner:string}):Promise<ISession>
     terminateSession({sessionCode}:{sessionCode:string}):Promise<void>
+    rate({sessionCode,rating}:{sessionCode:string,rating:number}):Promise<ISession>
 }

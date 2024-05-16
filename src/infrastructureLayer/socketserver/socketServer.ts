@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
-import { videoSessionUseCase } from './socketInjection/videoSessionInjection';
+import { videoSessionUseCase } from '../webserver/routes/injections/videoSessionInjection';
 import { redisDB } from '../webserver/config/redis';
 
 const client = redisDB();
@@ -23,7 +23,7 @@ export class SocketManager {
     }
 
     private handleConnection(socket: Socket) {
-        console.log('a user connected');
+        // console.log('a user connected');
 
         socket.on('addUser', async ({ userId }) => {
             this.addUser(userId, socket.id);
@@ -46,7 +46,7 @@ export class SocketManager {
         });
 
         socket.on('disconnect', async () => {
-            console.log('a user disconnected');
+            // console.log('a user disconnected');
             this.removeUser(socket.id);
             const users = await this.getAllUsers();
             this.io.emit('getUsers', users);
@@ -55,7 +55,7 @@ export class SocketManager {
         // webRTC
 
         socket.on('session:start', async ({ userId }) => {
-            console.log('new video session iniated');
+            // console.log('new video session iniated');
 
             const liveUsers = await this.getAllUserFromPriority();
             const session = await videoSessionUseCase.startSession({
@@ -100,7 +100,7 @@ export class SocketManager {
         });
 
         socket.on('session:rematch', async ({ sessionId }) => {
-            console.log(' video session rematch iniated');
+            // console.log(' video session rematch iniated');
 
             const liveUsers = await this.getAllUserFromPriority();
             const selectedLearner = await videoSessionUseCase.rematch({
@@ -119,7 +119,7 @@ export class SocketManager {
         });
 
         socket.on('session:terminate', async ({ sessionCode }) => {
-            console.log('session terminated--');
+            // console.log('session terminated--');
 
             await videoSessionUseCase.terminateSession({ sessionCode });
         });

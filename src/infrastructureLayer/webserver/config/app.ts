@@ -13,6 +13,7 @@ import dotenv from 'dotenv';
 import { Req } from '../../types/expressTypes';
 import { chatRoute } from '../routes/chatRoute';
 import { SocketManager } from '../../socketserver/socketServer';
+import { videoSessionRote } from '../routes/videoSessionRote';
 
 
 dotenv.config();
@@ -34,6 +35,7 @@ app.use('/api/user', userRoute(express.Router()));
 app.use('/api/admin', adminRoute(express.Router()));
 app.use('/api/post', postRoute(express.Router()));
 app.use('/api/chat',chatRoute(express.Router()));
+app.use('/api/session',videoSessionRote(express.Router()));
 
 app.all('*', (req:Req) => {
     console.log(req.originalUrl,'original url');
