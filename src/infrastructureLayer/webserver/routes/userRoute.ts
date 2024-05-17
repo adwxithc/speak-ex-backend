@@ -187,6 +187,14 @@ export function userRoute(router: Router) {
         }
     );
 
+    router.get(
+        '/id/:userId',
+        protect.protectUser,
+        async (req:Req, res:Res)=>{
+            await userController.getUserById(req,res);
+        }
+    );
+
     router.put(
         '/follow/:userId',
         protect.protectUser,

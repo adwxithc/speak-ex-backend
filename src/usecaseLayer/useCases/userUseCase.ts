@@ -20,7 +20,8 @@ import {
     follow,
     unfollow,
     getFollowers,
-    getFollowings
+    getFollowings,
+    getUserById
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -286,6 +287,10 @@ export class UserUseCase implements IUserUseCase {
             fileBucket: this.fileBucket,
             userRepository: this.userRepository,
         });
+    }
+
+    async getUserById(userId: string) {
+        return await getUserById({userId,userRepository: this.userRepository,fileBucket: this.fileBucket,});
     }
 
     async follow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
