@@ -34,7 +34,8 @@ export class SocketManager {
         //send and get message
         socket.on('sendMessage', async ({ senderId, receiverId, text }) => {
             const user = await this.getUser(receiverId);
-
+            
+            
             this.io.to(user?.socketId || '').emit('getMessage', {
                 senderId,
                 text,

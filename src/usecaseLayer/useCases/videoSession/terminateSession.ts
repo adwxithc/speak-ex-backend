@@ -12,7 +12,7 @@ export const terminateSession = async ({
 }) => {
     
     const session = await sessionRepository.findBySessionCode({sessionCode});
-    console.log('session termination process----',session,sessionCode);
+ 
     if(!session || !session?.helper || !session.learner || session.endingTime){
         return;
     }

@@ -277,6 +277,15 @@ export class UserController {
         });
     }
 
+    async getUserById(req:Req, res:Res){
+        const {userId} = req.params;
+        const user = await this.userUseCase.getUserById(userId);
+        res.json({
+            succes:true,
+            data:user
+        });
+    }
+
     async follow(req:Req, res:Res){
         const{id} =  req.user || {};
         const {userId} = req.params;
