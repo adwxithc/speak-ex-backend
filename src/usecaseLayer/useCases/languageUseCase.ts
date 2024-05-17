@@ -1,9 +1,9 @@
-import ILanguage from '../../domain/language';
+
 import { ILanguageRepository } from '../interface/repository/ILanguageRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
-import { ILanguageInfo, ILanguageUseCase, ILnaguageMonthelySessions } from '../interface/usecase/languageUseCase';
+import { ILanguageUseCase } from '../interface/usecase/languageUseCase';
 
-import { createLanguage,listLanguages,getAllLanguages, getLearnerHelperRatio, getMonthlySessions } from './language';
+import { createLanguage,listLanguages,getAllLanguages, getLearnerHelperRatio, getMonthlySessions, updateLanguage } from './language';
 
 export class LanguageUseCase implements ILanguageUseCase {
     private readonly languageRepository: ILanguageRepository;
@@ -22,14 +22,14 @@ export class LanguageUseCase implements ILanguageUseCase {
         name: string;
         basePrice: number;
        
-    }): Promise<ILanguage> {
+    }){
         return await createLanguage(
             { name, basePrice },
             this.languageRepository
         );
     }
     
-    async listLanguages({ page, key, limit }: { page: number; key: string; limit: number; }): Promise<{ languages: ILanguage[]; totalLanguages: number; lastPage: number; }> {
+    async listLanguages({ page, key, limit }: { page: number; key: string; limit: number; }) {
         const languagesData = await listLanguages({
             languageRepository: this.languageRepository,
             page,
@@ -38,15 +38,19 @@ export class LanguageUseCase implements ILanguageUseCase {
         });
         return languagesData;
     }
-    async getAllLanguages(): Promise<ILanguage[]> {
+    async getAllLanguages(){
         return await getAllLanguages({languageRepository:this.languageRepository});
     }
 
-    async getLearnerHelperRatio({ languageId }: { languageId: string; }): Promise<ILanguageInfo> {
+    async getLearnerHelperRatio({ languageId }: { languageId: string; }){
         return await getLearnerHelperRatio({languageId,languageRepository:this.languageRepository});
     }
 
-    async getMonthlySessions({ languageId }: { languageId: string; }): Promise<ILnaguageMonthelySessions> {
-        return getMonthlySessions({languageId, sessionRepository:this.sessionRepository});
+    async getMonthlySessions({ languageId }: { languageId: string; }){
+        return await getMonthlySessions({languageId, sessionRepository:this.sessionRepository});
+    }
+
+    async updateLanguage({ basePrice, rate,languageId }: { basePrice: number; rate: number; languageId:string }) {
+        return await updateLanguage({ basePrice, rate, languageId, languageRepository:this.languageRepository });
     }
 }

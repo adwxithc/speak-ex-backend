@@ -1,7 +1,6 @@
 
 
 import { ISessionRepository } from '../../../../usecaseLayer/interface/repository/ISessionRepository';
-import { ILnaguageMonthelySessions } from '../../../../usecaseLayer/interface/usecase/languageUseCase';
 import SessionModel from '../models/SessionModel';
 import {
     createSession,
@@ -93,7 +92,7 @@ export class SessionRepository implements ISessionRepository {
     async rate({ sessionCode, rating }: { sessionCode: string; rating: number; }){
         return await rate({rating,sessionCode,sessionModel:this.sessionModel});
     }
-    async getMonthlySessions({ languageId }: { languageId: string; }): Promise<ILnaguageMonthelySessions> {
+    async getMonthlySessions({ languageId }: { languageId: string; }) {
         return await getMonthlySessions({languageId,sessionModel:this.sessionModel});
     }
     

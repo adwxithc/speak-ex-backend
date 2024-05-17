@@ -1,13 +1,13 @@
 import LanguageModel from '../models/languageModel';
 import { ILanguageRepository } from '../../../../usecaseLayer/interface/repository/ILanguageRepository';
 import ILanguage from '../../../../domain/language';
-import { createLanguage, listLanguages,getLanguages, getAllLanguages, getLearnerHelperRatio } from './languageRepository/';
+import { createLanguage, listLanguages,getLanguages, getAllLanguages, getLearnerHelperRatio, updateLanguage } from './languageRepository/';
 
 
 export class LanguageRepository implements ILanguageRepository {
     constructor(private languageModel: typeof LanguageModel) {}
 
-    async createLanguage(language: ILanguage): Promise<ILanguage> {
+    async createLanguage(language: ILanguage){
         return await createLanguage(language, this.languageModel);
     }
     async listLanguages({
@@ -18,7 +18,7 @@ export class LanguageRepository implements ILanguageRepository {
         page: number;
         limit: number;
         key: string;
-    }): Promise<{ languages: ILanguage[]; totalLanguages: number }> {
+    }){
         return await listLanguages({ page, limit, key }, this.languageModel);
     }
 
@@ -29,11 +29,15 @@ export class LanguageRepository implements ILanguageRepository {
         );
     }
 
-    async getAllLanguages(): Promise<ILanguage[]> {
+    async getAllLanguages() {
         return await getAllLanguages(this.languageModel);
     }
 
     async getLearnerHelperRatio({ languageId }: { languageId: string; }){
         return await  getLearnerHelperRatio({languageModel:this.languageModel,languageId});
+    }
+    
+    async updateLanguage({ rate, basePrice, languageId }: { rate: number; basePrice: number; languageId: string; }){
+        return await updateLanguage({rate, basePrice, languageId,languageModel:this.languageModel});
     }
 }

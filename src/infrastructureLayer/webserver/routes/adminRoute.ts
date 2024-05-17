@@ -29,13 +29,9 @@ export function adminRoute(router: Router) {
         await adminController.signout(req, res);
     });
 
-    router.get(
-        '/users',
-        protect.protectAdmin,
-        async (req: Req, res: Res) => {
-            await userController.listUsers(req, res);
-        }
-    );
+    router.get('/users', protect.protectAdmin, async (req: Req, res: Res) => {
+        await userController.listUsers(req, res);
+    });
 
     router.put(
         '/user/:id',
@@ -49,7 +45,6 @@ export function adminRoute(router: Router) {
         validateRequest,
         async (req: Req, res: Res) => {
             await adminController.updateUser(req, res);
-            
         }
     );
 
@@ -73,25 +68,45 @@ export function adminRoute(router: Router) {
         }
     );
 
-    router.get('/languages',protect.protectAdmin, async (req: Req, res: Res) => {
-        await languageController.listLanguages(req, res);
-    });
+    router.get(
+        '/languages',
+        protect.protectAdmin,
+        async (req: Req, res: Res) => {
+            await languageController.listLanguages(req, res);
+        }
+    );
     router.get(
         '/language/:languageId/user-ratio',
         protect.protectAdmin,
-        async (req:Req, res:Res)=>{
-            
+        async (req: Req, res: Res) => {
             await languageController.getLearnerHelperRatio(req, res);
         }
     );
     router.get(
         '/language/:languageId/monthly-sessions',
         protect.protectAdmin,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await languageController.getMonthlySessions(req, res);
         }
     );
+    router.put(
+        '/language/:languageId',
+        body('basePrice')
+            .isNumeric()
+            .withMessage('Base price must be a numeric value')
+            .isFloat({ min: 0 })
+            .withMessage('Base price should be a positive number'),
+        body('rate')
+            .isNumeric()
+            .withMessage('rate  must be a numeric value')
+            .isFloat({ min: 0 })
+            .withMessage('rate  should be a positive number'),
+        validateRequest,
+        protect.protectAdmin,
+        async (req: Req, res: Res) => {
+            await languageController.updateLanguage(req, res);
+        }
+    );
 
-
-    return router; 
+    return router;
 }
