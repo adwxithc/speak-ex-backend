@@ -77,15 +77,21 @@ export function adminRoute(router: Router) {
         await languageController.listLanguages(req, res);
     });
     router.get(
-        '/language/:languageId',
+        '/language/:languageId/user-ratio',
         protect.protectAdmin,
         async (req:Req, res:Res)=>{
-            console.log('jbirsjlkjss');
             
-            await languageController.getLanguageInfo(req, res);
+            await languageController.getLearnerHelperRatio(req, res);
+        }
+    );
+    router.get(
+        '/language/:languageId/monthly-sessions',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await languageController.getMonthlySessions(req, res);
         }
     );
 
 
-    return router;
+    return router; 
 }

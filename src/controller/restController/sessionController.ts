@@ -11,7 +11,8 @@ export class VideoSessionController {
         const {rating} = req.body;
         const{sessionCode } = req.params;
         const {id} = req.user as IAccessRefreshToken;
-
+        console.log(id,'id shoule be end with fef',);
+        
         const result = await this.videoSessionUseCase.rate({sessionCode,userId:id,rating});
 
         res.json({

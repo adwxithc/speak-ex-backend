@@ -37,12 +37,21 @@ export class LanguageController {
         });
     }
 
-    async getLanguageInfo(req:Req, res:Res){
+    async getLearnerHelperRatio(req:Req, res:Res){
         const {languageId}  =  req.params;
-        const languageInfo = await this.languageUseCase.getLanguageInfo({languageId:languageId});
+        const languageInfo = await this.languageUseCase.getLearnerHelperRatio({languageId});
         res.json({
             success:true,
             data:languageInfo,
+        });
+    }
+
+    async getMonthlySessions(req:Req, res:Res){
+        const {languageId} = req.params;
+        const monthlySessions = await this.languageUseCase.getMonthlySessions({languageId});
+        res.json({
+            success:true,
+            data:monthlySessions,
         });
     }
     

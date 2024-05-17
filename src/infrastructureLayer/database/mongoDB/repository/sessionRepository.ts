@@ -1,6 +1,7 @@
 
 
 import { ISessionRepository } from '../../../../usecaseLayer/interface/repository/ISessionRepository';
+import { ILnaguageMonthelySessions } from '../../../../usecaseLayer/interface/usecase/languageUseCase';
 import SessionModel from '../models/SessionModel';
 import {
     createSession,
@@ -9,7 +10,8 @@ import {
     findSingleLearner,
     updateRematchedLearner,
     terminateSession,
-    rate
+    rate,
+    getMonthlySessions
 } from './sessionRepository/';
 
 export class SessionRepository implements ISessionRepository {
@@ -42,13 +44,16 @@ export class SessionRepository implements ISessionRepository {
     async joinLearner({
         learner,
         sessionCode,
+        languageId
     }: {
         learner: string;
         sessionCode: string;
+        languageId:string
     }) {
         return await joinLearner({
             learner,
             sessionCode,
+            languageId,
             sessionModel: this.sessionModel,
         });
     }
@@ -87,6 +92,9 @@ export class SessionRepository implements ISessionRepository {
 
     async rate({ sessionCode, rating }: { sessionCode: string; rating: number; }){
         return await rate({rating,sessionCode,sessionModel:this.sessionModel});
+    }
+    async getMonthlySessions({ languageId }: { languageId: string; }): Promise<ILnaguageMonthelySessions> {
+        return await getMonthlySessions({languageId,sessionModel:this.sessionModel});
     }
     
 }

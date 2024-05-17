@@ -1,13 +1,16 @@
 import { ISessionRepository } from '../../interface/repository/ISessionRepository';
+import { IUserRepository } from '../../interface/repository/IUserRepository';
 
 
 
 export const joinSession = async ({
     sessionRepository,
+    userRepository,
     userId,
     sessionId
 }: {
     sessionRepository: ISessionRepository;
+    userRepository:IUserRepository;
     sessionId:string;
     userId: string;
 }) => {
@@ -15,8 +18,11 @@ export const joinSession = async ({
     if(!session){
         return null;
     }
-
+    
     if(session.learner) return null;
-    await sessionRepository.joinLearner({learner:userId, sessionCode:sessionId});
+    const learner = await userRepository.findUserById(userId);
+    if(!learner) return null;
+    
+    await sessionRepository.joinLearner({learner:userId, sessionCode:sessionId,languageId:learner.focusLanguage as string});
     return session;
 };

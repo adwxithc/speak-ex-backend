@@ -1,6 +1,6 @@
 import { ILanguageRepository } from '../../interface/repository/ILanguageRepository';
 
-export const getLanguageInfo = async ({
+export const getLearnerHelperRatio = async ({
     languageId,
     languageRepository,
 }: {
@@ -9,5 +9,5 @@ export const getLanguageInfo = async ({
 
 }) => {
 
-    return await languageRepository.getLanguageInfo({languageId});
+    return await languageRepository.getLearnerHelperRatio({languageId});
 };

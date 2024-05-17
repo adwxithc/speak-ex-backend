@@ -5,6 +5,7 @@ import { findSingleLearner } from './findSingleLearner';
 import { updateRematchedLearner } from './updateRematchedLearner';
 import { terminateSession } from './terminateSession';
 import { rate } from './rate';
+import { getMonthlySessions } from './getMonthlySessions';
 export{
     createSession,
     findBySessionCode,
@@ -12,5 +13,6 @@ export{
     findSingleLearner,
     updateRematchedLearner,
     terminateSession,
-    rate
+    rate,
+    getMonthlySessions
 };

@@ -6,5 +6,5 @@ export interface ILanguageRepository {
     listLanguages({page,limit,key}:{page:number,limit:number,key:string}):Promise<{languages: ILanguage[];totalLanguages: number;}>;
     getLanguages({languageIds}:{languageIds:string[]}):Promise<ILanguage[]>
     getAllLanguages():Promise<ILanguage[]>
-    getLanguageInfo({languageId}:{languageId:string}):Promise<ILanguageInfo>
+    getLearnerHelperRatio({languageId}:{languageId:string}):Promise<ILanguageInfo>
 }

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import LanguageModel from '../../models/languageModel';
 import { ILanguageInfo } from '../../../../../usecaseLayer/interface/usecase/languageUseCase';
 
-export const getLanguageInfo = async ({
+export const getLearnerHelperRatio = async ({
     languageId,
     languageModel,
 }: {

@@ -1,10 +1,12 @@
 import {createLanguage} from './createLanguage';
 import { listLanguages } from './listLanguages';
 import {getAllLanguages} from './getAllLanguages';
-import { getLanguageInfo } from './getLanguageInfo';
+import { getLearnerHelperRatio } from './getLearnerHelperRatio';
+import { getMonthlySessions } from './getMonthlySessions';
 export {
     createLanguage,
     listLanguages,
     getAllLanguages,
-    getLanguageInfo
+    getLearnerHelperRatio,
+    getMonthlySessions
 };

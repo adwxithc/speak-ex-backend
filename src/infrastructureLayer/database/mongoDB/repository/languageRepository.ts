@@ -1,7 +1,7 @@
 import LanguageModel from '../models/languageModel';
 import { ILanguageRepository } from '../../../../usecaseLayer/interface/repository/ILanguageRepository';
 import ILanguage from '../../../../domain/language';
-import { createLanguage, listLanguages,getLanguages, getAllLanguages, getLanguageInfo } from './languageRepository/index';
+import { createLanguage, listLanguages,getLanguages, getAllLanguages, getLearnerHelperRatio } from './languageRepository/';
 
 
 export class LanguageRepository implements ILanguageRepository {
@@ -33,7 +33,7 @@ export class LanguageRepository implements ILanguageRepository {
         return await getAllLanguages(this.languageModel);
     }
 
-    async getLanguageInfo({ languageId }: { languageId: string; }){
-        return await  getLanguageInfo({languageModel:this.languageModel,languageId});
+    async getLearnerHelperRatio({ languageId }: { languageId: string; }){
+        return await  getLearnerHelperRatio({languageModel:this.languageModel,languageId});
     }
 }
