@@ -54,5 +54,17 @@ export class LanguageController {
             data:monthlySessions,
         });
     }
+
+    async updateLanguage(req:Req, res:Res){
+        const {rate, basePrice} = req.body;
+        const {languageId} = req.params;
+        const updatedLanguage = await this.languageUseCase.updateLanguage({rate, basePrice,languageId});
+
+        res.json({
+            success:true,
+            data:updatedLanguage,
+            message:'Language updated successfully'
+        });
+    }
     
 }
