@@ -17,6 +17,8 @@ import { LanguageRepository } from '../../../database/mongoDB/repository/languag
 import LanguageModel from '../../../database/mongoDB/models/languageModel';
 import { LanguageUseCase } from '../../../../usecaseLayer/useCases/languageUseCase';
 import { ValidateDbObjects } from '../../../services/validateDbObjects';
+import { SessionRepository } from '../../../database/mongoDB/repository/sessionRepository';
+import SessionModel from '../../../database/mongoDB/models/SessionModel';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -29,6 +31,7 @@ const fileBucket = new FileBucket();
 
 const userOtpRepository = new UserOtpRepository();
 const languageRepository= new LanguageRepository(LanguageModel);
+const sessionRepository = new SessionRepository(SessionModel);
 
 const userUseCase = new UserUseCase({
     userRepository,
@@ -45,10 +48,11 @@ const userUseCase = new UserUseCase({
 
 
 
-const languageUseCase = new LanguageUseCase(
+const languageUseCase = new LanguageUseCase({
     languageRepository,
+    sessionRepository
 
-);
+});
 
 const userController = new UserController({userUseCase,languageUseCase});
 

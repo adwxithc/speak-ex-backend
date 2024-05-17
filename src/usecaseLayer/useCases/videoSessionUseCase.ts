@@ -57,6 +57,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             userId,
             sessionId,
             sessionRepository: this.sessionRepository,
+            userRepository:this.userRepository
         });
     }
 

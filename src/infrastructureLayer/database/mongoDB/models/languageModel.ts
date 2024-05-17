@@ -13,7 +13,9 @@ const languageSchema = new Schema<ILanguage>(
             type: Number,
             required: true,
         },
-        
+        rate:{
+            type:Number,
+        }
     },
     {
         timestamps: true,

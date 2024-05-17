@@ -29,6 +29,10 @@ const sessionSchema = new Schema<ISession>(
             type:Number,
             min: 1,
             max: 5
+        },
+        languageId:{
+            type:mongoose.Schema.ObjectId,
+            ref:'languages'
         }
     },
     {
