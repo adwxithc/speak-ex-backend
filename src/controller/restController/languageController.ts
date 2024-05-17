@@ -36,5 +36,14 @@ export class LanguageController {
             data:languageData
         });
     }
+
+    async getLanguageInfo(req:Req, res:Res){
+        const {languageId}  =  req.params;
+        const languageInfo = await this.languageUseCase.getLanguageInfo({languageId:languageId});
+        res.json({
+            success:true,
+            data:languageInfo,
+        });
+    }
     
 }

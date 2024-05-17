@@ -16,10 +16,6 @@ const sessionSchema = new Schema<ISession>(
             type:mongoose.Schema.ObjectId,
             
         },
-        duaration:{
-            type:Number,
-            default:0
-        },
         startingTime:{
             type:String,
         },
@@ -28,6 +24,11 @@ const sessionSchema = new Schema<ISession>(
         },
         offers:{
             type:[mongoose.Schema.ObjectId]
+        },
+        rating:{
+            type:Number,
+            min: 1,
+            max: 5
         }
     },
     {

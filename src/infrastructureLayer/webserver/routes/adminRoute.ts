@@ -76,7 +76,15 @@ export function adminRoute(router: Router) {
     router.get('/languages',protect.protectAdmin, async (req: Req, res: Res) => {
         await languageController.listLanguages(req, res);
     });
-
+    router.get(
+        '/language/:languageId',
+        protect.protectAdmin,
+        async (req:Req, res:Res)=>{
+            console.log('jbirsjlkjss');
+            
+            await languageController.getLanguageInfo(req, res);
+        }
+    );
 
 
     return router;

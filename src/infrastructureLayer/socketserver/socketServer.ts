@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
-import { videoSessionUseCase } from './socketInjection/videoSessionInjection';
+import { videoSessionUseCase } from '../webserver/routes/injections/videoSessionInjection';
 import { redisDB } from '../webserver/config/redis';
 
 const client = redisDB();
@@ -23,7 +23,7 @@ export class SocketManager {
     }
 
     private handleConnection(socket: Socket) {
-        console.log('a user connected');
+        // console.log('a user connected');
 
         socket.on('addUser', async ({ userId }) => {
             this.addUser(userId, socket.id);
@@ -46,7 +46,7 @@ export class SocketManager {
         });
 
         socket.on('disconnect', async () => {
-            console.log('a user disconnected');
+            // console.log('a user disconnected');
             this.removeUser(socket.id);
             const users = await this.getAllUsers();
             this.io.emit('getUsers', users);
@@ -55,11 +55,9 @@ export class SocketManager {
         // webRTC
 
         socket.on('session:start', async ({ userId }) => {
-            console.log('new video session iniated');
+            // console.log('new video session iniated');
 
-            const liveUsers = (await this.getAllUsers()).map(
-                (user) => user.userId
-            );
+            const liveUsers = await this.getAllUserFromPriority();
             const session = await videoSessionUseCase.startSession({
                 userId,
                 liveUsers,
@@ -74,6 +72,7 @@ export class SocketManager {
             const user = await this.getUser(selectedLearner?.toString() || '');
 
             if (user) {
+                this.descreasePriority({ userId: user.userId });
                 this.io.to(user.socketId).emit('session:available', {
                     sessionId: session.sessionCode,
                     start: Date.now(),
@@ -101,20 +100,13 @@ export class SocketManager {
         });
 
         socket.on('session:rematch', async ({ sessionId }) => {
-            console.log(' video session rematch iniated');
+            // console.log(' video session rematch iniated');
 
-            const liveUsers = (await this.getAllUsers()).map((user) => user.userId);
+            const liveUsers = await this.getAllUserFromPriority();
             const selectedLearner = await videoSessionUseCase.rematch({
                 sessionCode: sessionId,
                 liveUsers,
             });
-
-            if (!selectedLearner) {
-                this.io
-                    .to(socket.id)
-                    .emit('session:rematch', { selectedLearner });
-                return;
-            }
 
             const user = await this.getUser(selectedLearner?.toString() || '');
 
@@ -122,7 +114,14 @@ export class SocketManager {
                 this.io
                     .to(user.socketId)
                     .emit('session:available', { sessionId });
+                this.descreasePriority({ userId: user.userId });
             }
+        });
+
+        socket.on('session:terminate', async ({ sessionCode }) => {
+            // console.log('session terminated--');
+
+            await videoSessionUseCase.terminateSession({ sessionCode });
         });
 
         socket?.on('session:call-user', async ({ from, to, offer }) => {
@@ -149,36 +148,45 @@ export class SocketManager {
     }
 
     async addUser(userId: string, socketId: string) {
-        await client.hset('userIdToSocketId', userId, socketId);
-      
-       
+        await client.hset('users', userId, socketId);
+        await this.addToPriorityQueue({ userId });
     }
 
     async removeUser(socketId: string) {
-        
         const users = await this.getAllUsers();
-        const user = users.find(user=>user.socketId==socketId);
-        if(user){
-            await client.hdel('userIdToSocketId', user.userId);
+        const user = users.find((user) => user.socketId == socketId);
+        if (user) {
+            await client.hdel('users', user.userId);
+            await this.removePriority({ userId: user.userId });
         }
-        
-       
-     
     }
-
 
     async getUser(userId: string) {
         if (!userId) return null;
-        const socketId = await client.hget('userIdToSocketId', userId);
+        const socketId = await client.hget('users', userId);
         return socketId ? { userId, socketId } : null;
     }
 
     async getAllUsers() {
-        const keyValuePairs = await client.hgetall('userIdToSocketId');
+        const keyValuePairs = await client.hgetall('users');
         const pairsArray = [];
         for (const userId in keyValuePairs) {
             pairsArray.push({ userId, socketId: keyValuePairs[userId] });
         }
         return pairsArray || [];
+    }
+
+    async addToPriorityQueue({ userId }: { userId: string }) {
+        await client.zadd('priority', 0, userId);
+    }
+    async getAllUserFromPriority() {
+        const users = await client.zrevrange('priority', 0, -1);
+        return users;
+    }
+    async descreasePriority({ userId }: { userId: string }) {
+        await client.zincrby('priority', -1, userId);
+    }
+    async removePriority({ userId }: { userId: string }) {
+        await client.zrem('priority', userId);
     }
 }

@@ -13,7 +13,7 @@ export const joinSession = async ({
 }) => {
     const session = await sessionRepository.findBySessionCode({sessionCode:sessionId});
     if(!session){
-        throw new Error('session does not exist');
+        return null;
     }
 
     if(session.learner) return null;

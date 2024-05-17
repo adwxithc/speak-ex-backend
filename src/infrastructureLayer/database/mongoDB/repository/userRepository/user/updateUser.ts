@@ -17,6 +17,8 @@ export const updateUser = async(
 ):Promise<IUser>=>{
 
     const user = await userModels.findById(id);
+   
+    
     if(!user){
         throw new BadRequestError('invalid user');
     }

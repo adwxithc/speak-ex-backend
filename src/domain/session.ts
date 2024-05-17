@@ -7,7 +7,7 @@ export interface ISession{
     learner?:DbId;
     startingTime?:string;
     endingTime?:string;
-    duaration:number;
+    rating?:number
     createdAt?:string;
     updatedAt?:string;
     offers:DbId[]

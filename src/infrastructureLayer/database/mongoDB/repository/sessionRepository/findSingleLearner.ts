@@ -1,74 +1,61 @@
-
 import SessionModel from '../../models/SessionModel';
-
 
 export const findSingleLearner = async ({
     sessionCode,
     liveUsers,
     sessionModel,
 }: {
-
-    sessionCode:string;
-    liveUsers:string[];
+    sessionCode: string;
+    liveUsers: string[];
     sessionModel: typeof SessionModel;
 }) => {
-    const [{learners, offers}] = await sessionModel.aggregate([
+    const [{ learners, offers }] = (await sessionModel.aggregate([
         {
-            $match:{
+            $match: {
                 sessionCode,
             },
-          
         },
         {
-            $lookup:{
+            $lookup: {
                 from: 'users',
                 localField: 'helper',
                 foreignField: '_id',
                 as: 'helper',
-            }
+            },
         },
         {
-            $unwind:'$helper'
+            $unwind: '$helper',
         },
         {
-            $lookup:{
-                from:'users',
-                localField:'helper.proficientLanguage',
-                foreignField:'focusLanguage',
-                as:'learners'
-            }
+            $lookup: {
+                from: 'users',
+                localField: 'helper.proficientLanguage',
+                foreignField: 'focusLanguage',
+                as: 'learners',
+            },
         },
-    
+
         {
-            $unwind:'$learners'
+            $unwind: '$learners',
         },
         {
-            $group:{
-                _id:'$sessionCode',
-                learners:{$push:'$learners._id'},
-                offers:{$first:'$offers'}
-            }
-        }
-        
-    ]) as {learners:string[], offers:string[]}[];
+            $group: {
+                _id: '$sessionCode',
+                learners: { $push: '$learners._id' },
+                offers: { $first: '$offers' },
+            },
+        },
+    ])) as { learners: string[]; offers: string[] }[];
 
-    
-    
+    const stringifiedLearner = learners.map((learner) => learner.toString());
+    const stringifiedOffers = offers.map((offer) => offer.toString());
 
+    const eligibleLearners = stringifiedLearner.filter(
+        (learner) => !stringifiedOffers.includes(learner)
+    );
 
-    const stringifiedLearner = learners.map(learner=>learner.toString());
-    const stringifiedOffers = offers.map(offer=>offer.toString());
-    
-    const eligibleLearners = stringifiedLearner.filter(learner=>!stringifiedOffers.includes(learner));
+    const selectedLearner =
+        eligibleLearners.find((learner) => liveUsers.includes(learner)) || null;
 
-    console.log(stringifiedLearner,'stringifiedLearner',eligibleLearners,'eligibleLearners',stringifiedOffers,'stringifiedOffers');
-    
-    
-    
-    const selectedLearner = eligibleLearners.find(learner=>liveUsers.includes(learner)) || null;
-
-
-    
-    
     return selectedLearner;
 };
