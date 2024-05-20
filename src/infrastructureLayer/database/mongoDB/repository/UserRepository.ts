@@ -10,7 +10,6 @@ import {
     listUsers,
     countUsers,
     updateUser,
-    findUserById,
     searchUser,
     follow,
     unfollow,
@@ -18,6 +17,8 @@ import {
     getFollowers,
     getFollowingPosts,
     getLearners,
+    findLearnerWithWallet,
+    findUserById
 } from './userRepository/user';
 import { getAllUser } from './userRepository/admin';
 
@@ -98,8 +99,13 @@ export class UserRepository implements IUserRepository {
         );
     }
 
-    async findUserById(id: string): Promise<Omit<IUser, 'password'> | null> {
+    async findUserById(id: string) {
         return await findUserById(id, this.userModels);
+        
+    }
+    
+    async findLearnerWithWallet(id: string){
+        return await findLearnerWithWallet(id, this.userModels);
     }
 
     async follow({

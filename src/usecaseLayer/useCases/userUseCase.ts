@@ -21,7 +21,8 @@ import {
     unfollow,
     getFollowers,
     getFollowings,
-    getUserById
+    getUserById,
+    getWallet
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -32,6 +33,9 @@ import { IUserOtpRepository } from '../interface/repository/IUserOtp';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { ILanguageRepository } from '../interface/repository/ILanguageRepository';
 import { IValidateDbObjects } from '../interface/services/validateDbObjects';
+import { IWalletRepository } from '../interface/repository/IWalletRepository';
+import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
+
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -44,6 +48,8 @@ export class UserUseCase implements IUserUseCase {
     private readonly fileBucket: IFileBucket;
     private readonly languageRepository: ILanguageRepository;
     private readonly validateDbObjects: IValidateDbObjects;
+    private readonly walletRepository: IWalletRepository;
+    private readonly generateUniQueString: IGenerateUniQueString;
 
     constructor({
         userRepository,
@@ -56,6 +62,8 @@ export class UserUseCase implements IUserUseCase {
         fileBucket,
         languageRepository,
         validateDbObjects,
+        walletRepository,
+        generateUniQueString
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -67,6 +75,8 @@ export class UserUseCase implements IUserUseCase {
         fileBucket: IFileBucket;
         languageRepository: ILanguageRepository;
         validateDbObjects: IValidateDbObjects;
+        walletRepository:IWalletRepository;
+        generateUniQueString: IGenerateUniQueString
     }) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -78,11 +88,13 @@ export class UserUseCase implements IUserUseCase {
         this.fileBucket = fileBucket;
         this.languageRepository = languageRepository;
         this.validateDbObjects = validateDbObjects;
+        this.walletRepository=walletRepository;
+        this.generateUniQueString =generateUniQueString;
     }
   
 
     //register user
-    async registerUser(newUser: IUser): Promise<string | void | never> {
+    async registerUser(newUser: IUser){
         const result = await registerUser(
             this.unverifiedUserRepository,
             this.userRepository,
@@ -99,13 +111,15 @@ export class UserUseCase implements IUserUseCase {
     async createUser(
         otpFromUser: string,
         token: string
-    ): Promise<IUser | null> {
+    ){
         const result = await createUser({
             UserRepository: this.userRepository,
             UnverifiedUserRepository: this.unverifiedUserRepository,
             jwtToken: this.jwtToken,
             otpFromUser: otpFromUser,
             token: token,
+            walletRepository:this.walletRepository,
+            generateUniQueString:this.generateUniQueString
         });
 
         return result;
@@ -310,6 +324,10 @@ export class UserUseCase implements IUserUseCase {
 
     async getFollowings({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
         return await getFollowings({ userName, page, limit, userRepository:this.userRepository , fileBucket:this.fileBucket});
+    }
+
+    async getWallet({ userId }: { userId: string; }) {
+        return await getWallet({userId,walletRepository:this.walletRepository});
     }
     
 }

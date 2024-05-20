@@ -180,7 +180,7 @@ export function userRoute(router: Router) {
         }
     );
     router.get(
-        '/:userName',
+        '/userName/:userName',
         protect.protectUser,
         async (req:Req, res:Res)=>{
             await userController.getUser(req, res);
@@ -228,6 +228,14 @@ export function userRoute(router: Router) {
             await userController.getFollowings(req, res);
            
             
+        }
+    );
+
+    router.get(
+        '/wallet',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await userController.getWallet(req, res);
         }
     );
 

@@ -1,28 +1,24 @@
 import { CurrencyType } from '../../../../domain/transaction';
 import { IWalletRepository } from '../../../../usecaseLayer/interface/repository/IWalletRepository';
-import { IGenerateUniQueString } from '../../../../usecaseLayer/interface/services/IGenerateUniQueString';
 import TransactionModel from '../models/TransactionModel';
 import WalletModel from '../models/WalletModel';
-import { creditToWallet, debitFromWallet } from './walletRepository/';
+import { creditToWallet, debitFromWallet, getWallet } from './walletRepository/';
 
 export class WalletRepository implements IWalletRepository {
-    
+
     private walletModel: typeof WalletModel;
     private transactionModel: typeof TransactionModel;
-    private generateUniQueString: IGenerateUniQueString;
+  
 
     constructor({
         walletModel,
         transactionModel,
-        generateUniQueString,
     }: {
         walletModel: typeof WalletModel;
         transactionModel: typeof TransactionModel;
-        generateUniQueString: IGenerateUniQueString;
     }) {
         this.walletModel = walletModel;
         this.transactionModel = transactionModel;
-        this.generateUniQueString = generateUniQueString;
     }
 
     async creditToWallet({
@@ -30,11 +26,13 @@ export class WalletRepository implements IWalletRepository {
         currencyType,
         amount,
         description,
+        transactionId
     }: {
         userId: string;
         currencyType: CurrencyType;
         amount: number;
         description: string;
+        transactionId:string
     }) {
         return await creditToWallet({
             userId,
@@ -43,7 +41,7 @@ export class WalletRepository implements IWalletRepository {
             walletModel: this.walletModel,
             transactionModel: this.transactionModel,
             description,
-            generateUniQueString: this.generateUniQueString,
+            transactionId,
         });
     }
 
@@ -52,11 +50,13 @@ export class WalletRepository implements IWalletRepository {
         currencyType,
         amount,
         description,
+        transactionId
     }: {
         userId: string;
         currencyType: CurrencyType;
         amount: number;
         description: string;
+        transactionId:string;
     }) {
         return await debitFromWallet({
             userId,
@@ -65,7 +65,11 @@ export class WalletRepository implements IWalletRepository {
             walletModel: this.walletModel,
             transactionModel: this.transactionModel,
             description,
-            generateUniQueString: this.generateUniQueString,
+            transactionId,
         });
+    }
+
+    async getWallet({ userId }: { userId: string; }) {
+        return await getWallet({userId,walletModel:this.walletModel});
     }
 }

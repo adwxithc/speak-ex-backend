@@ -31,6 +31,7 @@ const transactionSchema = new Schema<ITransaction>(
         transactionId: {
             type: String,
             required: true,
+            unique:true
         },
     },
     {

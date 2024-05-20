@@ -19,6 +19,10 @@ import { LanguageUseCase } from '../../../../usecaseLayer/useCases/languageUseCa
 import { ValidateDbObjects } from '../../../services/validateDbObjects';
 import { SessionRepository } from '../../../database/mongoDB/repository/sessionRepository';
 import SessionModel from '../../../database/mongoDB/models/SessionModel';
+import { WalletRepository } from '../../../database/mongoDB/repository/walletRepository';
+import WalletModel from '../../../database/mongoDB/models/WalletModel';
+import TransactionModel from '../../../database/mongoDB/models/TransactionModel';
+import { GenerateUniQueString } from '../../../services/generateUniqueString';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -32,7 +36,8 @@ const fileBucket = new FileBucket();
 const userOtpRepository = new UserOtpRepository();
 const languageRepository= new LanguageRepository(LanguageModel);
 const sessionRepository = new SessionRepository(SessionModel);
-
+const walletRepository = new WalletRepository({walletModel:WalletModel,transactionModel:TransactionModel});
+const generateUniQueString = new GenerateUniQueString();
 const userUseCase = new UserUseCase({
     userRepository,
     bcrypt:encryptService,
@@ -43,7 +48,9 @@ const userUseCase = new UserUseCase({
     userOtpRepository,
     fileBucket,
     languageRepository,
-    validateDbObjects
+    validateDbObjects,
+    walletRepository,
+    generateUniQueString
 });
 
 

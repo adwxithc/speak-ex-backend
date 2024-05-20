@@ -347,5 +347,16 @@ export class UserController {
             data: { ...usersData, lastPage },
         });
     }
+
+    async getWallet(req:Req, res:Res){
+       
+        const {id} = req.user as IAccessRefreshToken;
+        const wallet = await this.userUseCase.getWallet({userId:id});
+        
+        res.json({
+            success: true,
+            data: wallet
+        });
+    }
   
 }

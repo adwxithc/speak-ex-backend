@@ -23,7 +23,7 @@ export class SocketManager {
     }
 
     private handleConnection(socket: Socket) {
-        // console.log('a user connected');
+        console.log('a user connected');
 
         socket.on('addUser', async ({ userId }) => {
             this.addUser(userId, socket.id);
@@ -34,6 +34,7 @@ export class SocketManager {
         //send and get message
         socket.on('sendMessage', async ({ senderId, receiverId, text }) => {
             const user = await this.getUser(receiverId);
+            console.log('got message',text);
             
             
             this.io.to(user?.socketId || '').emit('getMessage', {
@@ -59,7 +60,7 @@ export class SocketManager {
             // console.log('new video session iniated');
 
             const liveUsers = await this.getAllUserFromPriority();
-            const session = await videoSessionUseCase.startSession({
+            const {data:session} = await videoSessionUseCase.startSession({
                 userId,
                 liveUsers,
             });
@@ -82,14 +83,14 @@ export class SocketManager {
         });
 
         socket.on('session:join', async ({ userId, sessionId }) => {
-            const session = await videoSessionUseCase.joinSession({
+            const {success:allowed,message} = await videoSessionUseCase.joinSession({
                 userId,
                 sessionId,
             });
-            const allowed = Boolean(session);
+        
             this.io
                 .to(socket.id)
-                .emit('session:join-allow', { sessionId, allowed });
+                .emit('session:join-allow', { sessionId, allowed,message });
 
             if (allowed) {
                 this.io.to(sessionId).emit('session:user-joined', {
@@ -104,7 +105,7 @@ export class SocketManager {
             // console.log(' video session rematch iniated');
 
             const liveUsers = await this.getAllUserFromPriority();
-            const selectedLearner = await videoSessionUseCase.rematch({
+            const {data:selectedLearner} = await videoSessionUseCase.rematch({
                 sessionCode: sessionId,
                 liveUsers,
             });

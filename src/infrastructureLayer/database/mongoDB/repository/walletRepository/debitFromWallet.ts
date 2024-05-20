@@ -1,5 +1,4 @@
 import { CurrencyType } from '../../../../../domain/transaction';
-import { IGenerateUniQueString } from '../../../../../usecaseLayer/interface/services/IGenerateUniQueString';
 import TransactionModel from '../../models/TransactionModel';
 import WalletModel from '../../models/WalletModel';
 
@@ -12,7 +11,7 @@ export const debitFromWallet = async ({
     walletModel,
     
     transactionModel,
-    generateUniQueString
+    transactionId
 }: {
     userId: string;
     currencyType: CurrencyType;
@@ -20,11 +19,9 @@ export const debitFromWallet = async ({
     description:string;
     walletModel: typeof WalletModel;
     transactionModel: typeof TransactionModel;
-    generateUniQueString:IGenerateUniQueString
+    transactionId:string
 }) => {
 
-
-    const transactionId= generateUniQueString.getString();
     const transaction  = await transactionModel.create({amount,currencyType,description,timestamp:new Date(),transactionId,type:'debit'});
 
     let updateCommand ={};

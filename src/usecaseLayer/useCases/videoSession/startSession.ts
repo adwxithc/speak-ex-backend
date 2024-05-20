@@ -27,5 +27,5 @@ export const startSession = async ({
     const session =  await sessionRepository.createSession({userId,sessionCode,selectedLearner});
     
     
-    return session;
+    return {success:true,data:session,message:'new session started'};
 }; 

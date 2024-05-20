@@ -1,4 +1,5 @@
 import IUser from '../../../domain/user';
+import IWallet from '../../../domain/wallet';
 import { IToken } from '../services/IJwt.types';
 
 export interface IUserUseCase {
@@ -96,4 +97,5 @@ export interface IUserUseCase {
     getFollowers({  userName,page,limit}:{  userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string;firstName:string, lastName:string,focusLanguage?:string }[],totalUsers:number}>
                 
     getFollowings({  userName,page,limit}:{  userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string;firstName:string, lastName:string,focusLanguage?:string }[],totalUsers:number}>
+    getWallet({userId}:{userId:string}):Promise<IWallet|null>
 }

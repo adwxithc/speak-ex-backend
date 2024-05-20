@@ -1,11 +1,14 @@
 
+import ILanguage from '../../../domain/language';
 import IPost from '../../../domain/post';
 import IUser from '../../../domain/user';
+import IWallet from '../../../domain/wallet';
 
 
 export interface IUserRepository {
     findUserByEmail(email: string): Promise<IUser | null>;
     findUserById(id: string): Promise<Omit<IUser, 'password'> | null>;
+    findLearnerWithWallet(id: string): Promise<Omit<IUser & {wallet:IWallet,focusLanguageInfo:ILanguage}, 'password'> | null>;
     findUserByUserName(userName:string): Promise<IUser | null>
 
     createUser(newUser: IUser): Promise<IUser>;

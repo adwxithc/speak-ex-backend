@@ -22,5 +22,7 @@ export const rematch = async ({
         });
     }
 
-    return selectedLearner;
+    if(!selectedLearner) return {message:'can not find new learner',success:true,};
+
+    return {message:'rematched new learner',success:true,data:selectedLearner};
 };

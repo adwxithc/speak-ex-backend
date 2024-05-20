@@ -8,14 +8,16 @@ export interface IVideoSessionUseCase {
     }: {
         userId: string;
         liveUsers: string[];
-    }): Promise<ISession>;
+    }): Promise<{success:boolean,data?:ISession,message:string}>;
     rematch({
         sessionCode,
         liveUsers,
     }: {
         sessionCode: string;
         liveUsers: string[];
-    }): Promise<string | null>;
+    }): Promise<{success:boolean,message:string,data?:string}>;
+
+    joinSession({ userId,sessionId}:{ userId:string,sessionId:string}):Promise<{success:boolean,message:string,data?:ISession}>
 
     terminateSession({sessionCode}:{sessionCode:string}):Promise<void>
 

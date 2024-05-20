@@ -17,6 +17,7 @@ import { unfollow } from './general/unfollow';
 import { getFollowers } from './general/getFollowers';
 import { getFollowings } from './general/getFollowings';
 import { getUserById } from './profile/getUserById';
+import { getWallet } from './general/getWallet';
 export {
     registerUser,
     createUser,
@@ -36,5 +37,6 @@ export {
     unfollow,
     getFollowers,
     getFollowings,
-    getUserById
+    getUserById,
+    getWallet
 };

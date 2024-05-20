@@ -16,13 +16,20 @@ export const joinSession = async ({
 }) => {
     const session = await sessionRepository.findBySessionCode({sessionCode:sessionId});
     if(!session){
-        return null;
+        return {success:false,message:'session does not exist'};
     }
     
-    if(session.learner) return null;
-    const learner = await userRepository.findUserById(userId);
-    if(!learner) return null;
+    if(session.learner) return {success:false,message:'session already occupied'};
+    const learner = await userRepository.findLearnerWithWallet(userId);
+   
+    
+    if(!learner) return {success:false,message:'learner does not exist'};
+    if(learner.wallet.silverCoins<(learner.focusLanguageInfo.rate/2)) return {success:false,message:'you does not have enough coins to join the session'};
     
     await sessionRepository.joinLearner({learner:userId, sessionCode:sessionId,languageId:learner.focusLanguage as string});
-    return session;
+    return {
+        success:true,
+        message:' joined successfully',
+        data:session
+    };
 };

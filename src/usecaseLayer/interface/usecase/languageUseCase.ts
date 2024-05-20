@@ -14,7 +14,7 @@ export interface ILnaguageMonthelySessions{
 export interface ILanguageUseCase {
 
     //create language
-    createLanguage(language:ILanguage):Promise<ILanguage | never>
+    createLanguage(language:{name:string,basePrice:number}):Promise<ILanguage | never>
     listLanguages({page,key,limit}:{page:number,key:string,limit:number}):Promise<{ languages: ILanguage[]; totalLanguages: number; lastPage: number }>
     getAllLanguages():Promise<ILanguage[]>
     getLearnerHelperRatio({languageId}:{languageId:string}):Promise<ILanguageInfo>
