@@ -8,14 +8,19 @@ import { IAccessRefreshToken } from '../../usecaseLayer/interface/services/IJwt.
 import { ILanguageUseCase } from '../../usecaseLayer/interface/usecase/languageUseCase';
 import { IUserUseCase } from '../../usecaseLayer/interface/usecase/userUseCase';
 
-
 export class UserController {
     private userUseCase: IUserUseCase;
     private languageUseCase: ILanguageUseCase;
 
-    constructor({userUseCase,languageUseCase}:{userUseCase: IUserUseCase;languageUseCase:ILanguageUseCase}) {
-        this.userUseCase=userUseCase;
-        this.languageUseCase=languageUseCase;
+    constructor({
+        userUseCase,
+        languageUseCase,
+    }: {
+        userUseCase: IUserUseCase;
+        languageUseCase: ILanguageUseCase;
+    }) {
+        this.userUseCase = userUseCase;
+        this.languageUseCase = languageUseCase;
     }
 
     async registerUser(req: Req, res: Res) {
@@ -169,7 +174,6 @@ export class UserController {
         });
     }
 
-
     async renewAccess(req: Req, res: Res) {
         const { refreshToken } = req.cookies;
         const accessToken = await this.userUseCase.renewAccess(refreshToken);
@@ -191,7 +195,7 @@ export class UserController {
     }
 
     async updateProfile(req: Req, res: Res) {
-        const { id } = req.user as IAccessRefreshToken || {}; 
+        const { id } = (req.user as IAccessRefreshToken) || {};
         const { file } = req;
 
         const url = await this.userUseCase.updateProfile({
@@ -227,21 +231,20 @@ export class UserController {
         });
 
         res.json({
-            success:true,
-            data:user
+            success: true,
+            data: user,
         });
     }
 
-    async listLanguages(req: Req, res: Res){
-        const languages= await this.languageUseCase.getAllLanguages();
+    async listLanguages(req: Req, res: Res) {
+        const languages = await this.languageUseCase.getAllLanguages();
         res.json({
-            success:true,
-            data:languages
+            success: true,
+            data: languages,
         });
     }
 
-    async searchUsers(req:Req, res:Res){
-
+    async searchUsers(req: Req, res: Res) {
         const { page = 1, limit = 5, key = '' } = req.query;
 
         const pageNumber = parseInt(page as string);
@@ -267,46 +270,52 @@ export class UserController {
         });
     }
 
-    async getUser(req:Req, res:Res){
-        const {userName} = req.params;
-        const user = await this.userUseCase.getUser(userName); 
+    async getUser(req: Req, res: Res) {
+        const { userName } = req.params;
+        const user = await this.userUseCase.getUser(userName);
 
         res.json({
-            succes:true,
-            data:user
+            succes: true,
+            data: user,
         });
     }
 
-    async getUserById(req:Req, res:Res){
-        const {userId} = req.params;
+    async getUserById(req: Req, res: Res) {
+        const { userId } = req.params;
         const user = await this.userUseCase.getUserById(userId);
         res.json({
-            succes:true,
-            data:user
+            succes: true,
+            data: user,
         });
     }
 
-    async follow(req:Req, res:Res){
-        const{id} =  req.user || {};
-        const {userId} = req.params;
-        await this.userUseCase.follow({followedUserId:userId, followerId:id || ''});
+    async follow(req: Req, res: Res) {
+        const { id } = req.user || {};
+        const { userId } = req.params;
+        await this.userUseCase.follow({
+            followedUserId: userId,
+            followerId: id || '',
+        });
         res.json({
-            success:true
+            success: true,
         });
     }
 
-    async unfollow(req:Req, res:Res){
-        const{id} =  req.user || {};
-        const {userId} = req.params;
-        await this.userUseCase.unfollow({followedUserId:userId, followerId:id || ''});
+    async unfollow(req: Req, res: Res) {
+        const { id } = req.user || {};
+        const { userId } = req.params;
+        await this.userUseCase.unfollow({
+            followedUserId: userId,
+            followerId: id || '',
+        });
         res.json({
-            success:true
+            success: true,
         });
     }
 
-    async getFollowers(req:Req, res:Res){
+    async getFollowers(req: Req, res: Res) {
         const { userName } = req.params;
-        
+
         const { page = 1, limit = 10 } = req.query || {};
 
         const pageNumber = parseInt(page as string);
@@ -325,10 +334,9 @@ export class UserController {
         });
     }
 
-    
-    async getFollowings(req:Req, res:Res){
+    async getFollowings(req: Req, res: Res) {
         const { userName } = req.params;
-        
+
         const { page = 1, limit = 10 } = req.query || {};
 
         const pageNumber = parseInt(page as string);
@@ -340,23 +348,29 @@ export class UserController {
             limit: limitNumber,
         });
         const lastPage = Math.ceil(usersData.totalUsers / limitNumber);
-        
-        
+
         res.json({
             success: true,
             data: { ...usersData, lastPage },
         });
     }
 
-    async getWallet(req:Req, res:Res){
-       
-        const {id} = req.user as IAccessRefreshToken;
-        const wallet = await this.userUseCase.getWallet({userId:id});
-        
+    async getWallet(req: Req, res: Res) {
+        const { id } = req.user as IAccessRefreshToken;
+        const wallet = await this.userUseCase.getWallet({ userId: id });
+
         res.json({
             success: true,
-            data: wallet
+            data: wallet,
         });
     }
-  
+
+    async getLanguage(req:Req, res:Res){
+        const {languageId} = req.params;
+        const language = await this.languageUseCase.getLanguage({languageId});
+        res.json({
+            success:true,
+            data:language
+        });
+    }
 }

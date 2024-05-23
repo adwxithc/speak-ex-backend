@@ -20,4 +20,5 @@ export interface ILanguageUseCase {
     getLearnerHelperRatio({languageId}:{languageId:string}):Promise<ILanguageInfo>
     getMonthlySessions({languageId}:{languageId:string}):Promise<ILnaguageMonthelySessions[]>
     updateLanguage({basePrice,rate, languageId}:{basePrice:number,rate:number, languageId:string}):Promise<ILanguage>
+    getLanguage({languageId}:{languageId:string}):Promise<ILanguage|null>
 }

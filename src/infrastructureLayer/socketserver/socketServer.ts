@@ -83,26 +83,27 @@ export class SocketManager {
         });
 
         socket.on('session:join', async ({ userId, sessionId }) => {
-            const {success:allowed,message} = await videoSessionUseCase.joinSession({
+            const {success:allowed,message,data} = await videoSessionUseCase.joinSession({
                 userId,
                 sessionId,
             });
         
             this.io
                 .to(socket.id)
-                .emit('session:join-allow', { sessionId, allowed,message });
+                .emit('session:join-allow', { sessionId, allowed,message,startTime:data?.createdAt });
 
             if (allowed) {
                 this.io.to(sessionId).emit('session:user-joined', {
                     userId,
                     socketId: socket.id,
+                    startTime:data?.createdAt
                 });
             }
             socket.join(sessionId);
         });
 
         socket.on('session:rematch', async ({ sessionId }) => {
-            // console.log(' video session rematch iniated');
+            
 
             const liveUsers = await this.getAllUserFromPriority();
             const {data:selectedLearner} = await videoSessionUseCase.rematch({

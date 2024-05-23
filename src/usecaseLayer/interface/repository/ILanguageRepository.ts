@@ -8,4 +8,5 @@ export interface ILanguageRepository {
     getAllLanguages():Promise<ILanguage[]>
     getLearnerHelperRatio({languageId}:{languageId:string}):Promise<ILanguageInfo>
     updateLanguage({rate, basePrice, languageId}:{rate: number, basePrice: number, languageId: string}):Promise<ILanguage|null>
+    findById({languageId}:{languageId:string}):Promise<ILanguage|null>
 }

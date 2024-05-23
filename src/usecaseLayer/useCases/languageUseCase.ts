@@ -3,7 +3,7 @@ import { ILanguageRepository } from '../interface/repository/ILanguageRepository
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
 import { ILanguageUseCase } from '../interface/usecase/languageUseCase';
 
-import { createLanguage,listLanguages,getAllLanguages, getLearnerHelperRatio, getMonthlySessions, updateLanguage } from './language';
+import { createLanguage,listLanguages,getAllLanguages, getLearnerHelperRatio, getMonthlySessions, updateLanguage, getLanguage } from './language';
 
 export class LanguageUseCase implements ILanguageUseCase {
     private readonly languageRepository: ILanguageRepository;
@@ -52,5 +52,9 @@ export class LanguageUseCase implements ILanguageUseCase {
 
     async updateLanguage({ basePrice, rate,languageId }: { basePrice: number; rate: number; languageId:string }) {
         return await updateLanguage({ basePrice, rate, languageId, languageRepository:this.languageRepository });
+    }
+
+    async getLanguage({ languageId }: { languageId: string; }) {
+        return await getLanguage({languageId,languageRepository:this.languageRepository});
     }
 }

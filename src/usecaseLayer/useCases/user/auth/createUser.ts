@@ -58,8 +58,8 @@ export const createUser = async ({
 
     const userId:string= newUser?.id || '';
     const transactionId = generateUniQueString.getString();
-    const creditInfo = await walletRepository.creditToWallet({amount:100,currencyType:'silver',userId,description:'Congratulations on your signup! You have received 100 silver coins as a welcome gift to kickstart your journey with us.',transactionId});
-    console.log(creditInfo);
+    await walletRepository.creditToWallet({amount:100,currencyType:'silver',userId,description:'Congratulations on your signup! You have received 100 silver coins as a welcome gift to kickstart your journey with us.',transactionId});
+  
     
  
     newUser.password='';

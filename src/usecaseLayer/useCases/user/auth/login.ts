@@ -38,7 +38,7 @@ export const login = async ({
         role:'user'
     };
     const token =  jwtToken.createAccessAndRefreshToken(data as IAccessRefreshToken);
-
+    user.password='';
 
     return {user, token};
 };

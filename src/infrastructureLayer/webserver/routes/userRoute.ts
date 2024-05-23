@@ -8,8 +8,6 @@ import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 import { upload } from '../middlewares/multer';
 
-
-
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -154,12 +152,11 @@ export function userRoute(router: Router) {
             body('proficientLanguage')
                 .optional()
                 .isArray()
-                .withMessage('invalid Proficient languages entry')
+                .withMessage('invalid Proficient languages entry'),
         ],
         validateRequest,
         protect.protectUser,
-        async(req:Req, res:Res)=>{
-            
+        async (req: Req, res: Res) => {
             await userController.updateUser(req, res);
         }
     );
@@ -167,22 +164,18 @@ export function userRoute(router: Router) {
     router.get(
         '/languages',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await userController.listLanguages(req, res);
         }
     );
 
-    router.get(
-        '/',
-        protect.protectUser,
-        async (req:Req, res:Res)=>{
-            await userController.searchUsers(req, res);
-        }
-    );
+    router.get('/', protect.protectUser, async (req: Req, res: Res) => {
+        await userController.searchUsers(req, res);
+    });
     router.get(
         '/userName/:userName',
         protect.protectUser,
-        async (req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await userController.getUser(req, res);
         }
     );
@@ -190,15 +183,15 @@ export function userRoute(router: Router) {
     router.get(
         '/id/:userId',
         protect.protectUser,
-        async (req:Req, res:Res)=>{
-            await userController.getUserById(req,res);
+        async (req: Req, res: Res) => {
+            await userController.getUserById(req, res);
         }
     );
 
     router.put(
         '/follow/:userId',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await userController.follow(req, res);
         }
     );
@@ -206,16 +199,15 @@ export function userRoute(router: Router) {
     router.put(
         '/unfollow/:userId',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await userController.unfollow(req, res);
-
         }
     );
 
     router.get(
         '/:userName/followers',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
+        async (req: Req, res: Res) => {
             await userController.getFollowers(req, res);
         }
     );
@@ -223,25 +215,22 @@ export function userRoute(router: Router) {
     router.get(
         '/:userName/followings',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
-          
+        async (req: Req, res: Res) => {
             await userController.getFollowings(req, res);
-           
-            
         }
     );
+
+    router.get('/wallet', protect.protectUser, async (req: Req, res: Res) => {
+        await userController.getWallet(req, res);
+    });
 
     router.get(
-        '/wallet',
+        '/language/:languageId',
         protect.protectUser,
-        async(req:Req, res:Res)=>{
-            await userController.getWallet(req, res);
+        async (req: Req, res: Res) => {
+            await userController.getLanguage(req, res);
         }
     );
 
-    
-   
- 
-    return router;  
+    return router;
 }
-  
