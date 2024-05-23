@@ -31,16 +31,16 @@ export const registerUser = async (
         password,
     } = newUser;
     // check user exist
-
-    const isUserExistOnUserRepo = await userRepository.findUserByEmail(email);
-    if (isUserExistOnUserRepo) {
+    const [emailExistOnUserRepo, useNameExistOnUserRepo] = await Promise.all([
+        userRepository.findUserByEmail(email),
+        userRepository.findUserByUserName(userName)
+    ]);
+ 
+    if (emailExistOnUserRepo) {
        
         throw new BadRequestError('user already exist with the same mail id');
         
     }
-
-    const useNameExistOnUserRepo = await userRepository.findUserByUserName(userName);
-    
     if (useNameExistOnUserRepo) {
        
         throw new BadRequestError('user already exist with the same userName');
@@ -57,7 +57,7 @@ export const registerUser = async (
 
     const hashPassword = await bcrypt.createHash(password as string);
 
-    const jwtToken = await jwtTokenGenerator.createVerificationJWT({
+    const jwtToken = jwtTokenGenerator.createVerificationJWT({
         userName,
         email,
     });

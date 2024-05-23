@@ -13,6 +13,7 @@ interface IUser{
     proficientLanguage?:string[]
     followers?: DbId[],
     following?: DbId[]
+    isMonetized?:boolean;
 }
 
 export default IUser; 

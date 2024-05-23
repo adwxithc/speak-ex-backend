@@ -9,6 +9,7 @@ export const createLanguage = async(
 ):Promise<ILanguage>=>{
 
     const lowercaseName = newLanguage.name.toLowerCase();
+    newLanguage.rate=newLanguage.basePrice;
 
     // Check if the language already exists 
     const existingLanguage = await languageModel.findOne({ name: { $regex: new RegExp(`^${lowercaseName}$`, 'i') } });

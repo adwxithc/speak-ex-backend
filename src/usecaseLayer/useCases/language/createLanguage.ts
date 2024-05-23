@@ -4,5 +4,5 @@ export const createLanguage = async (
     { name, basePrice }: { name: string; basePrice: number },
     languageRepository: ILanguageRepository
 ) => {
-    return await languageRepository.createLanguage({ basePrice, name });
+    return await languageRepository.createLanguage({ basePrice, name,rate:basePrice });
 };

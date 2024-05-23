@@ -40,7 +40,11 @@ const userSchema = new Schema<IUser>(
             type: [String],
         },
         followers: [{type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique:true}],
-        following: [{type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique:true}]
+        following: [{type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique:true}],
+        isMonetized:{
+            type: Boolean,
+            default:false,
+        }
     },
     {
         timestamps: true,

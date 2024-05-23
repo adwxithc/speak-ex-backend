@@ -15,7 +15,7 @@ export const rate = async ({
 }) => {
    
     const session = await sessionRepository.findBySessionCode({sessionCode});
-    console.log(session, userId, sessionCode);
+
     
     if(!session || session.learner?.toString()!==userId ){
 
