@@ -9,6 +9,7 @@ export interface ISession{
     endingTime?:string;
     rating?:number
     languageId?:DbId;
+    rate:number;
     createdAt?:string;
     updatedAt?:string;
     offers:DbId[]

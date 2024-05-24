@@ -26,13 +26,15 @@ export const debitFromWallet = async ({
 
     let updateCommand ={};
     if(currencyType=='gold'){
-        updateCommand={$dec:{goldCoins:amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{goldCoins:-amount},$push:{transactions:transaction.id}};
     }else if(currencyType=='silver'){
-        updateCommand={$dec:{silverCoins:amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{silverCoins:-amount},$push:{transactions:transaction.id}};
     }else{
-        updateCommand={$dec:{money:amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{money:-amount},$push:{transactions:transaction.id}};
     }
 
-    await walletModel.findOneAndUpdate({userId},updateCommand,{upsert:true,new:true});
+    const res =await walletModel.findOneAndUpdate({userId},updateCommand,{upsert:true,new:true});
+    console.log(res,'expected wallet on debit');
+    
     return transaction;
 };

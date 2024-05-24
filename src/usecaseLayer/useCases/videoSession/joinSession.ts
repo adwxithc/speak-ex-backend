@@ -26,7 +26,7 @@ export const joinSession = async ({
     if(!learner) return {success:false,message:'learner does not exist'};
     if(learner.wallet.silverCoins<(learner.focusLanguageInfo.rate/2)) return {success:false,message:'you does not have enough coins to join the session'};
     
-    await sessionRepository.joinLearner({learner:userId, sessionCode:sessionId,languageId:learner.focusLanguage as string});
+    await sessionRepository.joinLearner({learner:userId, sessionCode:sessionId,languageId:learner.focusLanguage as string,rate:learner.focusLanguageInfo.rate});
     return {
         success:true,
         message:' joined successfully',
