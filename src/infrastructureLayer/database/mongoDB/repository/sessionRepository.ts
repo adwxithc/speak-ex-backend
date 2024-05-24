@@ -43,15 +43,18 @@ export class SessionRepository implements ISessionRepository {
     async joinLearner({
         learner,
         sessionCode,
+        rate,
         languageId
     }: {
         learner: string;
         sessionCode: string;
+        rate:number
         languageId:string
     }) {
         return await joinLearner({
             learner,
             sessionCode,
+            rate,
             languageId,
             sessionModel: this.sessionModel,
         });
@@ -85,8 +88,8 @@ export class SessionRepository implements ISessionRepository {
         });
     }
 
-    async terminateSession({ sessionCode }: { sessionCode: string; }): Promise<void> {
-        return await terminateSession({ sessionCode, sessionModel: this.sessionModel });
+    async terminateSession({ sessionCode,endingTime }: { sessionCode: string; endingTime:string }): Promise<void> {
+        return await terminateSession({ sessionCode, sessionModel: this.sessionModel,endingTime });
     }
 
     async rate({ sessionCode, rating }: { sessionCode: string; rating: number; }){
