@@ -1,4 +1,5 @@
 import { Req, Res } from '../../infrastructureLayer/types/expressTypes';
+import { BadRequestError } from '../../usecaseLayer/errors';
 
 import { IAccessRefreshToken } from '../../usecaseLayer/interface/services/IJwt.types';
 
@@ -34,6 +35,37 @@ export class VideoSessionController {
             data:result
         });
         
+    }
+
+    async getSession(req:Req, res:Res){
+        const {sessionCode} = req.params;
+       
+        
+        const session = await this.videoSessionUseCase.getSession({sessionCode});
+
+        res.json({
+            success:true,
+            data:session
+        });
+    }
+
+    async listReports(req:Req, res:Res){
+
+        const {page =1,limit=5}=req.query;
+        
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if(typeof pageNumber !== 'number' || typeof limitNumber !== 'number' ){
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const sessionReportsData = await this.videoSessionUseCase.listReports({page:pageNumber,limit:limitNumber});
+
+        res.status(200).json({
+            success:true,
+            data:sessionReportsData
+        });
     }
 }
 

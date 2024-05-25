@@ -23,7 +23,7 @@ export class SocketManager {
     }
 
     private handleConnection(socket: Socket) {
-        console.log('a user connected');
+        // console.log('a user connected');
 
         socket.on('addUser', async ({ userId }) => {
             this.addUser(userId, socket.id);
@@ -34,9 +34,8 @@ export class SocketManager {
         //send and get message
         socket.on('sendMessage', async ({ senderId, receiverId, text }) => {
             const user = await this.getUser(receiverId);
-            console.log('got message',text);
-            
-            
+            // console.log('got message',text);
+
             this.io.to(user?.socketId || '').emit('getMessage', {
                 senderId,
                 text,
@@ -60,7 +59,7 @@ export class SocketManager {
             // console.log('new video session iniated');
 
             const liveUsers = await this.getAllUserFromPriority();
-            const {data:session} = await videoSessionUseCase.startSession({
+            const { data: session } = await videoSessionUseCase.startSession({
                 userId,
                 liveUsers,
             });
@@ -83,33 +82,42 @@ export class SocketManager {
         });
 
         socket.on('session:join', async ({ userId, sessionId }) => {
-            const {success:allowed,message,data} = await videoSessionUseCase.joinSession({
+            const {
+                success: allowed,
+                message,
+                data,
+            } = await videoSessionUseCase.joinSession({
                 userId,
                 sessionId,
             });
-        
+
             this.io
                 .to(socket.id)
-                .emit('session:join-allow', { sessionId, allowed,message,startTime:data?.createdAt });
+                .emit('session:join-allow', {
+                    sessionId,
+                    allowed,
+                    message,
+                    startTime: data?.createdAt,
+                });
 
             if (allowed) {
                 this.io.to(sessionId).emit('session:user-joined', {
                     userId,
                     socketId: socket.id,
-                    startTime:data?.createdAt
+                    startTime: data?.createdAt,
                 });
             }
             socket.join(sessionId);
         });
 
         socket.on('session:rematch', async ({ sessionId }) => {
-            
-
             const liveUsers = await this.getAllUserFromPriority();
-            const {data:selectedLearner} = await videoSessionUseCase.rematch({
-                sessionCode: sessionId,
-                liveUsers,
-            });
+            const { data: selectedLearner } = await videoSessionUseCase.rematch(
+                {
+                    sessionCode: sessionId,
+                    liveUsers,
+                }
+            );
 
             const user = await this.getUser(selectedLearner?.toString() || '');
 
@@ -121,10 +129,19 @@ export class SocketManager {
             }
         });
 
-        socket.on('session:terminate', async ({ sessionCode }) => {
+        socket.on('session:terminate', async ({ sessionCode,endingTime }) => {
             // console.log('session terminated--');
 
-            await videoSessionUseCase.terminateSession({ sessionCode });
+            const res = await videoSessionUseCase.terminateSession({
+                sessionCode,
+                endingTime
+            });
+
+            if (res.success) {
+                this.io
+                    .to(sessionCode)
+                    .emit('session:terminate', { coinExchange: res.data });
+            }
         });
 
         socket?.on('session:call-user', async ({ from, to, offer }) => {

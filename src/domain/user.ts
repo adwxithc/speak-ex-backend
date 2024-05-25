@@ -1,5 +1,6 @@
 import { DbId } from '../usecaseLayer/interface/db/dbTypes';
 
+
 interface IUser{
     id?:string;
     firstName:string;
@@ -14,6 +15,7 @@ interface IUser{
     followers?: DbId[],
     following?: DbId[]
     isMonetized?:boolean;
+
 }
 
 export default IUser; 

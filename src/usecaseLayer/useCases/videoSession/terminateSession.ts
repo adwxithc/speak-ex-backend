@@ -4,16 +4,21 @@ import { IGenerateUniQueString } from '../../interface/services/IGenerateUniQueS
 
 export const terminateSession = async ({
     sessionRepository,
+
     walletRepository,
     generateUniqueString,
     sessionCode,
+    endingTime
 }: {
     sessionRepository: ISessionRepository;
+
     walletRepository: IWalletRepository;
     generateUniqueString: IGenerateUniQueString;
     sessionCode: string;
+    endingTime:string;
 }) => {
     const session = await sessionRepository.findBySessionCode({ sessionCode });
+    const learnersWallet = await walletRepository.getWallet({userId:session?.learner?.toString() as string});
 
     if (
         !session ||
@@ -21,17 +26,20 @@ export const terminateSession = async ({
         !session.learner ||
         session.endingTime
     ) {
-        return;
+        return {success:false,message:'invalid session'};
     }
 
-    const endingTime = new Date();
+    const endingTimeStamp = new Date(endingTime);
     const startingTime = new Date(session.startingTime as string);
 
     const durationInHours =
-        (endingTime.getTime() - startingTime.getTime()) / 3600_000;
-    const totalcoinsExchanged =Math.floor( durationInHours * session.rate);
+        (endingTimeStamp.getTime() - startingTime.getTime()) / 3600_000;
 
-    const creditDescription = `Congratulations! You've successfully helped another user improve their language skills. As a token of appreciation for your time and effort, you've earned ${totalcoinsExchanged} silver coins. Keep up the great work and continue sharing your knowledge to earn more rewards!`;
+    const totalcoinsExchanged = Math.min(Math.floor(durationInHours * session.rate),learnersWallet?.silverCoins as number);
+
+    const creditDescription = `Congratulations! You've successfully helped another user improve their language skills. As a token of appreciation for your time and 
+    effort, you've earned ${totalcoinsExchanged} silver coins. Keep up the great work and continue sharing your knowledge to earn more rewards!`;
+
     const debitDescription = `Congratulations! You've successfully completed a learning session.  your  account has been debited ${totalcoinsExchanged} silver coins. `;
 
     const creditPromise = walletRepository.creditToWallet({
@@ -41,7 +49,7 @@ export const terminateSession = async ({
         transactionId: generateUniqueString.getString(),
         userId: session.helper.toString(),
     });
-    const debitPromise =  walletRepository.debitFromWallet({
+    const debitPromise = walletRepository.debitFromWallet({
         amount: totalcoinsExchanged,
         currencyType: 'silver',
         description: debitDescription,
@@ -50,10 +58,10 @@ export const terminateSession = async ({
     });
     const terminatePromise = sessionRepository.terminateSession({
         sessionCode,
-        endingTime: endingTime.toString(),
+        endingTime: endingTimeStamp.toString(),
     });
 
-    const res = await Promise.all([creditPromise,debitPromise,terminatePromise]);
-    console.log(res,'termination process data');
-    
+    await Promise.all([creditPromise, debitPromise, terminatePromise]);
+
+    return {success:true,data:totalcoinsExchanged, message:'session terminated'};
 };

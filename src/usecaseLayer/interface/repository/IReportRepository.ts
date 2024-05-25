@@ -14,4 +14,6 @@ export interface IReportRepository {
         description: string;
         reportedUser: string;
     }): Promise<IReport>;
+    listReports({page,limit}:{page:number,limit:number}):Promise<{reports: IReport[];totalReports: number;}>;
+
 }

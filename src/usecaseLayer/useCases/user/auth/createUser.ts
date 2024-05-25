@@ -5,6 +5,8 @@ import { IJwt } from '../../../interface/services/IJwt.types';
 import { BadRequestError} from '../../../errors';
 import { IWalletRepository } from '../../../interface/repository/IWalletRepository';
 import { IGenerateUniQueString } from '../../../interface/services/IGenerateUniQueString';
+import ITransaction from '../../../../domain/transaction';
+
 
 export const createUser = async ({
     UserRepository,
@@ -54,13 +56,12 @@ export const createUser = async ({
         password
     };
 
-    const newUser = await UserRepository.createUser(user);
+    const newUser = await UserRepository.createUser(user) ;
 
-    const userId:string= newUser?.id || '';
+    const userId= newUser?.id as string ;
     const transactionId = generateUniQueString.getString();
-    await walletRepository.creditToWallet({amount:100,currencyType:'silver',userId,description:'Congratulations on your signup! You have received 100 silver coins as a welcome gift to kickstart your journey with us.',transactionId});
+    await walletRepository.creditToWallet({amount:100,currencyType:'silver',userId,description:'Congratulations on your signup! You have received 100 silver coins as a welcome gift to kickstart your journey with us.',transactionId}) as Required<ITransaction>;
   
-    
  
     newUser.password='';
 

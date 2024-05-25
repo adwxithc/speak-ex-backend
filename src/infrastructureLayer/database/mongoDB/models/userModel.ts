@@ -3,6 +3,7 @@ import IUser from '../../../../domain/user';
 
 
 
+
 const userSchema = new Schema<IUser>(
     {
         firstName: {
@@ -44,7 +45,7 @@ const userSchema = new Schema<IUser>(
         isMonetized:{
             type: Boolean,
             default:false,
-        }
+        },
     },
     {
         timestamps: true,

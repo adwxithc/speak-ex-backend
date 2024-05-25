@@ -35,5 +35,13 @@ export function videoSessionRote(router: Router) {
         }
     );
 
+    router.get(
+        '/sessionCode/:sessionCode',
+        protect.protectUser,
+        async (req: Req, res: Res) => {
+            await videoSessionController.getSession(req, res);
+        }
+    );
+
     return router;
 }

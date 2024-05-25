@@ -8,6 +8,7 @@ import { protect } from './injections/middlewareInjection';
 
 import { Req, Res } from '../../types/expressTypes';
 import { userController } from './injections/userInjection';
+import { videoSessionController } from './injections/videoSessionInjection';
 
 export function adminRoute(router: Router) {
     router.post(
@@ -105,6 +106,15 @@ export function adminRoute(router: Router) {
         protect.protectAdmin,
         async (req: Req, res: Res) => {
             await languageController.updateLanguage(req, res);
+        }
+    );
+
+    router.get(
+        '/session-complains',
+        protect.protectAdmin,
+        async (req: Req, res: Res) => {
+
+            await videoSessionController.listReports(req, res);
         }
     );
 

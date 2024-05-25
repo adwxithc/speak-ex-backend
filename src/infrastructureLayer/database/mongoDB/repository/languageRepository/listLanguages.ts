@@ -10,8 +10,7 @@ export const listLanguages = async (
     })
         .sort({ updatedAt: -1 })
         .skip((page - 1) * limit)
-        .limit(limit)
-        .select('-password');
+        .limit(limit);
 
     const totalLanguages = await languageModel.countDocuments({name: { $regex: new RegExp(`^${key}`, 'i') } });
     
