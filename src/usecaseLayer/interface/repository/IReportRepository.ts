@@ -1,4 +1,5 @@
 import { IReport } from '../../../domain/report';
+import { IReportWithUsers } from '../usecase/videoSessionUseCase';
 
 export interface IReportRepository {
     report({
@@ -14,6 +15,6 @@ export interface IReportRepository {
         description: string;
         reportedUser: string;
     }): Promise<IReport>;
-    listReports({page,limit}:{page:number,limit:number}):Promise<{reports: IReport[];totalReports: number;}>;
+    listReportsOnSession({page,limit}:{page:number,limit:number}):Promise<{reports: IReportWithUsers[];totalReports: number;}>;
 
 }
