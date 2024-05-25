@@ -8,6 +8,7 @@ import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 import { upload } from '../middlewares/multer';
 
+
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -224,13 +225,13 @@ export function userRoute(router: Router) {
         await userController.getWallet(req, res);
     });
 
-    router.get(
-        '/language/:languageId',
-        protect.protectUser,
-        async (req: Req, res: Res) => {
-            await userController.getLanguage(req, res);
-        }
-    );
+    // router.get(
+    //     '/language/:languageId',
+    //     protect.protectUser,
+    //     async (req: Req, res: Res) => {
+    //         await userController.getLanguage(req, res);
+    //     }
+    // );
 
     return router;
 }

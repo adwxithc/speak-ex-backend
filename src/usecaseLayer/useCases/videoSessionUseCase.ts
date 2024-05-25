@@ -5,7 +5,7 @@ import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IWalletRepository } from '../interface/repository/IWalletRepository';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
 import { IVideoSessionUseCase } from '../interface/usecase/videoSessionUseCase';
-import { startSession, rematch, joinSession, terminateSession, rate, report } from './videoSession/';
+import { startSession, rematch, joinSession, terminateSession, rate, report, getSession, listReports } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly generateUniqueString: IGenerateUniQueString;
@@ -83,8 +83,8 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         });
     }
 
-    async terminateSession({ sessionCode }: { sessionCode: string; }) {
-        return await terminateSession({sessionCode,sessionRepository:this.sessionRepository,generateUniqueString:this.generateUniqueString,walletRepository:this.walletRepository});
+    async terminateSession({ sessionCode,endingTime }: { sessionCode: string; endingTime:string }) {
+        return await terminateSession({sessionCode,endingTime,sessionRepository:this.sessionRepository,generateUniqueString:this.generateUniqueString,walletRepository:this.walletRepository});
     }
 
     async rate({ sessionCode, userId, rating }: { sessionCode: string; userId: string; rating: number; }) {
@@ -95,5 +95,15 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         return await report({ sessionCode, description, reporter,sessionRepository:this.sessionRepository,reportRepository:this.reportRepository });
     }
 
-    
+    async getSession({ sessionCode }: { sessionCode: string; }){
+        return await getSession({sessionCode,sessionRepository:this.sessionRepository});
+    }
+
+    async listReports({ page, limit }: { page: number; limit: number; }) {
+        return await listReports({
+            reportRepository: this.reportRepository,
+            page,
+            limit,
+        });
+    }
 }

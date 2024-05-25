@@ -1,6 +1,7 @@
+
 import { IReportRepository } from '../../../../usecaseLayer/interface/repository/IReportRepository';
 import ReportModel from '../models/ReportModel';
-import { report } from './reportRepository/';
+import { listReports, report } from './reportRepository/';
 
 export class ReportRepository implements IReportRepository {
     constructor(private reportModel: typeof ReportModel) {}
@@ -26,5 +27,9 @@ export class ReportRepository implements IReportRepository {
             reportModel: this.reportModel,
             reportedUser,
         });
+    }
+
+    async listReports({ page, limit }: { page: number; limit: number; }){
+        return await listReports({page,limit,reportModel:this.reportModel});
     }
 }
