@@ -1,6 +1,6 @@
 import { report } from './report';
-import { listReports } from './listReports';
+import { listReportsOnSession } from './listReportsOnSession';
 export{
     report,
-    listReports
+    listReportsOnSession
 };

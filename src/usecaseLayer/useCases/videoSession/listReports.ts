@@ -11,7 +11,7 @@ export const listReports = async ({
     limit: number;
 }) => {
 
-    const {reports,totalReports} = await reportRepository.listReports({limit,page});
+    const {reports,totalReports} = await reportRepository.listReportsOnSession({limit,page});
 
 
     const lastPage = Math.ceil(totalReports / limit);
