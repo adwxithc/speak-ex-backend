@@ -37,4 +37,9 @@ export interface IPostRepository {
         postId: string;
         commentId: string;
     }): Promise<boolean>;
+    getPostsInfo({
+        userId,
+    }: {
+        userId: string;
+    }): Promise<{ posts: number; averageLikes: number }>;
 }

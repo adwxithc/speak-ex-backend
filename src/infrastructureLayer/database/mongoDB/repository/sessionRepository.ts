@@ -10,7 +10,8 @@ import {
     updateRematchedLearner,
     terminateSession,
     rate,
-    getMonthlySessions
+    getMonthlySessions,
+    getUsersSesstionData
 } from './sessionRepository/';
 
 export class SessionRepository implements ISessionRepository {
@@ -97,6 +98,10 @@ export class SessionRepository implements ISessionRepository {
     }
     async getMonthlySessions({ languageId }: { languageId: string; }) {
         return await getMonthlySessions({languageId,sessionModel:this.sessionModel});
+    }
+
+    async getUsersSesstionData({ userId }: { userId: string; }) {
+        return await getUsersSesstionData({userId, sessionModel:this.sessionModel});
     }
     
 }

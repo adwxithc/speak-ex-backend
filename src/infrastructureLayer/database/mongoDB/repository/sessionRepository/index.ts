@@ -6,6 +6,7 @@ import { updateRematchedLearner } from './updateRematchedLearner';
 import { terminateSession } from './terminateSession';
 import { rate } from './rate';
 import { getMonthlySessions } from './getMonthlySessions';
+import { getUsersSesstionData } from './getUsersSesstionData';
 export{
     createSession,
     findBySessionCode,
@@ -14,5 +15,6 @@ export{
     updateRematchedLearner,
     terminateSession,
     rate,
-    getMonthlySessions
+    getMonthlySessions,
+    getUsersSesstionData
 };

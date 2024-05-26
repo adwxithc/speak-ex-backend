@@ -1,6 +1,17 @@
+import ILanguage from '../../../domain/language';
+import { IReport } from '../../../domain/report';
 import IUser from '../../../domain/user';
 import IWallet from '../../../domain/wallet';
 import { IToken } from '../services/IJwt.types';
+
+export interface IUserDetails extends Omit<IUser,'password'>{
+    proficientLanguageInfo:ILanguage[];
+    focusLanguageInfo:ILanguage;
+    wallet:IWallet;
+    session:{helpingSessions:number; learningSessions:number;rating:number;avgHelpingSessionsPerMonth:number;avgLearningSessionsPerMonth:number};
+    social:{followers:number;following:number;posts:number;averageLikes:number}
+    reports:(IReport&{reporterDetails:{firstName:string,lastName:string,userName:string,profile:string}})[]
+}
 
 export interface IUserUseCase {
     // saving user details temporary
@@ -91,6 +102,7 @@ export interface IUserUseCase {
 
     getUser(userName:string):Promise<Omit<IUser, 'password'>>
     getUserById(userId:string):Promise<Omit<IUser, 'password'>>
+    getUserDetails(userId:string):Promise<IUserDetails>
 
     follow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>
     unfollow({followerId,followedUserId}:{followerId:string,followedUserId:string}):Promise<void>

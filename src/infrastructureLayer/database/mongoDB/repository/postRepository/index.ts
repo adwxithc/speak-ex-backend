@@ -5,7 +5,7 @@ import {upvote} from './upvote';
 import { downvote } from './downvote';
 import { insertComment } from './insertComment';
 import { removeComment } from './removeComment';
-
+import { getPostsInfo } from './getPostsInfo';
 
 export {
     createPost,
@@ -15,4 +15,5 @@ export {
     downvote,
     insertComment,
     removeComment,
+    getPostsInfo
 };

@@ -1,7 +1,7 @@
 
 import { IReportRepository } from '../../../../usecaseLayer/interface/repository/IReportRepository';
 import ReportModel from '../models/ReportModel';
-import { listReportsOnSession, report } from './reportRepository/';
+import { getReportsOnSession, listReportsOnSession, report } from './reportRepository/';
 
 export class ReportRepository implements IReportRepository {
     constructor(private reportModel: typeof ReportModel) {}
@@ -31,5 +31,9 @@ export class ReportRepository implements IReportRepository {
 
     async listReportsOnSession({ page, limit }: { page: number; limit: number; }){
         return await listReportsOnSession({page,limit,reportModel:this.reportModel});
+    }
+
+    async getReportsOnSession({ userId }: { userId: string; }){
+        return await getReportsOnSession({userId,reportModel:this.reportModel});
     }
 }

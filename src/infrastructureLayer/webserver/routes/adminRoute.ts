@@ -34,6 +34,14 @@ export function adminRoute(router: Router) {
         await userController.listUsers(req, res);
     });
 
+    router.get(
+        '/user/:userId',
+        protect.protectAdmin,
+        async (req:Req, res:Res)=>{
+            await userController.getUserDetails(req,res);
+        }
+    );
+
     router.put(
         '/user/:id',
         protect.protectAdmin,
@@ -117,6 +125,8 @@ export function adminRoute(router: Router) {
             await videoSessionController.listReports(req, res);
         }
     );
+
+  
 
     return router;
 }

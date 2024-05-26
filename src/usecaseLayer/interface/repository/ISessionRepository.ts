@@ -1,6 +1,13 @@
 import { ISession } from '../../../domain/session';
 import { ILnaguageMonthelySessions } from '../usecase/languageUseCase';
 
+export interface IUsersSesstionData{
+    helpingSessions:number;
+    learningSessions:number;
+    rating:number;
+    avgHelpingSessionsPerMonth:number;
+    avgLearningSessionsPerMonth:number
+}
 
 
 export interface ISessionRepository {
@@ -12,4 +19,5 @@ export interface ISessionRepository {
     terminateSession({sessionCode,endingTime}:{sessionCode:string,endingTime:string}):Promise<void>
     rate({sessionCode,rating}:{sessionCode:string,rating:number}):Promise<ISession>
     getMonthlySessions({languageId}:{languageId:string}):Promise<ILnaguageMonthelySessions[]>
+    getUsersSesstionData({userId}:{userId:string}):Promise<IUsersSesstionData>
 }

@@ -20,7 +20,8 @@ import {
     findLearnerWithWallet,
     findUserById
 } from './userRepository/user';
-import { getAllUser } from './userRepository/admin';
+import { getAllUser, getUserDataWithWallet } from './userRepository/admin';
+
 
 export class UserRepository implements IUserRepository {
     constructor(private userModels: typeof UserModel) {}
@@ -187,5 +188,9 @@ export class UserRepository implements IUserRepository {
     }
     async getLearners({ helperId }: { helperId: string; }) {
         return await getLearners({helperId, userModel:this.userModels});
+    }
+
+    async getUserDataWithWallet({ userId }: { userId: string; }){
+        return await getUserDataWithWallet({userId,userModel:this.userModels});
     }
 }

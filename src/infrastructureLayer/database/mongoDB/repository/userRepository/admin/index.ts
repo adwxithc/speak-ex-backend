@@ -1,5 +1,7 @@
 import { getAllUser } from './getAllUser';
+import { getUserDataWithWallet } from './getUserDataWithWallet';
 
 export {
-    getAllUser
+    getAllUser,
+    getUserDataWithWallet
 };
