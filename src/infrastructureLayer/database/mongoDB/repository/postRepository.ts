@@ -9,7 +9,9 @@ import {
     downvote,
     insertComment,
     removeComment,
+    
 } from './postRepository/';
+import { getPostsInfo } from './postRepository/getPostsInfo';
 
 export class PostRepository implements IPostRepository {
     constructor(private postModel: typeof PostModel) {}
@@ -87,5 +89,8 @@ export class PostRepository implements IPostRepository {
         });
     }
 
-
+    async getPostsInfo({ userId }: { userId: string; }){
+        return await getPostsInfo({userId, postModel:this.postModel});
+    }
+   
 }

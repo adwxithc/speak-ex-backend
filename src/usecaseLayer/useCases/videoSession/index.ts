@@ -4,6 +4,17 @@ import { joinSession } from './joinSession';
 import { terminateSession } from './terminateSession';
 import { rate } from './rate';
 import { report } from './report';
-import { getSession } from './getSession'; 
+import { getSession } from './getSession';
 import { listReports } from './listReports';
-export { startSession, rematch, joinSession, terminateSession, rate, report, getSession, listReports };
+import { createCoinPurchasePlan } from './createCoinPurchasePlan';
+export {
+    startSession,
+    rematch,
+    joinSession,
+    terminateSession,
+    rate,
+    report,
+    getSession,
+    listReports,
+    createCoinPurchasePlan,
+};

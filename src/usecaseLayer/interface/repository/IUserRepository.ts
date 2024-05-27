@@ -5,6 +5,13 @@ import IUser from '../../../domain/user';
 import IWallet from '../../../domain/wallet';
 
 
+export interface IUserDataWithWallet extends Omit<IUser,'password'>{
+    proficientLanguageInfo:ILanguage[];
+    focusLanguageInfo:ILanguage;
+    wallet:IWallet;
+    
+}
+
 export interface IUserRepository {
     findUserByEmail(email: string): Promise<IUser | null>;
     findUserById(id: string): Promise<Omit<IUser, 'password'> | null>;
@@ -24,6 +31,7 @@ export interface IUserRepository {
     getFollowings({ userName,page,limit}:{ userName:string,page:number,limit:number}):Promise<{users:{ userName: string; profile: string; firstName:string, lastName:string ,focusLanguage:string}[],totalUsers:number}>
     getFollowingPosts({page,limit,userId}:{page:number,limit:number,userId:string}):Promise<{ posts: (IPost &{user:IUser})[], totalPosts:number }>
     getLearners({helperId}:{helperId:string}):Promise<{id:string}[]>
+    getUserDataWithWallet({userId}:{userId:string}):Promise<IUserDataWithWallet>
 }
 
 

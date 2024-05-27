@@ -1,18 +1,22 @@
+import ICoinPurchasePlan from '../../../domain/coinPurchasePlan';
 import { IReport } from '../../../domain/report';
 import { ISession } from '../../../domain/session';
 
-export interface IReportWithUsers extends IReport{
-    reporterInfo:{
+export interface IReportWithUsers{
+    reports:(IReport&{reporterInfo:{
         id: string;
         username: string;
         firstName:string;
-        lastName:string
-    },
+        lastName:string;
+        profile:string;
+
+    }})[],
     reportedUserInfo:{
         id: string;
         username: string;
         firstName:string;
-        lastName:string
+        lastName:string;
+        profile:string
     },
 }
 
@@ -40,4 +44,5 @@ export interface IVideoSessionUseCase {
     report({sessionCode,description,reporter}:{sessionCode:string,description:string,reporter:string}):Promise<IReport>;
     getSession({sessionCode}:{sessionCode:string}):Promise<ISession|null>
     listReports({page,limit}:{page:number,limit:number}):Promise<{ reports: IReportWithUsers[]; totalReports: number; lastPage: number }>
+    createCoinPurchasePlan({count, title, imageFile, price}:{count:number, title:string, imageFile:Express.Multer.File|undefined, price:number}):Promise<ICoinPurchasePlan>
 }

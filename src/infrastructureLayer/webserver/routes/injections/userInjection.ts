@@ -23,6 +23,10 @@ import { WalletRepository } from '../../../database/mongoDB/repository/walletRep
 import WalletModel from '../../../database/mongoDB/models/WalletModel';
 import TransactionModel from '../../../database/mongoDB/models/TransactionModel';
 import { GenerateUniQueString } from '../../../services/generateUniqueString';
+import { PostRepository } from '../../../database/mongoDB/repository/postRepository';
+import PostModel from '../../../database/mongoDB/models/post';
+import { ReportRepository } from '../../../database/mongoDB/repository/reportRepository';
+import ReportModel from '../../../database/mongoDB/models/ReportModel';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -37,6 +41,8 @@ const userOtpRepository = new UserOtpRepository();
 const languageRepository= new LanguageRepository(LanguageModel);
 const sessionRepository = new SessionRepository(SessionModel);
 const walletRepository = new WalletRepository({walletModel:WalletModel,transactionModel:TransactionModel});
+const postRepository= new PostRepository(PostModel);
+const reportRepository=new ReportRepository(ReportModel);
 const generateUniQueString = new GenerateUniQueString();
 const userUseCase = new UserUseCase({
     userRepository,
@@ -50,7 +56,10 @@ const userUseCase = new UserUseCase({
     languageRepository,
     validateDbObjects,
     walletRepository,
-    generateUniQueString
+    generateUniQueString,
+    postRepository,
+    sessionRepository,
+    reportRepository
 });
 
 

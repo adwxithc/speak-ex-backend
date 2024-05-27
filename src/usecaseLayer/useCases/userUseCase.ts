@@ -22,7 +22,8 @@ import {
     getFollowers,
     getFollowings,
     getUserById,
-    getWallet
+    getWallet,
+    getUserDetails,
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -35,7 +36,9 @@ import { ILanguageRepository } from '../interface/repository/ILanguageRepository
 import { IValidateDbObjects } from '../interface/services/validateDbObjects';
 import { IWalletRepository } from '../interface/repository/IWalletRepository';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
-
+import { IPostRepository } from '../interface/repository/IPostRepository';
+import { IReportRepository } from '../interface/repository/IReportRepository';
+import { ISessionRepository } from '../interface/repository/ISessionRepository';
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -49,6 +52,9 @@ export class UserUseCase implements IUserUseCase {
     private readonly languageRepository: ILanguageRepository;
     private readonly validateDbObjects: IValidateDbObjects;
     private readonly walletRepository: IWalletRepository;
+    private readonly postRepository: IPostRepository;
+    private readonly reportRepository: IReportRepository;
+    private readonly sessionRepository: ISessionRepository;
     private readonly generateUniQueString: IGenerateUniQueString;
 
     constructor({
@@ -63,7 +69,10 @@ export class UserUseCase implements IUserUseCase {
         languageRepository,
         validateDbObjects,
         walletRepository,
-        generateUniQueString
+        postRepository,
+        sessionRepository,
+        reportRepository,
+        generateUniQueString,
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -75,8 +84,11 @@ export class UserUseCase implements IUserUseCase {
         fileBucket: IFileBucket;
         languageRepository: ILanguageRepository;
         validateDbObjects: IValidateDbObjects;
-        walletRepository:IWalletRepository;
-        generateUniQueString: IGenerateUniQueString
+        walletRepository: IWalletRepository;
+        sessionRepository: ISessionRepository;
+        postRepository: IPostRepository;
+        reportRepository: IReportRepository;
+        generateUniQueString: IGenerateUniQueString;
     }) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -88,13 +100,15 @@ export class UserUseCase implements IUserUseCase {
         this.fileBucket = fileBucket;
         this.languageRepository = languageRepository;
         this.validateDbObjects = validateDbObjects;
-        this.walletRepository=walletRepository;
-        this.generateUniQueString =generateUniQueString;
+        this.walletRepository = walletRepository;
+        this.generateUniQueString = generateUniQueString;
+        this.postRepository = postRepository;
+        this.reportRepository = reportRepository;
+        this.sessionRepository = sessionRepository;
     }
-  
 
     //register user
-    async registerUser(newUser: IUser){
+    async registerUser(newUser: IUser) {
         const result = await registerUser(
             this.unverifiedUserRepository,
             this.userRepository,
@@ -108,18 +122,15 @@ export class UserUseCase implements IUserUseCase {
     }
 
     //create verified user
-    async createUser(
-        otpFromUser: string,
-        token: string
-    ){
+    async createUser(otpFromUser: string, token: string) {
         const result = await createUser({
             UserRepository: this.userRepository,
             UnverifiedUserRepository: this.unverifiedUserRepository,
             jwtToken: this.jwtToken,
             otpFromUser: otpFromUser,
             token: token,
-            walletRepository:this.walletRepository,
-            generateUniQueString:this.generateUniQueString
+            walletRepository: this.walletRepository,
+            generateUniQueString: this.generateUniQueString,
         });
 
         return result;
@@ -223,7 +234,6 @@ export class UserUseCase implements IUserUseCase {
         totalUsers: number;
         lastPage: number;
     }> {
-
         return await searchUsers({
             UserRepository: this.userRepository,
             fileBucket: this.fileBucket,
@@ -231,7 +241,6 @@ export class UserUseCase implements IUserUseCase {
             key,
             limit,
         });
-
     }
 
     async updateUser({
@@ -244,12 +253,12 @@ export class UserUseCase implements IUserUseCase {
         proficientLanguage,
     }: {
         id: string;
-        firstName?: string ;
-        lastName?: string ;
-        userName?: string ;
-        password?: string ;
-        focusLanguage?: string ;
-        proficientLanguage?: string[] ;
+        firstName?: string;
+        lastName?: string;
+        userName?: string;
+        password?: string;
+        focusLanguage?: string;
+        proficientLanguage?: string[];
     }): Promise<Omit<IUser, 'password'> | null> {
         return await updateUser({
             id,
@@ -266,7 +275,7 @@ export class UserUseCase implements IUserUseCase {
         });
     }
 
-    async renewAccess(token: string): Promise<string | undefined> {
+    async renewAccess(token: string) {
         return await renewAccess({
             token,
             jwtToken: this.jwtToken,
@@ -304,30 +313,92 @@ export class UserUseCase implements IUserUseCase {
     }
 
     async getUserById(userId: string) {
-        return await getUserById({userId,userRepository: this.userRepository,fileBucket: this.fileBucket,});
+        return await getUserById({
+            userId,
+            userRepository: this.userRepository,
+            fileBucket: this.fileBucket,
+        });
     }
 
-    async follow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
-        return await follow({followerId,followedUserId, userRepository:this.userRepository });
+    async follow({
+        followerId,
+        followedUserId,
+    }: {
+        followerId: string;
+        followedUserId: string;
+    }): Promise<void> {
+        return await follow({
+            followerId,
+            followedUserId,
+            userRepository: this.userRepository,
+        });
     }
 
-    async unfollow({ followerId, followedUserId }: { followerId: string; followedUserId: string; }): Promise<void> {
-        
-        return await unfollow({followerId,followedUserId, userRepository:this.userRepository });
+    async unfollow({
+        followerId,
+        followedUserId,
+    }: {
+        followerId: string;
+        followedUserId: string;
+    }): Promise<void> {
+        return await unfollow({
+            followerId,
+            followedUserId,
+            userRepository: this.userRepository,
+        });
     }
 
-    async getFollowers({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
-        
-        
-        return await getFollowers({ userName, page, limit, userRepository:this.userRepository,fileBucket:this.fileBucket });
+    async getFollowers({
+        userName,
+        page,
+        limit,
+    }: {
+        userName: string;
+        page: number;
+        limit: number;
+    }) {
+        return await getFollowers({
+            userName,
+            page,
+            limit,
+            userRepository: this.userRepository,
+            fileBucket: this.fileBucket,
+        });
     }
 
-    async getFollowings({ userName, page, limit }: { userName: string; page: number; limit: number; }) {
-        return await getFollowings({ userName, page, limit, userRepository:this.userRepository , fileBucket:this.fileBucket});
+    async getFollowings({
+        userName,
+        page,
+        limit,
+    }: {
+        userName: string;
+        page: number;
+        limit: number;
+    }) {
+        return await getFollowings({
+            userName,
+            page,
+            limit,
+            userRepository: this.userRepository,
+            fileBucket: this.fileBucket,
+        });
     }
 
-    async getWallet({ userId }: { userId: string; }) {
-        return await getWallet({userId,walletRepository:this.walletRepository});
+    async getWallet({ userId }: { userId: string }) {
+        return await getWallet({
+            userId,
+            walletRepository: this.walletRepository,
+        });
     }
-    
+
+    async getUserDetails(userId: string) {
+        return await getUserDetails({
+            userId,
+            userRepository: this.userRepository,
+            fileBucket: this.fileBucket,
+            postRepository: this.postRepository,
+            reportRepository: this.reportRepository,
+            sessionRepository: this.sessionRepository,
+        });
+    }
 }
