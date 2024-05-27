@@ -49,6 +49,8 @@ export class AdminUseCase implements IAdminUseCase {
         });
     }
 
+    
+
     async updateUser({ id, blocked, }: { id: string; blocked?: boolean | undefined; }): Promise<Omit<IUser, 'password'> | null> {
         return await updateUser(
             {

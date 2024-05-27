@@ -3,5 +3,5 @@ import { updateUser } from './updateUser';
 
 export {
     login,
-    updateUser
+    updateUser,
 };

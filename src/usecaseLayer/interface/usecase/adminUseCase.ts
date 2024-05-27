@@ -17,4 +17,6 @@ export interface IAdminUseCase {
         
     }): Promise<Omit<IUser, 'password'> | null>;
 
+
+
 }

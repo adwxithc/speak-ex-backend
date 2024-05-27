@@ -275,7 +275,7 @@ export class UserUseCase implements IUserUseCase {
         });
     }
 
-    async renewAccess(token: string): Promise<string | undefined> {
+    async renewAccess(token: string) {
         return await renewAccess({
             token,
             jwtToken: this.jwtToken,

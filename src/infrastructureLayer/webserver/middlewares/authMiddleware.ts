@@ -1,56 +1,50 @@
-import  'express-async-errors';
-import {JWTToken} from '../../services/jwt';
-import dotenv from 'dotenv';
-dotenv.config();
-import UserModel from '../../database/mongoDB/models/userModel';
-import { UserRepository } from '../../database/mongoDB/repository/UserRepository';
-import { BadRequestError } from '../../../usecaseLayer/errors';
 import { Next, Req, Res } from '../../types/expressTypes';
-import IUser from '../../../domain/user';
+import { ForbiddenRequestError } from '../../../usecaseLayer/errors';
+import {
+    IAccessRefreshToken,
+    IJwt,
+} from '../../../usecaseLayer/interface/services/IJwt.types';
 
 declare module 'express' {
     export interface Request {
-      user?: Omit<IUser, 'password'>;
+        user?: IAccessRefreshToken;
     }
-  }
+}
+interface IProtect {
+    protectUser(req: Req, res: Res, next: Next): Promise<void>;
+}
 
-const protect = async(req:Req,res:Res,next:Next)=>{
-    
-    const token =req.cookies.jwt;
-    if(token){
-      
-        const verifyJwt= new  JWTToken();
-        const userRepository = new UserRepository(UserModel);
-        const decoded=await verifyJwt.verifyAccessJwt(token);
-        if(!decoded?.id){
-            throw new BadRequestError('invalid token');
+export class Protect implements IProtect {
+    readonly jwt: IJwt;
+
+    constructor({ jwt }: { jwt: IJwt }) {
+        this.jwt = jwt;
+    }
+
+    protectUser = async (req: Req, res: Res, next: Next) => {
+        const token = req.cookies.accessToken;
+        
+        const decoded = await this.jwt.verifyAccessJwt(token);
+
+        if (decoded?.id && ['user', 'admin'].includes(decoded.role)) {
+            req.user = decoded;
+            return next();
         }
 
-        const {id} = decoded;
-        
+        throw new ForbiddenRequestError();
+    };
 
-        req.user=await userRepository.findUserById(id) as Omit<IUser, 'password'>;
-        
-        if(!req?.user?.blocked){
-            next();
-        }else{
-            res.cookie('jwt','',{
-                httpOnly:true,
-                expires: new Date(0)
-            });
-            throw new BadRequestError('access denied');
+    protectAdmin = async (req: Req, res: Res, next: Next) => {
+        const token = req.cookies.accessToken;
+
+        const decoded = await this.jwt.verifyAccessJwt(token);
+
+        if (decoded?.id && decoded.role == 'admin') {
+            const { id, role } = decoded;
+            req.user = { id, role };
+            return next();
         }
-            
-            
-        
-    }else{
 
-        throw new NotAuthorizedErro();
-    }
-};
-
-
-
-export{
-    protect,
-};
+        throw new ForbiddenRequestError();
+    };
+}

@@ -94,7 +94,7 @@ export interface IUserUseCase {
     }): Promise<Omit<IUser, 'password'> | null>;
 
     //renewAccess token
-    renewAccess(token: string): Promise<string | undefined>;
+    renewAccess(token: string): Promise<string >;
 
     checkUserName(userName:string): Promise<boolean>;
 

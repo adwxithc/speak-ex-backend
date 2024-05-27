@@ -3,6 +3,7 @@ import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IWalletRepository } from '../interface/repository/IWalletRepository';
+import { IFileBucket } from '../interface/services/IFileBucket';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
 import { IVideoSessionUseCase } from '../interface/usecase/videoSessionUseCase';
 import { startSession, rematch, joinSession, terminateSession, rate, report, getSession, listReports } from './videoSession/';
@@ -13,25 +14,29 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly userRepository: IUserRepository;
     private readonly reportRepository: IReportRepository;
     private readonly walletRepository: IWalletRepository;
+    private readonly fileBucket: IFileBucket;
 
     constructor({
         generateUniqueString,
         sessionRepository,
         userRepository,
         reportRepository,
-        walletRepository
+        walletRepository,
+        fileBucket
     }: {
         generateUniqueString: IGenerateUniQueString;
         sessionRepository: ISessionRepository;
         userRepository: IUserRepository;
         reportRepository:IReportRepository;
-        walletRepository:IWalletRepository
+        walletRepository:IWalletRepository;
+        fileBucket:IFileBucket
     }) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.generateUniqueString = generateUniqueString;
         this.reportRepository=reportRepository;
         this.walletRepository = walletRepository;
+        this.fileBucket=fileBucket;
     }
 
     //startSession
@@ -102,6 +107,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     async listReports({ page, limit }: { page: number; limit: number; }) {
         return await listReports({
             reportRepository: this.reportRepository,
+            fileBucket:this.fileBucket,
             page,
             limit,
         });

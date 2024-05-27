@@ -1,18 +1,21 @@
 import { IReport } from '../../../domain/report';
 import { ISession } from '../../../domain/session';
 
-export interface IReportWithUsers extends IReport{
-    reporterInfo:{
+export interface IReportWithUsers{
+    reports:(IReport&{reporterInfo:{
         id: string;
         username: string;
         firstName:string;
-        lastName:string
-    },
+        lastName:string;
+        profile:string;
+
+    }})[],
     reportedUserInfo:{
         id: string;
         username: string;
         firstName:string;
-        lastName:string
+        lastName:string;
+        profile:string
     },
 }
 

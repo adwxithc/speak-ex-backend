@@ -30,6 +30,7 @@ export function adminRoute(router: Router) {
         await adminController.signout(req, res);
     });
 
+
     router.get('/users', protect.protectAdmin, async (req: Req, res: Res) => {
         await userController.listUsers(req, res);
     });

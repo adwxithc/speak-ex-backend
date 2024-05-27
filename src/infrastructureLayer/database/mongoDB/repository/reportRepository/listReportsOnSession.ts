@@ -6,15 +6,31 @@ export const listReportsOnSession = async (
     { page, limit, reportModel }: { page: number; limit: number,reportModel:typeof ReportModel },
    
 ) => {
-    // const reports = await reportModel.find({type:'sessions'})
-    //     .sort({ updatedAt: -1 })
-    //     .skip((page - 1) * limit)
-    //     .limit(limit);
-
-    const reports = await reportModel.aggregate([
+    const reportsPromise =  reportModel.aggregate([
         {
-            $match:{
-                type:'sessions'
+            $group: {
+                _id: '$reportedUser',
+                reportCount: { $sum: 1 },
+                reports: {
+                    $push: {
+                        reportId: '$_id',
+                        description: '$description',
+                        type: '$type',
+                        referenceId: '$referenceId',
+                        reporter: '$reporter',
+                        createdAt: '$createdAt'
+                    }
+                }
+            }
+        },
+        {
+            $match: {
+                reportCount: { $gt: 5 }
+            }
+        },
+        {
+            $sort: {
+                reportCount: -1
             }
         },
         {
@@ -27,58 +43,99 @@ export const listReportsOnSession = async (
             $limit: limit
         },
         {
-            $lookup: {
-                from: 'users',
-                localField: 'reporter',
-                foreignField: '_id',
-                as: 'reporterInfo'
-            }
-        },
-        {
-            $unwind: '$reporterInfo'
+            $unwind: '$reports' 
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'reportedUser',
-                foreignField: '_id',
-                as:'reportedUserInfo'
+                let: { reporterId: '$reports.reporter' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ['$_id', '$$reporterId'] }
+                        }
+                    },
+                    {
+                        $project: {
+                            
+                            id:'$_id',
+                            _id: 0,
+                            firstName: 1,
+                            lastName: 1,
+                            userName: 1,
+                            profile: 1
+                        }
+                    }
+                ],
+                as: 'reports.reporterInfo'
             }
         },
         {
-            $unwind: '$reportedUserInfo'
+            $unwind: '$reports.reporterInfo' // Unwind the result of $lookup
         },
         {
-            $project:{
-                id:'$_id',
-                _id:0,
-                description:1,
-                type:1,
-                referenceId:1,
-                reporter:1,
-                reportedUser:1,
-                reportedUserInfo:{
-                    id:'$reportedUserInfo._id',
-                    firstName: '$reportedUserInfo.firstName',
-                    lastName: '$reportedUserInfo.lastName',
-                    userName: '$reportedUserInfo.userName',
-                },
-                reporterInfo:{
-                    id:'$reporterInfo._id',
-                    firstName: '$reporterInfo.firstName',
-                    lastName: '$reporterInfo.lastName',
-                    userName: '$reporterInfo.userName',
-                },
-                createdAt:1,
-                updatedAt:1
+            $group: {
+                _id: '$_id',
+                reportCount: { $first: '$reportCount' },
+                reports: { $push: '$reports' }
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                let: { userId: '$_id' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ['$_id', '$$userId'] }
+                        }
+                    },
+                    {
+                        $project: {
+                            id:'$_id',
+                            _id: 0,
+                            firstName: 1,
+                            lastName: 1,
+                            userName: 1,
+                            profile: 1
+                        }
+                    }
+                ],
+                as: 'reportedUserInfo'
+            }
+        },
+        
+        {
+            $unwind:'$reportedUserInfo'
+        }
+       
+    ]);
+
+    const totalCountQueryResultPromise =  reportModel.aggregate([
+        {
+            $group: {
+                _id: '$reportedUser',
+                reportCount: { $sum: 1 }
+            }
+        },
+        {
+            $match: {
+                reportCount: { $gt: 5 }
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                totalCount: { $sum: 1 }
             }
         }
-    ]) as IReportWithUsers[];
+    ]);
 
+    const [totalCountQueryResult,reports]= await Promise.all([totalCountQueryResultPromise,reportsPromise]) as [{totalCount:number,_id:null}[], IReportWithUsers[]];
+
+    const totalReports = totalCountQueryResult[0] ? totalCountQueryResult[0].totalCount : 0;
     
-    
-       
-    const totalReports = await reportModel.countDocuments();
+
     
     return {reports,totalReports};
 };

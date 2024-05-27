@@ -32,8 +32,8 @@ export class AdminController {
     }
 
     async signout(req: Req, res: Res) {
-        res.clearCookie('accessToken');
-        res.clearCookie('refreshToken');
+        res.clearCookie('adminAccessToken');
+        res.clearCookie('adminRefreshToken');
         res.json({
             success: true,
             message: 'successfully logout',
@@ -54,6 +54,8 @@ export class AdminController {
             data: userData,
         });
     }
+
+    
 
    
 }

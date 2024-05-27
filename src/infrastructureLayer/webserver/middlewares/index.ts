@@ -1,5 +1,5 @@
 import {validateRequest} from './validateRequest';
-import { Protect} from './authMiddleware1';
+import { Protect} from './authMiddleware';
 
 export {
     validateRequest,

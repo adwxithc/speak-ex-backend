@@ -37,5 +37,9 @@ export const getUserDetails = async ({
     };
 
     usersDetails.profile =  fileBucket.getFileAccessURL(usersDetails.profile||'');
+    usersDetails.reports.forEach(r=>{
+        r.reporterDetails.profile=fileBucket.getFileAccessURL(r.reporterDetails.profile);
+    });
+    
     return usersDetails;
 };
