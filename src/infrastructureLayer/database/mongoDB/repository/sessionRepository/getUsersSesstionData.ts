@@ -76,9 +76,7 @@ export const getUsersSesstionData = async ({
         }
     ]) as IUsersSesstionData[];
 
-    console.log(sessionStats);
-    
-
+ 
    
 
     return sessionStats[0];

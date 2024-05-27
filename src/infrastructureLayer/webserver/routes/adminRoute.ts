@@ -9,6 +9,7 @@ import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 import { userController } from './injections/userInjection';
 import { videoSessionController } from './injections/videoSessionInjection';
+import { upload } from '../middlewares/multer';
 
 export function adminRoute(router: Router) {
     router.post(
@@ -30,7 +31,6 @@ export function adminRoute(router: Router) {
         await adminController.signout(req, res);
     });
 
-
     router.get('/users', protect.protectAdmin, async (req: Req, res: Res) => {
         await userController.listUsers(req, res);
     });
@@ -38,8 +38,8 @@ export function adminRoute(router: Router) {
     router.get(
         '/user/:userId',
         protect.protectAdmin,
-        async (req:Req, res:Res)=>{
-            await userController.getUserDetails(req,res);
+        async (req: Req, res: Res) => {
+            await userController.getUserDetails(req, res);
         }
     );
 
@@ -122,12 +122,32 @@ export function adminRoute(router: Router) {
         '/session-complains',
         protect.protectAdmin,
         async (req: Req, res: Res) => {
-
             await videoSessionController.listReports(req, res);
         }
     );
 
-  
+    router.post(
+        '/coin-purchase-plan',
+        upload.single('image'),
+        body('price')
+            .isNumeric()
+            .withMessage(' Price must be a numeric value')
+            .isFloat({ min: 0 })
+            .withMessage(' price should be a positive number'),
+        body('count')
+            .isNumeric()
+            .withMessage(' Count must be a numeric value')
+            .isFloat({ min: 0 })
+            .withMessage(' Count should be a positive number'),
+        body('title')
+            .isLength({ min: 3 })
+            .withMessage('Title must be atleast 3 character long'),
+        validateRequest,
+        protect.protectAdmin,
+        async (req: Req, res: Res) => {
+            await videoSessionController.createCoinPurchasePlan(req, res);
+        }
+    );
 
     return router;
 }

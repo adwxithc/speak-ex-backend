@@ -1,10 +1,12 @@
 import { VideoSessionController } from '../../../../controller/restController/sessionController';
 import { VideoSessionUseCase } from '../../../../usecaseLayer/useCases/videoSessionUseCase';
+import CoinPurchasePlanModel from '../../../database/mongoDB/models/CoinPurchasePlan';
 import ReportModel from '../../../database/mongoDB/models/ReportModel';
 import SessionModel from '../../../database/mongoDB/models/SessionModel';
 import TransactionModel from '../../../database/mongoDB/models/TransactionModel';
 import WalletModel from '../../../database/mongoDB/models/WalletModel';
 import UserModel from '../../../database/mongoDB/models/userModel';
+import { CoinPurchasePlanRepository } from '../../../database/mongoDB/repository/CoinPurchasePlanRepository';
 import { UserRepository } from '../../../database/mongoDB/repository/UserRepository';
 import { ReportRepository } from '../../../database/mongoDB/repository/reportRepository';
 import { SessionRepository } from '../../../database/mongoDB/repository/sessionRepository';
@@ -23,6 +25,7 @@ const walletRepository = new WalletRepository({
     walletModel: WalletModel,
     transactionModel: TransactionModel,
 });
+const coinPurchasePlanRepository = new CoinPurchasePlanRepository(CoinPurchasePlanModel);
 
 export const videoSessionUseCase = new VideoSessionUseCase({
     generateUniqueString,
@@ -31,6 +34,7 @@ export const videoSessionUseCase = new VideoSessionUseCase({
     reportRepository,
     walletRepository,
     fileBucket,
+    coinPurchasePlanRepository
 });
 
 const videoSessionController = new VideoSessionController(videoSessionUseCase);

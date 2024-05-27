@@ -67,6 +67,16 @@ export class VideoSessionController {
             data:sessionReportsData
         });
     }
+
+    async createCoinPurchasePlan(req:Req, res:Res){
+        const {count, title, price} = req.body;
+        const {file} = req;
+        const purchasePlan = await this.videoSessionUseCase.createCoinPurchasePlan({count, title, imageFile:file, price});
+        res.json({
+            success:true,
+            data:purchasePlan
+        });
+    }
 }
 
 

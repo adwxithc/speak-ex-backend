@@ -1,4 +1,4 @@
-
+import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
@@ -6,7 +6,17 @@ import { IWalletRepository } from '../interface/repository/IWalletRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
 import { IVideoSessionUseCase } from '../interface/usecase/videoSessionUseCase';
-import { startSession, rematch, joinSession, terminateSession, rate, report, getSession, listReports } from './videoSession/';
+import {
+    startSession,
+    rematch,
+    joinSession,
+    terminateSession,
+    rate,
+    report,
+    getSession,
+    listReports,
+    createCoinPurchasePlan,
+} from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly generateUniqueString: IGenerateUniQueString;
@@ -15,28 +25,31 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly reportRepository: IReportRepository;
     private readonly walletRepository: IWalletRepository;
     private readonly fileBucket: IFileBucket;
-
+    private readonly coinPurchasePlanRepository: ICoinPurchasePlanRepository;
     constructor({
         generateUniqueString,
         sessionRepository,
         userRepository,
         reportRepository,
         walletRepository,
-        fileBucket
+        coinPurchasePlanRepository,
+        fileBucket,
     }: {
         generateUniqueString: IGenerateUniQueString;
         sessionRepository: ISessionRepository;
         userRepository: IUserRepository;
-        reportRepository:IReportRepository;
-        walletRepository:IWalletRepository;
-        fileBucket:IFileBucket
+        reportRepository: IReportRepository;
+        walletRepository: IWalletRepository;
+        coinPurchasePlanRepository: ICoinPurchasePlanRepository;
+        fileBucket: IFileBucket;
     }) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.generateUniqueString = generateUniqueString;
-        this.reportRepository=reportRepository;
+        this.reportRepository = reportRepository;
         this.walletRepository = walletRepository;
-        this.fileBucket=fileBucket;
+        this.fileBucket = fileBucket;
+        this.coinPurchasePlanRepository = coinPurchasePlanRepository;
     }
 
     //startSession
@@ -53,7 +66,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             sessionRepository: this.sessionRepository,
             userRepository: this.userRepository,
             generateUniqueString: this.generateUniqueString,
-        });  
+        });
     }
 
     async joinSession({
@@ -67,10 +80,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             userId,
             sessionId,
             sessionRepository: this.sessionRepository,
-            userRepository:this.userRepository
+            userRepository: this.userRepository,
         });
     }
-    
 
     //rematch new user
     async rematch({
@@ -84,32 +96,94 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             sessionCode,
             liveUsers,
             sessionRepository: this.sessionRepository,
-        
         });
     }
 
-    async terminateSession({ sessionCode,endingTime }: { sessionCode: string; endingTime:string }) {
-        return await terminateSession({sessionCode,endingTime,sessionRepository:this.sessionRepository,generateUniqueString:this.generateUniqueString,walletRepository:this.walletRepository});
+    async terminateSession({
+        sessionCode,
+        endingTime,
+    }: {
+        sessionCode: string;
+        endingTime: string;
+    }) {
+        return await terminateSession({
+            sessionCode,
+            endingTime,
+            sessionRepository: this.sessionRepository,
+            generateUniqueString: this.generateUniqueString,
+            walletRepository: this.walletRepository,
+        });
     }
 
-    async rate({ sessionCode, userId, rating }: { sessionCode: string; userId: string; rating: number; }) {
-        return await rate({ sessionCode, userId, rating, sessionRepository:this.sessionRepository });
+    async rate({
+        sessionCode,
+        userId,
+        rating,
+    }: {
+        sessionCode: string;
+        userId: string;
+        rating: number;
+    }) {
+        return await rate({
+            sessionCode,
+            userId,
+            rating,
+            sessionRepository: this.sessionRepository,
+        });
     }
 
-    async report({ sessionCode, description, reporter }: { sessionCode: string; description: string; reporter: string; }){
-        return await report({ sessionCode, description, reporter,sessionRepository:this.sessionRepository,reportRepository:this.reportRepository });
+    async report({
+        sessionCode,
+        description,
+        reporter,
+    }: {
+        sessionCode: string;
+        description: string;
+        reporter: string;
+    }) {
+        return await report({
+            sessionCode,
+            description,
+            reporter,
+            sessionRepository: this.sessionRepository,
+            reportRepository: this.reportRepository,
+        });
     }
 
-    async getSession({ sessionCode }: { sessionCode: string; }){
-        return await getSession({sessionCode,sessionRepository:this.sessionRepository});
+    async getSession({ sessionCode }: { sessionCode: string }) {
+        return await getSession({
+            sessionCode,
+            sessionRepository: this.sessionRepository,
+        });
     }
 
-    async listReports({ page, limit }: { page: number; limit: number; }) {
+    async listReports({ page, limit }: { page: number; limit: number }) {
         return await listReports({
             reportRepository: this.reportRepository,
-            fileBucket:this.fileBucket,
+            fileBucket: this.fileBucket,
             page,
             limit,
+        });
+    }
+
+    async createCoinPurchasePlan({
+        count,
+        title,
+        imageFile,
+        price,
+    }: {
+        count: number;
+        title: string;
+        imageFile: Express.Multer.File | undefined;
+        price: number;
+    }) {
+        return await createCoinPurchasePlan({
+            count,
+            title,
+            fileBucket:this.fileBucket,
+            imageFile,
+            price,
+            coinPurchasePlanRepository: this.coinPurchasePlanRepository,
         });
     }
 }
