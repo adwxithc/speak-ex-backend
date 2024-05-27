@@ -50,6 +50,16 @@ export const getUserDataWithWallet = async ({
             $unwind: {path:'$focusLanguageInfo',preserveNullAndEmptyArrays: true },
         },
         {
+            $addFields: {
+                'focusLanguageInfo.id': '$focusLanguageInfo._id',
+            },
+        },
+        {
+            $project: {
+                'focusLanguageInfo._id': 0,
+            },
+        },
+        {
             $unwind: {path:'$proficientLanguage',preserveNullAndEmptyArrays: true },
         },
         {
@@ -69,8 +79,19 @@ export const getUserDataWithWallet = async ({
             $unwind: {path:'$proficientLanguageInfo',preserveNullAndEmptyArrays: true },
         },
         {
+            $addFields: {
+                'proficientLanguageInfo.id': '$proficientLanguageInfo._id',
+            },
+        },
+        {
+            $project: {
+                'proficientLanguageInfo._id': 0,
+            },
+        },
+        {
             $group: {
                 _id: '$_id',
+                id:{ $first: '$_id' },
                 firstName: { $first: '$firstName' },
                 lastName: { $first: '$lastName' },
                 userName: { $first: '$userName' },

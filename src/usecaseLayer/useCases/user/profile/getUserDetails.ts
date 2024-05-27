@@ -6,8 +6,6 @@ import { ISessionRepository } from '../../../interface/repository/ISessionReposi
 import { IUserRepository } from '../../../interface/repository/IUserRepository';
 import { IFileBucket } from '../../../interface/services/IFileBucket';
 
-
-
 export const getUserDetails = async ({
     userId,
     userRepository,
@@ -29,7 +27,7 @@ export const getUserDetails = async ({
     const reports =  await reportRepository.getReportsOnSession({userId});
     const session = await sessionRepository.getUsersSesstionData({userId});
     const postsInfo = await postRepository.getPostsInfo({userId});
-    const social={averageLikes:postsInfo.averageLikes,posts:postsInfo.posts,followers:userDataWithWallet.followers?.length||0,following:userDataWithWallet.following?.length||0}
+    const social={averageLikes:postsInfo.averageLikes,posts:postsInfo.posts,followers:userDataWithWallet.followers?.length||0,following:userDataWithWallet.following?.length||0};
 
     const usersDetails={
         ...userDataWithWallet,
@@ -37,5 +35,7 @@ export const getUserDetails = async ({
         session,
         social
     };
+
+    usersDetails.profile =  fileBucket.getFileAccessURL(usersDetails.profile||'');
     return usersDetails;
 };
