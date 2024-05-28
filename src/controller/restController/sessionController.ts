@@ -88,6 +88,15 @@ export class VideoSessionController {
             data:sessionReportsData
         });
     }
+
+    async deletePurchasePlan(req:Req, res:Res){
+        const {id} = req.params;
+        const plan = await this.videoSessionUseCase.deletePurchasePlan(id);
+        res.json({
+            success:true,
+            data:plan
+        });
+    }
 }
 
 

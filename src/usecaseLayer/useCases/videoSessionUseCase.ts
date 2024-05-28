@@ -1,4 +1,4 @@
-import ICoinPurchasePlan from '../../domain/coinPurchasePlan';
+
 import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
@@ -19,6 +19,7 @@ import {
     listReports,
     createCoinPurchasePlan,
     getPurchasePlans,
+    deletePurchasePlan,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -195,11 +196,14 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         });
     }
 
-    async getPurchasePlans(): Promise<ICoinPurchasePlan[]> {
+    async getPurchasePlans() {
         return await getPurchasePlans({
           
             coinPurchasePlanRepository: this.coinPurchasePlanRepository,
             fileBucket:this.fileBucket
         });
+    }
+    async deletePurchasePlan(id: string){
+        return await deletePurchasePlan({id, coinPurchasePlanRepository: this.coinPurchasePlanRepository});
     }
 }

@@ -46,4 +46,5 @@ export interface IVideoSessionUseCase {
     listReports({page,limit}:{page:number,limit:number}):Promise<{ reports: IReportWithUsers[]; totalReports: number; lastPage: number }>
     createCoinPurchasePlan({count, title, imageFile, price}:{count:number, title:string, imageFile:Express.Multer.File|undefined, price:number}):Promise<ICoinPurchasePlan>
     getPurchasePlans():Promise<ICoinPurchasePlan[]>
+    deletePurchasePlan(id:string):Promise<ICoinPurchasePlan>
 }

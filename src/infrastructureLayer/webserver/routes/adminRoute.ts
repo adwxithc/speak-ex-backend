@@ -157,5 +157,13 @@ export function adminRoute(router: Router) {
         }
     );
 
+    router.delete(
+        '/coin-purchase-plan/:id',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.deletePurchasePlan(req, res);
+        }
+    );
+
     return router;
 }
