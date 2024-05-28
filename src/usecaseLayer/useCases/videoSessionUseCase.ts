@@ -1,3 +1,4 @@
+import ICoinPurchasePlan from '../../domain/coinPurchasePlan';
 import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
@@ -5,6 +6,7 @@ import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IWalletRepository } from '../interface/repository/IWalletRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
+import { IImageCroper } from '../interface/services/IIMageCroper';
 import { IVideoSessionUseCase } from '../interface/usecase/videoSessionUseCase';
 import {
     startSession,
@@ -16,6 +18,7 @@ import {
     getSession,
     listReports,
     createCoinPurchasePlan,
+    getPurchasePlans,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -26,6 +29,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly walletRepository: IWalletRepository;
     private readonly fileBucket: IFileBucket;
     private readonly coinPurchasePlanRepository: ICoinPurchasePlanRepository;
+    private readonly imageCroper: IImageCroper;
     constructor({
         generateUniqueString,
         sessionRepository,
@@ -34,6 +38,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         walletRepository,
         coinPurchasePlanRepository,
         fileBucket,
+        imageCroper
     }: {
         generateUniqueString: IGenerateUniQueString;
         sessionRepository: ISessionRepository;
@@ -42,6 +47,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         walletRepository: IWalletRepository;
         coinPurchasePlanRepository: ICoinPurchasePlanRepository;
         fileBucket: IFileBucket;
+        imageCroper: IImageCroper;
     }) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
@@ -50,6 +56,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         this.walletRepository = walletRepository;
         this.fileBucket = fileBucket;
         this.coinPurchasePlanRepository = coinPurchasePlanRepository;
+        this.imageCroper=imageCroper;
     }
 
     //startSession
@@ -180,10 +187,19 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         return await createCoinPurchasePlan({
             count,
             title,
-            fileBucket:this.fileBucket,
+            fileBucket: this.fileBucket,
             imageFile,
             price,
+            imageCroper:this.imageCroper,
             coinPurchasePlanRepository: this.coinPurchasePlanRepository,
+        });
+    }
+
+    async getPurchasePlans(): Promise<ICoinPurchasePlan[]> {
+        return await getPurchasePlans({
+          
+            coinPurchasePlanRepository: this.coinPurchasePlanRepository,
+            fileBucket:this.fileBucket
         });
     }
 }

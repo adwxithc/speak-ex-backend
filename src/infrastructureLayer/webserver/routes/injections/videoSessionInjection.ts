@@ -13,8 +13,10 @@ import { SessionRepository } from '../../../database/mongoDB/repository/sessionR
 import { WalletRepository } from '../../../database/mongoDB/repository/walletRepository';
 import { FileBucket } from '../../../services/fileBucket';
 import { GenerateUniQueString } from '../../../services/generateUniqueString';
+import { ImageCroper } from '../../../services/imageCroper';
 
 const generateUniqueString = new GenerateUniQueString();
+const imageCroper= new ImageCroper();
 
 const sessionRepository = new SessionRepository(SessionModel);
 const userRepository = new UserRepository(UserModel);
@@ -34,7 +36,8 @@ export const videoSessionUseCase = new VideoSessionUseCase({
     reportRepository,
     walletRepository,
     fileBucket,
-    coinPurchasePlanRepository
+    coinPurchasePlanRepository,
+    imageCroper
 });
 
 const videoSessionController = new VideoSessionController(videoSessionUseCase);

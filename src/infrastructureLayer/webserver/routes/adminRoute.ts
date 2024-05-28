@@ -149,5 +149,13 @@ export function adminRoute(router: Router) {
         }
     );
 
+    router.get(
+        '/coin-purchase-plans',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.getPurchasePlans(req, res);
+        }
+    );
+
     return router;
 }

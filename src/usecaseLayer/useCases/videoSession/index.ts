@@ -7,6 +7,7 @@ import { report } from './report';
 import { getSession } from './getSession';
 import { listReports } from './listReports';
 import { createCoinPurchasePlan } from './createCoinPurchasePlan';
+import {getPurchasePlans} from './getPurchasePlans';
 export {
     startSession,
     rematch,
@@ -17,4 +18,5 @@ export {
     getSession,
     listReports,
     createCoinPurchasePlan,
+    getPurchasePlans
 };

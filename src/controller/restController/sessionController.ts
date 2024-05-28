@@ -77,6 +77,17 @@ export class VideoSessionController {
             data:purchasePlan
         });
     }
+
+    async getPurchasePlans(req:Req, res:Res){
+        
+
+        const sessionReportsData = await this.videoSessionUseCase.getPurchasePlans();
+
+        res.status(200).json({
+            success:true,
+            data:sessionReportsData
+        });
+    }
 }
 
 

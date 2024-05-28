@@ -20,6 +20,10 @@ const coinPurchasePlanSchema = new Schema<ICoinPurchasePlan>(
             type: String,
             required: true,
         },
+        deleted:{
+            type:Boolean,
+            default:false
+        }
     },
     {
         timestamps: true,
