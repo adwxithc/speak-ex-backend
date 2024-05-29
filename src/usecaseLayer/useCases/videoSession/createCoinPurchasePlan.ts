@@ -1,7 +1,7 @@
 import { BadRequestError } from '../../errors';
 import { ICoinPurchasePlanRepository } from '../../interface/repository/ICoinPurchasePlanRepository';
 import { IFileBucket } from '../../interface/services/IFileBucket';
-import { IImageCroper } from '../../interface/services/IIMageCroper';
+import {  IImageFormater } from '../../interface/services/IImageFormater';
 
 export const createCoinPurchasePlan = async ({
     count,
@@ -9,7 +9,7 @@ export const createCoinPurchasePlan = async ({
     title,
     imageFile,
     fileBucket,
-    imageCroper,
+    imageFormater,
     coinPurchasePlanRepository,
 }: {
     count: number;
@@ -17,7 +17,7 @@ export const createCoinPurchasePlan = async ({
     title: string;
     imageFile: Express.Multer.File | undefined;
     fileBucket: IFileBucket;
-    imageCroper:IImageCroper
+    imageFormater:IImageFormater
     coinPurchasePlanRepository: ICoinPurchasePlanRepository;
 }) => {
     if (!imageFile) throw new BadRequestError('image is required');
@@ -25,13 +25,14 @@ export const createCoinPurchasePlan = async ({
     const imageBuffer = imageFile.buffer;
 
    
-    const croppedImageBuffer = await imageCroper.crop({aspectRatio:1,imageBuffer});
+    const croppedImageBuffer = await imageFormater.crop({aspectRatio:1,imageBuffer,format:'png'});
 
 
     const imageName = await fileBucket.uploadImage({
         imageBuffer: croppedImageBuffer,
         mimetype: imageFile.mimetype,
     });
+
 
     const purchasePlan = await coinPurchasePlanRepository.createPurchasePlan({
         count,

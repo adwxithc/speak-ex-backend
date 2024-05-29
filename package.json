@@ -26,6 +26,7 @@
     "nodemailer": "^6.9.13",
     "sharp": "^0.33.4",
     "socket.io": "^4.7.5",
+    "stripe": "^15.8.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.3"
   },

@@ -1,12 +1,13 @@
-
 import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
+import { ICoinPurchaseRepository } from '../interface/repository/ICoinPurchaseRepository';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IWalletRepository } from '../interface/repository/IWalletRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
-import { IImageCroper } from '../interface/services/IIMageCroper';
+import { IImageFormater } from '../interface/services/IImageFormater';
+import { IPaymentService } from '../interface/services/IPaymentService';
 import { IVideoSessionUseCase } from '../interface/usecase/videoSessionUseCase';
 import {
     startSession,
@@ -20,6 +21,8 @@ import {
     createCoinPurchasePlan,
     getPurchasePlans,
     deletePurchasePlan,
+    createPayment,
+    paymentConfirmation,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -30,7 +33,10 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly walletRepository: IWalletRepository;
     private readonly fileBucket: IFileBucket;
     private readonly coinPurchasePlanRepository: ICoinPurchasePlanRepository;
-    private readonly imageCroper: IImageCroper;
+    private readonly imageFormater: IImageFormater;
+    private readonly paymentService: IPaymentService;
+    private readonly coinPurchaseRepository: ICoinPurchaseRepository;
+
     constructor({
         generateUniqueString,
         sessionRepository,
@@ -39,7 +45,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         walletRepository,
         coinPurchasePlanRepository,
         fileBucket,
-        imageCroper
+        imageFormater,
+        paymentService,
+        coinPurchaseRepository,
     }: {
         generateUniqueString: IGenerateUniQueString;
         sessionRepository: ISessionRepository;
@@ -48,7 +56,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         walletRepository: IWalletRepository;
         coinPurchasePlanRepository: ICoinPurchasePlanRepository;
         fileBucket: IFileBucket;
-        imageCroper: IImageCroper;
+        imageFormater: IImageFormater;
+        paymentService: IPaymentService;
+        coinPurchaseRepository: ICoinPurchaseRepository;
     }) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
@@ -57,7 +67,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         this.walletRepository = walletRepository;
         this.fileBucket = fileBucket;
         this.coinPurchasePlanRepository = coinPurchasePlanRepository;
-        this.imageCroper=imageCroper;
+        this.imageFormater = imageFormater;
+        this.paymentService = paymentService;
+        this.coinPurchaseRepository = coinPurchaseRepository;
     }
 
     //startSession
@@ -191,19 +203,53 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             fileBucket: this.fileBucket,
             imageFile,
             price,
-            imageCroper:this.imageCroper,
+            imageFormater: this.imageFormater,
             coinPurchasePlanRepository: this.coinPurchasePlanRepository,
         });
     }
 
     async getPurchasePlans() {
         return await getPurchasePlans({
-          
             coinPurchasePlanRepository: this.coinPurchasePlanRepository,
-            fileBucket:this.fileBucket
+            fileBucket: this.fileBucket,
         });
     }
-    async deletePurchasePlan(id: string){
-        return await deletePurchasePlan({id, coinPurchasePlanRepository: this.coinPurchasePlanRepository});
+    async deletePurchasePlan(id: string) {
+        return await deletePurchasePlan({
+            id,
+            coinPurchasePlanRepository: this.coinPurchasePlanRepository,
+        });
+    }
+
+    async createPayment({
+        userId,
+        coinPurchasePlanId,
+    }: {
+        userId: string;
+        coinPurchasePlanId: string;
+    }) {
+        return await createPayment({
+            userId,
+            coinPurchasePlanId,
+            paymentService: this.paymentService,
+            coinPurchasePlanRepository: this.coinPurchasePlanRepository,
+            fileBucket: this.fileBucket,
+        });
+    }
+
+    async paymentConfirmation({
+        signature,
+        payload,
+    }: {
+        signature: string;
+        payload: Buffer;
+    }): Promise<void> {
+        await paymentConfirmation({
+            signature,
+            payload,
+            walletRepository: this.walletRepository,
+            coinPurchaseRepository: this.coinPurchaseRepository,
+            paymentService:this.paymentService
+        });
     }
 }

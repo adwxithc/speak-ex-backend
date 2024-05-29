@@ -9,6 +9,8 @@ import { listReports } from './listReports';
 import { createCoinPurchasePlan } from './createCoinPurchasePlan';
 import {getPurchasePlans} from './getPurchasePlans';
 import { deletePurchasePlan } from './deletePurchasePlan';
+import { createPayment } from './createPayment';
+import { paymentConfirmation } from './paymentConfirmation';
 export {
     startSession,
     rematch,
@@ -20,5 +22,7 @@ export {
     listReports,
     createCoinPurchasePlan,
     getPurchasePlans,
-    deletePurchasePlan
+    deletePurchasePlan,
+    createPayment,
+    paymentConfirmation
 };

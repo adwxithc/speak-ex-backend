@@ -1,5 +1,6 @@
 import { body } from 'express-validator';
-import { Router } from 'express';
+import { Router,raw } from 'express';
+
 
 import { validateRequest } from '../middlewares';
 import { protect } from './injections/middlewareInjection';
@@ -23,11 +24,7 @@ export function videoSessionRote(router: Router) {
 
     router.post(
         '/report/:sessionCode',
-        [
-            body('description')
-                .exists()
-                .withMessage('Description is required')
-        ],
+        [body('description').exists().withMessage('Description is required')],
         validateRequest,
         protect.protectUser,
         async (req: Req, res: Res) => {
@@ -42,6 +39,30 @@ export function videoSessionRote(router: Router) {
             await videoSessionController.getSession(req, res);
         }
     );
+    router.get('/coin-purchase-plans', async (req: Req, res: Res) => {
+        await videoSessionController.getPurchasePlans(req, res);
+    });
+
+    // ======== strip integration =============
+
+    router.post(
+        '/payment',
+        async (req: Req, res: Res) => {
+            await videoSessionController.payment(req, res);
+        }
+    );
+
+    router.post(
+        '/webhook',
+        raw({type: 'application/json'}),
+        async(req:Req, res:Res)=>{
+            
+            
+            await videoSessionController.webhook(req, res);
+        }
+    );
+
+   
 
     return router;
 }

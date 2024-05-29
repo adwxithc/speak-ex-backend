@@ -1,9 +1,11 @@
 import { Next, Req, Res } from '../../types/expressTypes';
+
 import { ForbiddenRequestError } from '../../../usecaseLayer/errors';
 import {
     IAccessRefreshToken,
     IJwt,
 } from '../../../usecaseLayer/interface/services/IJwt.types';
+
 
 declare module 'express' {
     export interface Request {
@@ -12,10 +14,12 @@ declare module 'express' {
 }
 interface IProtect {
     protectUser(req: Req, res: Res, next: Next): Promise<void>;
+    protectAdmin(req: Req, res: Res, next: Next): Promise<void>;
 }
 
 export class Protect implements IProtect {
     readonly jwt: IJwt;
+  
 
     constructor({ jwt }: { jwt: IJwt }) {
         this.jwt = jwt;
@@ -23,7 +27,7 @@ export class Protect implements IProtect {
 
     protectUser = async (req: Req, res: Res, next: Next) => {
         const token = req.cookies.accessToken;
-        
+
         const decoded = await this.jwt.verifyAccessJwt(token);
 
         if (decoded?.id && ['user', 'admin'].includes(decoded.role)) {
@@ -47,4 +51,6 @@ export class Protect implements IProtect {
 
         throw new ForbiddenRequestError();
     };
+
+ 
 }

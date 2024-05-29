@@ -1,7 +1,7 @@
 
 import { ICoinPurchasePlanRepository } from '../../../../usecaseLayer/interface/repository/ICoinPurchasePlanRepository';
 import CoinPurchasePlanModel from '../models/CoinPurchasePlan';
-import { createPurchasePlan, deletePlan, getPurchasePlans } from './coinPurchasePlanRepository/';
+import { createPurchasePlan, deletePlan, getPurchasePlan, getPurchasePlans } from './coinPurchasePlanRepository/';
 
 
 
@@ -17,5 +17,7 @@ export class CoinPurchasePlanRepository implements ICoinPurchasePlanRepository {
     async deletePlan(id: string) {
         return await deletePlan({id,coinPurchasePlanModel:this.coinPurchasePlanModel});
     }
-
+    async getPurchasePlan(id: string){
+        return await getPurchasePlan({id, coinPurchasePlanModel:this.coinPurchasePlanModel});
+    }
 }

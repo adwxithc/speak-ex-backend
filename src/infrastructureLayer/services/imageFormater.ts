@@ -1,15 +1,17 @@
 import sharp from 'sharp';
-import { IImageCroper } from '../../usecaseLayer/interface/services/IIMageCroper';
+import { IImageFormater } from '../../usecaseLayer/interface/services/IImageFormater';
 
-export class ImageCroper implements IImageCroper {
+export class ImageFormater implements IImageFormater {
     constructor() {}
 
     async crop({
         imageBuffer,
         aspectRatio,
+        format='jpeg'
     }: {
         imageBuffer: Buffer;
         aspectRatio: number;
+        format:'jpeg'|'png'
     }) {
         const metadata = await sharp(imageBuffer).metadata();
 
@@ -31,11 +33,25 @@ export class ImageCroper implements IImageCroper {
         const left = Math.round((width - newWidth) / 2);
         const top = Math.round((height - newHeight) / 2);
 
-        // Crop the image to the desired aspect ratio and convert to JPEG
-        const croppedImageBuffer = await sharp(imageBuffer)
-            .extract({ width: newWidth, height: newHeight, left, top })
-            .jpeg()
-            .toBuffer();
+        // Crop the image to the desired aspect ratio
+        let imageProcessing = sharp(imageBuffer).extract({
+            width: newWidth,
+            height: newHeight,
+            left,
+            top,
+        });
+
+        // Check if format conversion is needed
+        if (format === 'jpeg') {
+            imageProcessing = imageProcessing.jpeg();
+        } else if (format === 'png') {
+            imageProcessing = imageProcessing.png();
+        } else {
+            throw new Error('Invalid image format specified');
+        }
+
+        // Convert the image to the desired format and return the buffer
+        const croppedImageBuffer = await imageProcessing.toBuffer();
 
         return croppedImageBuffer;
     }
