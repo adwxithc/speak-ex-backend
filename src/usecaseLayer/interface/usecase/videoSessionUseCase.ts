@@ -113,5 +113,26 @@ export interface IVideoSessionUseCase {
 
     getSessionData(userId: string): Promise<IUsersSesstionData>;
 
-    requestMonetization({userId,description}:{userId:string,description:string}):Promise<IMonetizationRequest>
+    requestMonetization({
+        userId,
+        description,
+    }: {
+        userId: string;
+        description: string;
+    }): Promise<IMonetizationRequest>;
+
+    listMonetizationRequests({
+        page,
+        limit,
+        status,
+    }: {
+        page: number;
+        limit: number;
+        status: string
+    }): Promise<{
+        requests: IMonetizationRequest[];
+        totalRequests: number;
+        lastPage: number;
+    }>;
 }
+

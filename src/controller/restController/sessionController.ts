@@ -162,4 +162,26 @@ export class VideoSessionController {
             data: result,
         });
     }
+
+    async getMonetizationRequests(req:Req, res:Res){
+        const { page = 1, limit = 5,status='all' } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (typeof pageNumber !== 'number' || typeof limitNumber !== 'number') {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const requestData= await this.videoSessionUseCase.listMonetizationRequests({
+            page: pageNumber,
+            limit: limitNumber,
+            status:status as string
+        });
+
+        res.status(200).json({
+            success: true,
+            data: requestData,
+        }); 
+    }
 }

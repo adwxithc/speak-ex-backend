@@ -26,6 +26,7 @@ import {
     paymentConfirmation,
     getSessionData,
     requestMonetization,
+    listMonetizationRequests,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -277,7 +278,24 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             userId,
             description,
             monetizationRequestRepository: this.monetizationRequestRepository,
-            userRepository:this.userRepository
+            userRepository: this.userRepository,
+        });
+    }
+
+    async listMonetizationRequests({
+        page,
+        limit,
+        status,
+    }: {
+        page: number;
+        limit: number;
+        status: string;
+    }) {
+        return await listMonetizationRequests({
+            page,
+            limit,
+            status,
+            monetizationRequestRepository: this.monetizationRequestRepository,
         });
     }
 }

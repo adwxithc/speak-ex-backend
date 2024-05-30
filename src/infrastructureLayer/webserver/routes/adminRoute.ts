@@ -165,5 +165,13 @@ export function adminRoute(router: Router) {
         }
     );
 
+    router.get(
+        '/monetization-requests',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.getMonetizationRequests(req, res);
+        }
+    );
+
     return router;
 }

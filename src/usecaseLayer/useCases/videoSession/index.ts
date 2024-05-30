@@ -13,6 +13,7 @@ import { createPayment } from './createPayment';
 import { paymentConfirmation } from './paymentConfirmation';
 import { getSessionData } from './getSessionData';
 import { requestMonetization } from './requestMonetization'; 
+import { listMonetizationRequests } from './listMonetizationRequests';
 export {
     startSession,
     rematch,
@@ -28,5 +29,6 @@ export {
     createPayment,
     paymentConfirmation,
     getSessionData,
-    requestMonetization
+    requestMonetization,
+    listMonetizationRequests
 };

@@ -1,10 +1,9 @@
-import ILanguage from '../../../../../domain/language';
 import LanguageModel from '../../models/languageModel';
 
 export const listLanguages = async (
     { page, limit, key }: { page: number; limit: number; key: string },
     languageModel: typeof LanguageModel
-): Promise<{languages: ILanguage[];totalLanguages: number;}> => {
+) => {
     const languages = await languageModel.find({
         name: { $regex: new RegExp(`^${key}`, 'i') } 
     })
