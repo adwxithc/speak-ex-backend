@@ -1,6 +1,8 @@
 import ICoinPurchasePlan from '../../../domain/coinPurchasePlan';
+import IMonetizationRequest from '../../../domain/monetizationRequest';
 import { IReport } from '../../../domain/report';
 import { ISession } from '../../../domain/session';
+import { IUsersSesstionData } from '../repository/ISessionRepository';
 
 export interface IReportWithUsers {
     reports: (IReport & {
@@ -103,12 +105,13 @@ export interface IVideoSessionUseCase {
     }): Promise<string>;
     paymentConfirmation({
         signature,
-        payload
-        
+        payload,
     }: {
-        signature:string,
-        payload:Buffer
+        signature: string;
+        payload: Buffer;
     }): Promise<void>;
 
-    getMonetizationEligibility(userId:string):Promise<boolean>
+    getSessionData(userId: string): Promise<IUsersSesstionData>;
+
+    requestMonetization({userId,description}:{userId:string,description:string}):Promise<IMonetizationRequest>
 }

@@ -1,5 +1,6 @@
 import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
 import { ICoinPurchaseRepository } from '../interface/repository/ICoinPurchaseRepository';
+import { IMonetizationRequestRepository } from '../interface/repository/IMonetizationRequestRepository';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
@@ -23,7 +24,8 @@ import {
     deletePurchasePlan,
     createPayment,
     paymentConfirmation,
-    getMonetizationEligibility,
+    getSessionData,
+    requestMonetization,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -37,6 +39,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly imageFormater: IImageFormater;
     private readonly paymentService: IPaymentService;
     private readonly coinPurchaseRepository: ICoinPurchaseRepository;
+    private readonly monetizationRequestRepository: IMonetizationRequestRepository;
 
     constructor({
         generateUniqueString,
@@ -49,6 +52,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         imageFormater,
         paymentService,
         coinPurchaseRepository,
+        monetizationRequestRepository,
     }: {
         generateUniqueString: IGenerateUniQueString;
         sessionRepository: ISessionRepository;
@@ -60,6 +64,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         imageFormater: IImageFormater;
         paymentService: IPaymentService;
         coinPurchaseRepository: ICoinPurchaseRepository;
+        monetizationRequestRepository: IMonetizationRequestRepository;
     }) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
@@ -71,6 +76,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         this.imageFormater = imageFormater;
         this.paymentService = paymentService;
         this.coinPurchaseRepository = coinPurchaseRepository;
+        this.monetizationRequestRepository = monetizationRequestRepository;
     }
 
     //startSession
@@ -254,7 +260,24 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         });
     }
 
-    async getMonetizationEligibility(userId: string){
-        return await getMonetizationEligibility({userId, sessionRepository:this.sessionRepository});
+    async getSessionData(userId: string) {
+        return await getSessionData({
+            userId,
+            sessionRepository: this.sessionRepository,
+        });
+    }
+    async requestMonetization({
+        userId,
+        description,
+    }: {
+        userId: string;
+        description: string;
+    }) {
+        return await requestMonetization({
+            userId,
+            description,
+            monetizationRequestRepository: this.monetizationRequestRepository,
+            userRepository:this.userRepository
+        });
     }
 }

@@ -136,17 +136,30 @@ export class VideoSessionController {
         });
 
         res.json({ received: true });
-
-        
     }
 
-
-    async getMonetizationEligibility(req:Req, res:Res){
-        const {userId} = req.params;
-        const eligibility = await this.videoSessionUseCase.getMonetizationEligibility(userId);
+    async getSessionData(req: Req, res: Res) {
+        const { userId } = req.params;
+        const eligibility = await this.videoSessionUseCase.getSessionData(
+            userId
+        );
         res.json({
-            success:true,
-            data:eligibility
+            success: true,
+            data: eligibility,
+        });
+    }
+
+    async requestMonetization(req: Req, res: Res) {
+        const { id } = req.user as IAccessRefreshToken;
+        const { description } = req.body;
+        const result = await this.videoSessionUseCase.requestMonetization({
+            userId: id,
+            description,
+        });
+
+        res.json({
+            success: true,
+            data: result,
         });
     }
 }

@@ -15,6 +15,7 @@ interface IUser{
     followers?: DbId[],
     following?: DbId[]
     isMonetized?:boolean;
+    requestedForMonetization?:boolean;
 
 }
 

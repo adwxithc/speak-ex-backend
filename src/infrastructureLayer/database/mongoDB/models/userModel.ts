@@ -46,6 +46,10 @@ const userSchema = new Schema<IUser>(
             type: Boolean,
             default:false,
         },
+        requestedForMonetization:{
+            type:Boolean,
+            default:false
+        }
     },
     {
         timestamps: true,

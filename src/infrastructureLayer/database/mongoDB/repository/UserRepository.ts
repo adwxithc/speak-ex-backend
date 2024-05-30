@@ -83,6 +83,7 @@ export class UserRepository implements IUserRepository {
         profile,
         proficientLanguage,
         focusLanguage,
+        requestedForMonetization
     }: Required<Pick<IUser, 'id'>> &
         Partial<Omit<IUser, 'email'>>): Promise<IUser> {
         return await updateUser(
@@ -95,6 +96,7 @@ export class UserRepository implements IUserRepository {
                 profile,
                 proficientLanguage,
                 focusLanguage,
+                requestedForMonetization
             },
             this.userModels
         );

@@ -12,9 +12,11 @@ export const updateUser = async(
         profile,
         proficientLanguage,
         focusLanguage,
+        requestedForMonetization
     }:Required<Pick<IUser, 'id'>> & Partial<Omit<IUser ,'email'>>,
     userModels:typeof UserModel
-):Promise<IUser>=>{
+)=>{
+    console.log(requestedForMonetization,'requestedForMonetization');
 
     const user = await userModels.findById(id);
    
@@ -30,7 +32,7 @@ export const updateUser = async(
     user.profile=profile || user.profile;
     user.focusLanguage=focusLanguage || user.focusLanguage;
     user.proficientLanguage=proficientLanguage || user.proficientLanguage;
-
+    user.requestedForMonetization=requestedForMonetization||user.requestedForMonetization;
     
 
     const updatedUser =await user.save();
