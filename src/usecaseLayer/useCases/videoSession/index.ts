@@ -11,6 +11,7 @@ import {getPurchasePlans} from './getPurchasePlans';
 import { deletePurchasePlan } from './deletePurchasePlan';
 import { createPayment } from './createPayment';
 import { paymentConfirmation } from './paymentConfirmation';
+import { getMonetizationEligibility } from './getMonetizationEligibility';
 export {
     startSession,
     rematch,
@@ -24,5 +25,6 @@ export {
     getPurchasePlans,
     deletePurchasePlan,
     createPayment,
-    paymentConfirmation
+    paymentConfirmation,
+    getMonetizationEligibility
 };

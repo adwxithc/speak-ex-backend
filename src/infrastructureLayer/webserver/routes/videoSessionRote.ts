@@ -56,12 +56,16 @@ export function videoSessionRote(router: Router) {
         '/webhook',
         raw({type: 'application/json'}),
         async(req:Req, res:Res)=>{
-            
-            
             await videoSessionController.webhook(req, res);
         }
     );
-
+    router.get(
+        '/monetization-eligibility/:userId',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.getMonetizationEligibility(req, res);
+        }
+    );
    
 
     return router;

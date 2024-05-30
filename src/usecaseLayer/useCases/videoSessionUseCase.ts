@@ -23,6 +23,7 @@ import {
     deletePurchasePlan,
     createPayment,
     paymentConfirmation,
+    getMonetizationEligibility,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -243,13 +244,17 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     }: {
         signature: string;
         payload: Buffer;
-    }): Promise<void> {
+    }) {
         await paymentConfirmation({
             signature,
             payload,
             walletRepository: this.walletRepository,
             coinPurchaseRepository: this.coinPurchaseRepository,
-            paymentService:this.paymentService
+            paymentService: this.paymentService,
         });
+    }
+
+    async getMonetizationEligibility(userId: string){
+        return await getMonetizationEligibility({userId, sessionRepository:this.sessionRepository});
     }
 }

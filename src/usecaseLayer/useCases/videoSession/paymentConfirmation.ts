@@ -16,17 +16,15 @@ export const paymentConfirmation = async ({
     coinPurchaseRepository: ICoinPurchaseRepository;
     paymentService: IPaymentService;
 }) => {
-
     const result = await paymentService.verify({
         signature,
         payload,
     });
 
-    if(!result) throw new BadRequestError('invalid event');
+    if (!result) throw new BadRequestError('invalid event');
 
-    const {transactionId,metadata}=result;
-    const {amount,coinCount,coinPurchasePlanId,userId}=metadata;
-    
+    const { transactionId, metadata } = result;
+    const { amount, coinCount, coinPurchasePlanId, userId } = metadata;
 
     await coinPurchaseRepository.createPurchase({
         amount,

@@ -5,7 +5,6 @@ import { IAccessRefreshToken } from '../../usecaseLayer/interface/services/IJwt.
 
 import { IVideoSessionUseCase } from '../../usecaseLayer/interface/usecase/videoSessionUseCase';
 
-
 export class VideoSessionController {
     constructor(private videoSessionUseCase: IVideoSessionUseCase) {}
 
@@ -131,26 +130,23 @@ export class VideoSessionController {
     async webhook(req: Req, res: Res) {
         const payload = req.body;
         const signature = req.headers['stripe-signature'] as string;
-        await this.videoSessionUseCase.paymentConfirmation({signature, payload});
-       
-        // if (event.type === 'checkout.session.completed') {
-        //     const session = event.data.object;
-        //     const metadata = session.metadata;
-        //     const coinPurchasePlanId = metadata.coinPurchasePlanId;
-        //     const coinCount= metadata.coinCount;
-        //     const userId = metadata.userId;
-        //     const amount = metadata.amount;
-        //     const transactionId = event.data.object.payment_intent;
-
-        //     await this.videoSessionUseCase.paymentConfirmation({
-        //         transactionId,
-        //         coinPurchasePlanId,
-        //         userId,
-        //         amount,
-        //         coinCount
-        //     });
-        // }
+        await this.videoSessionUseCase.paymentConfirmation({
+            signature,
+            payload,
+        });
 
         res.json({ received: true });
+
+        
+    }
+
+
+    async getMonetizationEligibility(req:Req, res:Res){
+        const {userId} = req.params;
+        const eligibility = await this.videoSessionUseCase.getMonetizationEligibility(userId);
+        res.json({
+            success:true,
+            data:eligibility
+        });
     }
 }

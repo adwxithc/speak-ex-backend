@@ -109,4 +109,6 @@ export interface IVideoSessionUseCase {
         signature:string,
         payload:Buffer
     }): Promise<void>;
+
+    getMonetizationEligibility(userId:string):Promise<boolean>
 }
