@@ -23,6 +23,15 @@ export interface IReportWithUsers {
     };
 }
 
+export interface IMonetizationRequestData extends IMonetizationRequest{
+    userData:{
+        firstName:string,
+        lastName:string,
+        userName:string,
+        profile:string
+    }
+}
+
 export interface IVideoSessionUseCase {
     startSession({
         userId,
@@ -130,7 +139,7 @@ export interface IVideoSessionUseCase {
         limit: number;
         status: string
     }): Promise<{
-        requests: IMonetizationRequest[];
+        requests: IMonetizationRequestData[];
         totalRequests: number;
         lastPage: number;
     }>;
