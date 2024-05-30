@@ -7,6 +7,11 @@ import { report } from './report';
 import { getSession } from './getSession';
 import { listReports } from './listReports';
 import { createCoinPurchasePlan } from './createCoinPurchasePlan';
+import {getPurchasePlans} from './getPurchasePlans';
+import { deletePurchasePlan } from './deletePurchasePlan';
+import { createPayment } from './createPayment';
+import { paymentConfirmation } from './paymentConfirmation';
+import { getMonetizationEligibility } from './getMonetizationEligibility';
 export {
     startSession,
     rematch,
@@ -17,4 +22,9 @@ export {
     getSession,
     listReports,
     createCoinPurchasePlan,
+    getPurchasePlans,
+    deletePurchasePlan,
+    createPayment,
+    paymentConfirmation,
+    getMonetizationEligibility
 };

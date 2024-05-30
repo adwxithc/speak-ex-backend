@@ -99,6 +99,8 @@ export function userRoute(router: Router) {
     );
 
     router.get('/refresh', async (req: Req, res: Res) => {
+        console.log('refrshed');
+        
         await userController.renewAccess(req, res);
     });
 
