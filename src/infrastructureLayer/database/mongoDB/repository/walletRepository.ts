@@ -2,13 +2,16 @@ import { CurrencyType } from '../../../../domain/transaction';
 import { IWalletRepository } from '../../../../usecaseLayer/interface/repository/IWalletRepository';
 import TransactionModel from '../models/TransactionModel';
 import WalletModel from '../models/WalletModel';
-import { creditToWallet, debitFromWallet, getWallet } from './walletRepository/';
+import {
+    creditToWallet,
+    debitFromWallet,
+    getWallet,
+    listTransactions,
+} from './walletRepository/';
 
 export class WalletRepository implements IWalletRepository {
-
     private walletModel: typeof WalletModel;
     private transactionModel: typeof TransactionModel;
-  
 
     constructor({
         walletModel,
@@ -26,13 +29,13 @@ export class WalletRepository implements IWalletRepository {
         currencyType,
         amount,
         description,
-        transactionId
+        transactionId,
     }: {
         userId: string;
         currencyType: CurrencyType;
         amount: number;
         description: string;
-        transactionId:string
+        transactionId: string;
     }) {
         return await creditToWallet({
             userId,
@@ -50,13 +53,13 @@ export class WalletRepository implements IWalletRepository {
         currencyType,
         amount,
         description,
-        transactionId
+        transactionId,
     }: {
         userId: string;
         currencyType: CurrencyType;
         amount: number;
         description: string;
-        transactionId:string;
+        transactionId: string;
     }) {
         return await debitFromWallet({
             userId,
@@ -69,7 +72,26 @@ export class WalletRepository implements IWalletRepository {
         });
     }
 
-    async getWallet({ userId }: { userId: string; }) {
-        return await getWallet({userId,walletModel:this.walletModel});
+    async getWallet({ userId }: { userId: string }) {
+        return await getWallet({ userId, walletModel: this.walletModel });
+    }
+    async listTransactions({
+        limit,
+        page,
+        type,
+        userId,
+    }: {
+        limit: number;
+        page: number;
+        type: 'credit' | 'debit' | 'all';
+        userId: string;
+    }) {
+        return await listTransactions({
+            limit,
+            page,
+            type,
+            userId,
+            walletModel: this.walletModel,
+        });
     }
 }

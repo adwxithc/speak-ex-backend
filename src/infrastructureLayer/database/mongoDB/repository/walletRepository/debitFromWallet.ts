@@ -26,11 +26,11 @@ export const debitFromWallet = async ({
 
     let updateCommand ={};
     if(currencyType=='gold'){
-        updateCommand={$inc:{goldCoins:-amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{goldCoins:-amount},$push:{transactions:{id:transaction.id,type:'debit'}}};
     }else if(currencyType=='silver'){
-        updateCommand={$inc:{silverCoins:-amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{silverCoins:-amount},$push:{transactions:{id:transaction.id,type:'debit'}}};
     }else{
-        updateCommand={$inc:{money:-amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{money:-amount},$push:{transactions:{id:transaction.id,type:'debit'}}};
     }
 
     const res =await walletModel.findOneAndUpdate({userId},updateCommand,{upsert:true,new:true});

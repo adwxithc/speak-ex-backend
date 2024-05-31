@@ -31,6 +31,7 @@ import {
     listMonetizationRequests,
     updateMonetizationStatus,
     getVideoSessions,
+    getTransactions,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -338,6 +339,26 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             type,
             sessionRepository: this.sessionRepository,
             fileBucket: this.fileBucket,
+        });
+    }
+
+    async getTransactions({
+        userId,
+        page,
+        limit,
+        type,
+    }: {
+        userId: string;
+        page: number;
+        limit: number;
+        type: string;
+    }) {
+        return await getTransactions({
+            userId,
+            page,
+            limit,
+            type,
+            walletRepository: this.walletRepository,
         });
     }
 }

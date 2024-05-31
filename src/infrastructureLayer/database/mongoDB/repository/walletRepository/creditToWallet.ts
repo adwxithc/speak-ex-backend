@@ -26,11 +26,11 @@ export const creditToWallet = async ({
 
     let updateCommand ={};
     if(currencyType=='gold'){
-        updateCommand={$inc:{goldCoins:amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{goldCoins:amount},$push:{transactions:{id:transaction.id,type:'credit'}}};
     }else if(currencyType=='silver'){
-        updateCommand={$inc:{silverCoins:amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{silverCoins:amount},$push:{transactions:{id:transaction.id,type:'credit'}}};
     }else{
-        updateCommand={$inc:{money:amount},$push:{transactions:transaction.id}};
+        updateCommand={$inc:{money:amount},$push:{transactions:{id:transaction.id,type:'credit'}}};
     }
 
     await walletModel.findOneAndUpdate({userId},updateCommand,{upsert:true,new:true});

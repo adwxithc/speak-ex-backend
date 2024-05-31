@@ -16,6 +16,7 @@ import { requestMonetization } from './requestMonetization';
 import { listMonetizationRequests } from './listMonetizationRequests';
 import {updateMonetizationStatus } from './updateMonetizationStatus';
 import { getVideoSessions } from './getVideoSessions';
+import { getTransactions } from './getTransactions';
 export {
     startSession,
     rematch,
@@ -34,5 +35,6 @@ export {
     requestMonetization,
     listMonetizationRequests,
     updateMonetizationStatus,
-    getVideoSessions
+    getVideoSessions,
+    getTransactions
 };

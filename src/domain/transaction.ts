@@ -6,10 +6,12 @@ interface ITransaction {
     id?:DbId
     description: string;
     amount: number;
-    timestamp: Date;
+    // timestamp: Date;
     type: 'credit' | 'debit';
     currencyType: CurrencyType;
     transactionId: string;
+    createdAt?:string;
+    updatedAt?:string;
 }
 
 export default ITransaction;

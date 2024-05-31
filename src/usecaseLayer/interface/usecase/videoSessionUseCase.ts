@@ -4,6 +4,7 @@ import IMonetizationRequest, {
 } from '../../../domain/monetizationRequest';
 import { IReport } from '../../../domain/report';
 import { ISession } from '../../../domain/session';
+import ITransaction from '../../../domain/transaction';
 import IUser from '../../../domain/user';
 import { IUsersSesstionData } from '../repository/ISessionRepository';
 
@@ -176,6 +177,22 @@ export interface IVideoSessionUseCase {
     }): Promise<{
         sessions: ISessionDetails[];
         totalSessions: number;
+        lastPage: number;
+    }>;
+
+    getTransactions({
+        userId,
+        page,
+        limit,
+        type,
+    }: {
+        userId: string;
+        page: number;
+        limit: number;
+        type: string;
+    }): Promise<{
+        transactions: ITransaction[];
+        totalTransactions: number;
         lastPage: number;
     }>;
 }
