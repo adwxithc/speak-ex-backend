@@ -195,4 +195,28 @@ export class VideoSessionController {
             data:result
         });
     }
+
+    async getVideoSessions(req:Req, res:Res){
+        const { id } = req.user as IAccessRefreshToken;
+        const { page = 1, limit = 5,type='all' } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (typeof pageNumber !== 'number' || typeof limitNumber !== 'number') {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const videoSessionDatas= await this.videoSessionUseCase.getVideoSessions({
+            userId:id,
+            page: pageNumber,
+            limit: limitNumber,
+            type:type as string
+        });
+
+        res.status(200).json({
+            success: true,
+            data: videoSessionDatas
+        }); 
+    }
 }

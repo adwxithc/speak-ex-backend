@@ -7,6 +7,7 @@ import { terminateSession } from './terminateSession';
 import { rate } from './rate';
 import { getMonthlySessions } from './getMonthlySessions';
 import { getUsersSesstionData } from './getUsersSesstionData';
+import {listSessions} from './listSessions';
 export{
     createSession,
     findBySessionCode,
@@ -16,5 +17,6 @@ export{
     terminateSession,
     rate,
     getMonthlySessions,
-    getUsersSesstionData
+    getUsersSesstionData,
+    listSessions
 };

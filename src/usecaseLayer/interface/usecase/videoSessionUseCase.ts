@@ -36,6 +36,11 @@ export interface IMonetizationRequestData extends IMonetizationRequest {
     };
 }
 
+export interface ISessionDetails extends ISession {
+    helperData: IUser;
+    learnerData: IUser;
+}
+
 export interface IVideoSessionUseCase {
     startSession({
         userId,
@@ -124,7 +129,9 @@ export interface IVideoSessionUseCase {
         payload: Buffer;
     }): Promise<void>;
 
-    getSessionData(userId: string): Promise<IUsersSesstionData & {isMonetized:boolean}>;
+    getSessionData(
+        userId: string
+    ): Promise<IUsersSesstionData & { isMonetized: boolean }>;
 
     requestMonetization({
         userId,
@@ -155,4 +162,20 @@ export interface IVideoSessionUseCase {
         userId: string;
         status: IMonetizationRequestStatus;
     }): Promise<IUser>;
+
+    getVideoSessions({
+        userId,
+        page,
+        limit,
+        type,
+    }: {
+        userId: string;
+        page: number;
+        limit: number;
+        type: string;
+    }): Promise<{
+        sessions: ISessionDetails[];
+        totalSessions: number;
+        lastPage: number;
+    }>;
 }

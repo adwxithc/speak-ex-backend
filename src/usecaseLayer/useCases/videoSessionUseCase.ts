@@ -1,4 +1,3 @@
-
 import { IMonetizationRequestStatus } from '../../domain/monetizationRequest';
 import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
 import { ICoinPurchaseRepository } from '../interface/repository/ICoinPurchaseRepository';
@@ -31,6 +30,7 @@ import {
     requestMonetization,
     listMonetizationRequests,
     updateMonetizationStatus,
+    getVideoSessions,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -144,7 +144,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             sessionRepository: this.sessionRepository,
             generateUniqueString: this.generateUniqueString,
             walletRepository: this.walletRepository,
-            coinPurchasePlanRepository:this.coinPurchasePlanRepository
+            coinPurchasePlanRepository: this.coinPurchasePlanRepository,
         });
     }
 
@@ -270,7 +270,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         return await getSessionData({
             userId,
             sessionRepository: this.sessionRepository,
-            userRepository:this.userRepository
+            userRepository: this.userRepository,
         });
     }
     async requestMonetization({
@@ -302,15 +302,42 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             limit,
             status,
             monetizationRequestRepository: this.monetizationRequestRepository,
-            fileBucket:this.fileBucket
+            fileBucket: this.fileBucket,
         });
     }
-    async updateMonetizationStatus({ userId,status }: { userId: string; status:IMonetizationRequestStatus }) {
+    async updateMonetizationStatus({
+        userId,
+        status,
+    }: {
+        userId: string;
+        status: IMonetizationRequestStatus;
+    }) {
         return await updateMonetizationStatus({
             userId,
             status,
-            userRepository:this.userRepository,
-            monetizationRequestRepository:this.monetizationRequestRepository
+            userRepository: this.userRepository,
+            monetizationRequestRepository: this.monetizationRequestRepository,
+        });
+    }
+
+    async getVideoSessions({
+        userId,
+        page,
+        limit,
+        type,
+    }: {
+        userId: string;
+        page: number;
+        limit: number;
+        type: string;
+    }) {
+        return await getVideoSessions({
+            page,
+            limit,
+            userId,
+            type,
+            sessionRepository: this.sessionRepository,
+            fileBucket: this.fileBucket,
         });
     }
 }

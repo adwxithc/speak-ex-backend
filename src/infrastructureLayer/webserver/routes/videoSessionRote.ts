@@ -81,6 +81,14 @@ export function videoSessionRote(router: Router) {
             await videoSessionController.requestMonetization(req, res);
         }
     );
+
+    router.get(
+        '/video-session',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.getVideoSessions(req, res);
+        }
+    );
    
 
     return router;
