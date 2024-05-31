@@ -8,8 +8,13 @@ const sessionSchema = new Schema<ISession>(
             required:true,
             unique:true
         },
+        isMonetized:{
+            type:Boolean,
+            default:false
+        },
         helper:{
             type:mongoose.Schema.ObjectId,
+            ref:'User',
             required:true
         },
         learner:{

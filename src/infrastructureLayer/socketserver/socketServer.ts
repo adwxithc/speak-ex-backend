@@ -84,6 +84,7 @@ export class SocketManager {
         socket.on('session:join', async ({ userId, sessionId }) => {
             const {
                 success: allowed,
+
                 message,
                 data,
             } = await videoSessionUseCase.joinSession({
@@ -95,6 +96,7 @@ export class SocketManager {
                 .to(socket.id)
                 .emit('session:join-allow', {
                     sessionId,
+                    isMonetized:data?.isMonetized||false,
                     allowed,
                     message,
                     startTime: data?.createdAt,

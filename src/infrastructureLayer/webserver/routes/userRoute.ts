@@ -227,13 +227,7 @@ export function userRoute(router: Router) {
         await userController.getWallet(req, res);
     });
 
-    // router.get(
-    //     '/language/:languageId',
-    //     protect.protectUser,
-    //     async (req: Req, res: Res) => {
-    //         await userController.getLanguage(req, res);
-    //     }
-    // );
+ 
 
     return router;
 }

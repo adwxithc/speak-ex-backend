@@ -14,6 +14,7 @@ import { paymentConfirmation } from './paymentConfirmation';
 import { getSessionData } from './getSessionData';
 import { requestMonetization } from './requestMonetization'; 
 import { listMonetizationRequests } from './listMonetizationRequests';
+import {updateMonetizationStatus } from './updateMonetizationStatus';
 export {
     startSession,
     rematch,
@@ -30,5 +31,6 @@ export {
     paymentConfirmation,
     getSessionData,
     requestMonetization,
-    listMonetizationRequests
+    listMonetizationRequests,
+    updateMonetizationStatus
 };

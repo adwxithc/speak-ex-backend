@@ -184,4 +184,15 @@ export class VideoSessionController {
             data: requestData,
         }); 
     }
+
+    async updateMonetizationStatus(req:Req, res:Res){
+        const {userId} = req.params;
+        const {status} = req.body;
+        const result = await this.videoSessionUseCase.updateMonetizationStatus({userId,status});
+
+        res.json({
+            success:true,
+            data:result
+        });
+    }
 }

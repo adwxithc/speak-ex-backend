@@ -1,5 +1,4 @@
 
-
 import { ISessionRepository } from '../../../../usecaseLayer/interface/repository/ISessionRepository';
 import SessionModel from '../models/SessionModel';
 import {
@@ -14,6 +13,8 @@ import {
     getUsersSesstionData
 } from './sessionRepository/';
 
+
+
 export class SessionRepository implements ISessionRepository {
     constructor(private sessionModel: typeof SessionModel) {}
 
@@ -21,20 +22,24 @@ export class SessionRepository implements ISessionRepository {
         userId,
         sessionCode,
         selectedLearner,
+        isMonetized
     }: {
         userId: string;
         sessionCode: string;
         selectedLearner: string;
+        isMonetized:boolean
     }) {
         return await createSession({
             userId,
             sessionModel: this.sessionModel,
             sessionCode,
             selectedLearner,
+            isMonetized
         });
     }
 
     async findBySessionCode({ sessionCode }: { sessionCode: string }) {
+
         return await findBySessionCode({
             sessionCode,
             sessionModel: this.sessionModel,

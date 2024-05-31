@@ -1,3 +1,5 @@
+
+import { IMonetizationRequestStatus } from '../../domain/monetizationRequest';
 import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
 import { ICoinPurchaseRepository } from '../interface/repository/ICoinPurchaseRepository';
 import { IMonetizationRequestRepository } from '../interface/repository/IMonetizationRequestRepository';
@@ -28,6 +30,7 @@ import {
     getSessionData,
     requestMonetization,
     listMonetizationRequests,
+    updateMonetizationStatus,
 } from './videoSession/';
 
 export class VideoSessionUseCase implements IVideoSessionUseCase {
@@ -141,6 +144,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             sessionRepository: this.sessionRepository,
             generateUniqueString: this.generateUniqueString,
             walletRepository: this.walletRepository,
+            coinPurchasePlanRepository:this.coinPurchasePlanRepository
         });
     }
 
@@ -266,6 +270,7 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         return await getSessionData({
             userId,
             sessionRepository: this.sessionRepository,
+            userRepository:this.userRepository
         });
     }
     async requestMonetization({
@@ -297,6 +302,15 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             limit,
             status,
             monetizationRequestRepository: this.monetizationRequestRepository,
+            fileBucket:this.fileBucket
+        });
+    }
+    async updateMonetizationStatus({ userId,status }: { userId: string; status:IMonetizationRequestStatus }) {
+        return await updateMonetizationStatus({
+            userId,
+            status,
+            userRepository:this.userRepository,
+            monetizationRequestRepository:this.monetizationRequestRepository
         });
     }
 }

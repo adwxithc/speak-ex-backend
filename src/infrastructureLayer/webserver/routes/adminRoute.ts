@@ -172,6 +172,13 @@ export function adminRoute(router: Router) {
             await videoSessionController.getMonetizationRequests(req, res);
         }
     );
+    router.put(
+        '/update-monetization-status/:userId',
+        protect.protectAdmin,
+        async (req:Req, res:Res)=>{
+            await videoSessionController.updateMonetizationStatus(req, res);
+        }
+    );
 
     return router;
 }

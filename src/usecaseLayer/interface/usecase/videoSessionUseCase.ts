@@ -1,7 +1,10 @@
 import ICoinPurchasePlan from '../../../domain/coinPurchasePlan';
-import IMonetizationRequest from '../../../domain/monetizationRequest';
+import IMonetizationRequest, {
+    IMonetizationRequestStatus,
+} from '../../../domain/monetizationRequest';
 import { IReport } from '../../../domain/report';
 import { ISession } from '../../../domain/session';
+import IUser from '../../../domain/user';
 import { IUsersSesstionData } from '../repository/ISessionRepository';
 
 export interface IReportWithUsers {
@@ -23,13 +26,14 @@ export interface IReportWithUsers {
     };
 }
 
-export interface IMonetizationRequestData extends IMonetizationRequest{
-    userData:{
-        firstName:string,
-        lastName:string,
-        userName:string,
-        profile:string
-    }
+export interface IMonetizationRequestData extends IMonetizationRequest {
+    userData: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        userName: string;
+        profile: string;
+    };
 }
 
 export interface IVideoSessionUseCase {
@@ -120,7 +124,7 @@ export interface IVideoSessionUseCase {
         payload: Buffer;
     }): Promise<void>;
 
-    getSessionData(userId: string): Promise<IUsersSesstionData>;
+    getSessionData(userId: string): Promise<IUsersSesstionData & {isMonetized:boolean}>;
 
     requestMonetization({
         userId,
@@ -137,11 +141,18 @@ export interface IVideoSessionUseCase {
     }: {
         page: number;
         limit: number;
-        status: string
+        status: string;
     }): Promise<{
         requests: IMonetizationRequestData[];
         totalRequests: number;
         lastPage: number;
     }>;
-}
 
+    updateMonetizationStatus({
+        userId,
+        status,
+    }: {
+        userId: string;
+        status: IMonetizationRequestStatus;
+    }): Promise<IUser>;
+}

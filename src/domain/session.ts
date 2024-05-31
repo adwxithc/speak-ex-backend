@@ -9,6 +9,7 @@ export interface ISession{
     endingTime?:string;
     rating?:number
     languageId?:DbId;
+    isMonetized?:boolean;
     rate:number;
     createdAt?:string;
     updatedAt?:string;

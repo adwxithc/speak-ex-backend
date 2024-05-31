@@ -2,7 +2,7 @@
 import { IMonetizationRequestStatus } from '../../../../domain/monetizationRequest';
 import { IMonetizationRequestRepository } from '../../../../usecaseLayer/interface/repository/IMonetizationRequestRepository';
 import MonetizationRequestModel from '../models/monetizationRequest';
-import { create, listMonetizationRequests } from './monetizationRequestRepository/';
+import { create, enableMonetization, listMonetizationRequests } from './monetizationRequestRepository/';
 
 export class MonetizationRequestRepository implements IMonetizationRequestRepository
 {
@@ -26,6 +26,10 @@ export class MonetizationRequestRepository implements IMonetizationRequestReposi
 
     async listMonetizationRequests({ limit, page, status }: { limit: number; page: number; status: IMonetizationRequestStatus | 'all'; }) {
         return await listMonetizationRequests({limit, page, status, monetizationRequestModel:this.monetizationRequestModel});
+    }
+
+    async updateMonetizationStatus({ userId, status }: { userId: string; status:IMonetizationRequestStatus }){
+        return await enableMonetization({userId,status,monetizationRequestModel:this.monetizationRequestModel});
     }
 
 }
