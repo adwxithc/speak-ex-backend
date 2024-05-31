@@ -37,8 +37,8 @@ export interface IMonetizationRequestData extends IMonetizationRequest {
 }
 
 export interface ISessionDetails extends ISession {
-    helperData: IUser;
-    learnerData: IUser;
+    helperData: {firstName:string;lastName:string;userName:string;profile:string ; id:string};
+    learnerData: {firstName:string;lastName:string;userName:string;profile:string ; id:string};
 }
 
 export interface IVideoSessionUseCase {

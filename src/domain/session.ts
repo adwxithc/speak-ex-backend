@@ -5,6 +5,7 @@ export interface ISession{
     sessionCode:string;
     helper:DbId;
     learner?:DbId;
+    moneyToTheHelper?:number;
     startingTime?:string;
     endingTime?:string;
     rating?:number

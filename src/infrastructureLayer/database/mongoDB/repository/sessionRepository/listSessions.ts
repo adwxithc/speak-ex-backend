@@ -80,6 +80,7 @@ export const listSessions = async ({
                 isMonetized:1,
                 startingTime:1,
                 endingTime:1,
+                moneyToTheHelper:1,
                 rate:1,
                 helperData:{
                     id:'$helperData._id',

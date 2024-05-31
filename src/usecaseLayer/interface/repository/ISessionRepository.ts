@@ -54,9 +54,11 @@ export interface ISessionRepository {
     }): Promise<ISession>;
     terminateSession({
         sessionCode,
+        moneyToTheHelper,
         endingTime,
     }: {
         sessionCode: string;
+        moneyToTheHelper:number;
         endingTime: string;
     }): Promise<void>;
     rate({

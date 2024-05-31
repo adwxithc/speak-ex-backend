@@ -42,6 +42,10 @@ const sessionSchema = new Schema<ISession>(
         languageId:{
             type:mongoose.Schema.ObjectId,
             ref:'languages'
+        },
+        moneyToTheHelper:{
+            type:Number,
+            default:0
         }
     },
     {

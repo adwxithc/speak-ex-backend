@@ -93,15 +93,18 @@ export class SessionRepository implements ISessionRepository {
 
     async terminateSession({
         sessionCode,
+        moneyToTheHelper,
         endingTime,
     }: {
         sessionCode: string;
+        moneyToTheHelper:number
         endingTime: string;
     }): Promise<void> {
         return await terminateSession({
             sessionCode,
             sessionModel: this.sessionModel,
             endingTime,
+            moneyToTheHelper
         });
     }
 
@@ -132,7 +135,23 @@ export class SessionRepository implements ISessionRepository {
         });
     }
 
-    async listSessions({ limit, page, type, userId }: { limit: number; page: number; type: 'helping' | 'learning' | 'all', userId:string }) {
-        return await listSessions({limit, page, type, sessionModel:this.sessionModel,userId});
+    async listSessions({
+        limit,
+        page,
+        type,
+        userId,
+    }: {
+        limit: number;
+        page: number;
+        type: 'helping' | 'learning' | 'all';
+        userId: string;
+    }) {
+        return await listSessions({
+            limit,
+            page,
+            type,
+            sessionModel: this.sessionModel,
+            userId,
+        });
     }
 }

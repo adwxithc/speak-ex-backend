@@ -73,7 +73,7 @@ export const terminateSession = async ({
     }
 
     //CALCULATING THE WORTH OF 90% OF COIN EXCHANGED (WHICH WILL BE CREDITED TO THE HELPER)
-    const moneyToTheHelper = totalcoinsExchanged * goldCoinRate * 0.9;
+    const moneyToTheHelper = Number((totalcoinsExchanged * goldCoinRate * 0.9).toFixed(2));
 
     //CREATING DESCRIPTION FOR TRANSACTION
     const creditDescription = `Congratulations! You've successfully helped another user improve their language skills. As a token of appreciation for your time and effort, you've earned ${ session.isMonetized ? moneyToTheHelper + 'Rs from thse session' : totalcoinsExchanged + 'silver coins'}. Keep up the great work and continue sharing your knowledge to earn more rewards!`;
@@ -96,6 +96,7 @@ export const terminateSession = async ({
     });
     const terminatePromise = sessionRepository.terminateSession({
         sessionCode,
+        moneyToTheHelper:session.isMonetized?moneyToTheHelper:0,
         endingTime: endingTimeStamp.toString(),
     });
 
