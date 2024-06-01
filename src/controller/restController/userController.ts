@@ -400,4 +400,26 @@ export class UserController {
             data:notificationData
         });
     }
+
+    async getSingleNotification(req:Req, res:Res){
+        const {id} =  req.user as IAccessRefreshToken;
+        const {notificationId} =req.params;
+        const notification = await this.userUseCase.getSingleNotification({userId:id,notificationId});
+        res.json({
+            success:true,
+            data:notification
+        });
+    }
+
+    async setNotificationReaded(req:Req, res:Res){
+        const {id} = req.user as IAccessRefreshToken;
+        const {notificationIds} = req.body;
+        await this.userUseCase.setNotificationReaded({userId:id,notificationIds});
+        res.json({
+            success:true,
+            
+        });
+    }
+
+    
 }

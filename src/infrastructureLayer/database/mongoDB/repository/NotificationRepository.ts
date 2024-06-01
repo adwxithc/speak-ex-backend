@@ -1,7 +1,7 @@
 import INotification from '../../../../domain/notification';
 import { INotificationRepository } from '../../../../usecaseLayer/interface/repository/INotification';
 import NotificationModel from '../models/NotificationModel';
-import { createNotification, getNotifications, markAsRead } from './notificationRepository/';
+import { createNotification, getNotifications, getSingleNotification, markAsRead } from './notificationRepository/';
 
 export class NotificationRepository implements INotificationRepository {
     constructor(private notificationModel: typeof NotificationModel) {}
@@ -37,5 +37,9 @@ export class NotificationRepository implements INotificationRepository {
         userId: string;
     }) {
         return getNotifications({ limit, page, userId, notificationModel:this.notificationModel });
+    }
+
+    async getSingleNotification({ userId, notificationId }: { userId: string; notificationId: string; }) {
+        return await getSingleNotification({userId, notificationId,notificationModel: this.notificationModel,});
     }
 }

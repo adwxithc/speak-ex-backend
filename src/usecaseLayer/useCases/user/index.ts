@@ -20,6 +20,8 @@ import { getUserById } from './profile/getUserById';
 import { getWallet } from './general/getWallet';
 import { getUserDetails } from './profile/getUserDetails';
 import { getNotifications } from './general/getNotifications';
+import { setNotificationReaded } from './general/setNotificationReaded';
+import { getSingleNotification } from './general/getSingleNotification';
 export {
     registerUser,
     createUser,
@@ -42,5 +44,7 @@ export {
     getUserById,
     getWallet,
     getUserDetails,
-    getNotifications
+    getNotifications,
+    setNotificationReaded,
+    getSingleNotification
 };

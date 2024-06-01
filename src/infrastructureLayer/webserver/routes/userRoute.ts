@@ -229,7 +229,32 @@ export function userRoute(router: Router) {
         '/notifications',
         protect.protectUser,
         async (req: Req, res: Res) => {
+           
             await userController.getNotifications(req, res);
+        }
+    );
+    router.patch(
+        '/notification-readed',
+        [
+            body('notificationIds')
+                .isArray()
+                .withMessage('invalid notificationIds'),
+        ],
+        validateRequest,
+        protect.protectUser,
+        async (req: Req, res: Res) => {
+            await userController.setNotificationReaded(req, res);
+        }
+    );
+
+    router.get(
+        '/notification/:notificationId',
+        validateRequest,
+        protect.protectUser,
+        async (req:Req, res:Res)=>{
+            
+            
+            await userController.getSingleNotification(req, res);
         }
     );
 

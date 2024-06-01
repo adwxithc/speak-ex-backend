@@ -19,8 +19,8 @@ export const upvote = async ({
     postId: string;
     userId: string;
 }) => {
-    const userPromise =  userRePository.findUserById(userId);
-    const postPromise =  postRepository.upvote({ postId, userId });
+    const userPromise = userRePository.findUserById(userId);
+    const postPromise = postRepository.upvote({ postId, userId });
 
     const [user, post] = await Promise.all([userPromise, postPromise]);
     if (!user || !user.id) throw new BadRequestError('invalid user');
@@ -30,7 +30,7 @@ export const upvote = async ({
     const message = `your post "${post?.title}" has been liked by ${
         user?.firstName + ' ' + user?.lastName
     }`;
-    
+
     post.image = fileBucket.getFileAccessURL(post.image || '');
 
     await notificationRepository.createNotification({
@@ -43,6 +43,5 @@ export const upvote = async ({
         type: 'POST_LIKE',
     });
 
-    
     return post;
 };

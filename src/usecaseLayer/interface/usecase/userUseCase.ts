@@ -5,6 +5,16 @@ import IUser from '../../../domain/user';
 import IWallet from '../../../domain/wallet';
 import { IToken } from '../services/IJwt.types';
 
+export interface INotificationDetails extends INotification {
+    actionCreatorInfo: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        userName: string;
+        profile: string;
+    };
+}
+
 export interface IUserDetails extends Omit<IUser, 'password'> {
     proficientLanguageInfo: ILanguage[];
     focusLanguageInfo: ILanguage;
@@ -190,8 +200,19 @@ export interface IUserUseCase {
         page: number;
         limit: number;
     }): Promise<{
-        notifications: INotification[];
+        notifications: INotificationDetails[];
         totalNotifications: number;
         lastPage: number;
+        currentPage:number
     }>;
+
+    setNotificationReaded({
+        userId,
+        notificationIds,
+    }: {
+        userId: string;
+        notificationIds: string[];
+    }): Promise<void>;
+
+    getSingleNotification({userId,notificationId}:{userId:string,notificationId:string}):Promise<INotificationDetails>
 }

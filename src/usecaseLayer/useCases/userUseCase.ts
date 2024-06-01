@@ -1,5 +1,7 @@
 import IUser from '../../domain/user';
-import { IUserUseCase } from '../interface/usecase/userUseCase';
+import {
+    IUserUseCase,
+} from '../interface/usecase/userUseCase';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 
 import {
@@ -25,6 +27,8 @@ import {
     getWallet,
     getUserDetails,
     getNotifications,
+    setNotificationReaded,
+    getSingleNotification,
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -76,7 +80,7 @@ export class UserUseCase implements IUserUseCase {
         sessionRepository,
         reportRepository,
         generateUniQueString,
-        notificationRepository
+        notificationRepository,
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -93,9 +97,8 @@ export class UserUseCase implements IUserUseCase {
         postRepository: IPostRepository;
         reportRepository: IReportRepository;
         generateUniQueString: IGenerateUniQueString;
-        notificationRepository: INotificationRepository
+        notificationRepository: INotificationRepository;
     }) {
-
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
         this.otpGenerator = otpGenerator;
@@ -111,7 +114,7 @@ export class UserUseCase implements IUserUseCase {
         this.postRepository = postRepository;
         this.reportRepository = reportRepository;
         this.sessionRepository = sessionRepository;
-        this.notificationRepository=notificationRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     //register user
@@ -422,6 +425,36 @@ export class UserUseCase implements IUserUseCase {
             page,
             limit,
             notificationRepository: this.notificationRepository,
+            fileBucket: this.fileBucket,
+        });
+    }
+
+    async setNotificationReaded({
+        userId,
+        notificationIds,
+    }: {
+        userId: string;
+        notificationIds: string[];
+    }) {
+        return await setNotificationReaded({
+            userId,
+            notificationIds,
+            notificationRepository: this.notificationRepository,
+        });
+    }
+
+    async getSingleNotification({
+        userId,
+        notificationId,
+    }: {
+        userId: string;
+        notificationId: string;
+    }) {
+        return await getSingleNotification({
+            userId,
+            notificationId,
+            notificationRepository: this.notificationRepository,
+            fileBucket: this.fileBucket,
         });
     }
 }

@@ -1,32 +1,24 @@
-import { INotificationDetails } from '../../../../../usecaseLayer/interface/usecase/userUseCase';
+import mongoose from 'mongoose';
 import NotificationModel from '../../models/NotificationModel';
+import { INotificationDetails } from '../../../../../usecaseLayer/interface/usecase/userUseCase';
 
-export const getNotifications = async ({
-    limit,
-    page,
+export const getSingleNotification = async ({
     userId,
+    notificationId,
     notificationModel,
 }: {
-    limit: number;
-    page: number;
+    
+    notificationId:string;
     userId: string;
     notificationModel: typeof NotificationModel;
 }) => {
 
-    const notificationsPromise= notificationModel.aggregate([
+    const [notification]= await notificationModel.aggregate([
         {
             $match:{
-                userId
+                userId,
+                _id:new mongoose.Types.ObjectId(notificationId)
             }
-        },
-        {
-            $sort:{updatedAt: -1 }
-        },
-        {
-            $skip:(page - 1) * limit
-        },
-        {
-            $limit: limit
         },
         {
             $addFields: {
@@ -65,11 +57,9 @@ export const getNotifications = async ({
             }
         }
     ]);
-   
+ 
 
-    const totalNotificationsPromise = await notificationModel.countDocuments({userId,read:false});
+  
 
-    const [notifications, totalNotifications]= await Promise.all([notificationsPromise,totalNotificationsPromise]) as [INotificationDetails[],number];
-
-    return { notifications, totalNotifications };
+    return notification as INotificationDetails;
 };

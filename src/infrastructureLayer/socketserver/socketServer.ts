@@ -132,8 +132,7 @@ export class SocketManager {
         });
 
         socket.on('session:terminate', async ({ sessionCode,endingTime }) => {
-            // console.log('session terminated--');
-
+           
             const res = await videoSessionUseCase.terminateSession({
                 sessionCode,
                 endingTime
@@ -169,12 +168,20 @@ export class SocketManager {
         });
     }
 
-    async addUser(userId: string, socketId: string) {
+    async notifyUser({userId,notificationId}:{userId:string,notificationId:string}){
+       
+        const user = (await this.getUser(userId));
+        if(user){
+            this.io.to(user.socketId).emit('notification', { notificationId });
+        }
+    }
+
+    private async addUser(userId: string, socketId: string) {
         await client.hset('users', userId, socketId);
         await this.addToPriorityQueue({ userId });
     }
 
-    async removeUser(socketId: string) {
+    private async removeUser(socketId: string) {
         const users = await this.getAllUsers();
         const user = users.find((user) => user.socketId == socketId);
         if (user) {
@@ -183,13 +190,13 @@ export class SocketManager {
         }
     }
 
-    async getUser(userId: string) {
+    private async  getUser(userId: string) {
         if (!userId) return null;
         const socketId = await client.hget('users', userId);
         return socketId ? { userId, socketId } : null;
     }
 
-    async getAllUsers() {
+    private async getAllUsers() {
         const keyValuePairs = await client.hgetall('users');
         const pairsArray = [];
         for (const userId in keyValuePairs) {
@@ -198,17 +205,17 @@ export class SocketManager {
         return pairsArray || [];
     }
 
-    async addToPriorityQueue({ userId }: { userId: string }) {
+    private async addToPriorityQueue({ userId }: { userId: string }) {
         await client.zadd('priority', 0, userId);
     }
-    async getAllUserFromPriority() {
+    private async getAllUserFromPriority() {
         const users = await client.zrevrange('priority', 0, -1);
         return users;
     }
-    async descreasePriority({ userId }: { userId: string }) {
+    private async descreasePriority({ userId }: { userId: string }) {
         await client.zincrby('priority', -1, userId);
     }
-    async removePriority({ userId }: { userId: string }) {
+    private async removePriority({ userId }: { userId: string }) {
         await client.zrem('priority', userId);
     }
 }
