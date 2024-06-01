@@ -61,7 +61,7 @@ export const listTransactions = async ({
                 type:'$transactionData.type',
                 currencyType:'$transactionData.currencyType',
                 transactionId:'$transactionData.transactionId',
-                createdAt:'transactionData.createdAt'
+                createdAt:'$transactionData.createdAt'
             }
         }
     ]) ;

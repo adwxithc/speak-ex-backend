@@ -24,6 +24,7 @@ import {
     getUserById,
     getWallet,
     getUserDetails,
+    getNotifications,
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -39,6 +40,7 @@ import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueStri
 import { IPostRepository } from '../interface/repository/IPostRepository';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
+import { INotificationRepository } from '../interface/repository/INotification';
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -56,6 +58,7 @@ export class UserUseCase implements IUserUseCase {
     private readonly reportRepository: IReportRepository;
     private readonly sessionRepository: ISessionRepository;
     private readonly generateUniQueString: IGenerateUniQueString;
+    private readonly notificationRepository: INotificationRepository;
 
     constructor({
         userRepository,
@@ -73,6 +76,7 @@ export class UserUseCase implements IUserUseCase {
         sessionRepository,
         reportRepository,
         generateUniQueString,
+        notificationRepository
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -89,7 +93,9 @@ export class UserUseCase implements IUserUseCase {
         postRepository: IPostRepository;
         reportRepository: IReportRepository;
         generateUniQueString: IGenerateUniQueString;
+        notificationRepository: INotificationRepository
     }) {
+
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
         this.otpGenerator = otpGenerator;
@@ -105,6 +111,7 @@ export class UserUseCase implements IUserUseCase {
         this.postRepository = postRepository;
         this.reportRepository = reportRepository;
         this.sessionRepository = sessionRepository;
+        this.notificationRepository=notificationRepository;
     }
 
     //register user
@@ -399,6 +406,22 @@ export class UserUseCase implements IUserUseCase {
             postRepository: this.postRepository,
             reportRepository: this.reportRepository,
             sessionRepository: this.sessionRepository,
+        });
+    }
+    async getNotifications({
+        userId,
+        page,
+        limit,
+    }: {
+        userId: string;
+        page: number;
+        limit: number;
+    }) {
+        return await getNotifications({
+            userId,
+            page,
+            limit,
+            notificationRepository: this.notificationRepository,
         });
     }
 }

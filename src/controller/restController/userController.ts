@@ -382,4 +382,22 @@ export class UserController {
             data:language
         });
     }
+
+    async getNotifications(req:Req, res:Res){
+    
+        const { id } = req.user as IAccessRefreshToken;
+        const { page = 1, limit = 5 } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (typeof pageNumber !== 'number' || typeof limitNumber !== 'number') {
+            throw new BadRequestError('invalid parameters');
+        }
+        const notificationData = await this.userUseCase.getNotifications({userId:id,limit:limitNumber,page:pageNumber});
+        res.json({
+            success:true,
+            data:notificationData
+        });
+    }
 }

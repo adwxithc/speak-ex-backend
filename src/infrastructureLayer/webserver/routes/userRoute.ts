@@ -8,7 +8,6 @@ import { protect } from './injections/middlewareInjection';
 import { Req, Res } from '../../types/expressTypes';
 import { upload } from '../middlewares/multer';
 
-
 export function userRoute(router: Router) {
     router.post(
         '/signup',
@@ -100,7 +99,7 @@ export function userRoute(router: Router) {
 
     router.get('/refresh', async (req: Req, res: Res) => {
         console.log('refrshed');
-        
+
         await userController.renewAccess(req, res);
     });
 
@@ -226,8 +225,13 @@ export function userRoute(router: Router) {
     router.get('/wallet', protect.protectUser, async (req: Req, res: Res) => {
         await userController.getWallet(req, res);
     });
-
- 
+    router.get(
+        '/notifications',
+        protect.protectUser,
+        async (req: Req, res: Res) => {
+            await userController.getNotifications(req, res);
+        }
+    );
 
     return router;
 }
