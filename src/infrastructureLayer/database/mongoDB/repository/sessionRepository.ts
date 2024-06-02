@@ -11,6 +11,9 @@ import {
     getMonthlySessions,
     getUsersSesstionData,
     listSessions,
+    getTotalSessionCounts,
+    getTotalMoneyHelpersGain,
+    getMonthlySessionExpenceSummary,
 } from './sessionRepository/';
 
 export class SessionRepository implements ISessionRepository {
@@ -153,5 +156,15 @@ export class SessionRepository implements ISessionRepository {
             sessionModel: this.sessionModel,
             userId,
         });
+    }
+
+    async getTotalSessionCounts(){
+        return await getTotalSessionCounts(this.sessionModel);
+    }
+    async getTotalMoneyHelpersGain(){
+        return await getTotalMoneyHelpersGain(this.sessionModel);
+    }
+    async getMonthlySessionExpenceSummary() {
+        return await getMonthlySessionExpenceSummary(this.sessionModel);
     }
 }

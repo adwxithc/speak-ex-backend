@@ -17,11 +17,11 @@ export const getNotifications = async ({
 }) => {
     
 
-    const {notifications,totalNotifications} = await notificationRepository.getNotifications({limit,page,userId});
+    const {notifications,totalNotifications,totalUnReadedNotifications} = await notificationRepository.getNotifications({limit,page,userId});
     notifications.forEach(n=>{
         n.actionCreatorInfo.profile=fileBucket.getFileAccessURL(n.actionCreatorInfo.profile);
     });
     const lastPage = Math.ceil(totalNotifications / limit);
 
-    return {notifications,totalNotifications,lastPage,currentPage:page};
+    return {notifications,totalNotifications,lastPage,currentPage:page,totalUnReadedNotifications};
 };

@@ -8,6 +8,9 @@ import { rate } from './rate';
 import { getMonthlySessions } from './getMonthlySessions';
 import { getUsersSesstionData } from './getUsersSesstionData';
 import {listSessions} from './listSessions';
+import { getTotalSessionCounts } from './getTotalSessionCounts';
+import { getTotalMoneyHelpersGain } from './getTotalMoneyHelpersGain';
+import { getMonthlySessionExpenceSummary } from './getMonthlySessionsProfitSummary';
 export{
     createSession,
     findBySessionCode,
@@ -18,5 +21,8 @@ export{
     rate,
     getMonthlySessions,
     getUsersSesstionData,
-    listSessions
+    listSessions,
+    getTotalSessionCounts,
+    getTotalMoneyHelpersGain,
+    getMonthlySessionExpenceSummary
 };

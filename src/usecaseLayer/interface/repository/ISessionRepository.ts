@@ -58,7 +58,7 @@ export interface ISessionRepository {
         endingTime,
     }: {
         sessionCode: string;
-        moneyToTheHelper:number;
+        moneyToTheHelper: number;
         endingTime: string;
     }): Promise<void>;
     rate({
@@ -82,11 +82,16 @@ export interface ISessionRepository {
         limit,
         page,
         type,
-        userId
+        userId,
     }: {
         limit: number;
         page: number;
-        userId:string;
+        userId: string;
         type: 'helping' | 'learning' | 'all';
     }): Promise<{ sessions: ISessionDetails[]; totalSessions: number }>;
+
+    getTotalSessionCounts(): Promise<{ thisMonth: number; lastMonth: number }>;
+    getTotalMoneyHelpersGain():Promise<{thisMonth: number; lastMonth: number}>
+    getMonthlySessionExpenceSummary():Promise<{sessionCount:number;totalExpense:number,year:string,month:string}[]>
+
 }

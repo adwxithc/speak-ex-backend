@@ -42,4 +42,5 @@ export interface IPostRepository {
     }: {
         userId: string;
     }): Promise<{ posts: number; averageLikes: number }>;
+    getPopularPost():Promise<IPost[]>
 }

@@ -20,7 +20,7 @@ export const getNotifications = async ({
             }
         },
         {
-            $sort:{updatedAt: -1 }
+            $sort:{createdAt: -1 }
         },
         {
             $skip:(page - 1) * limit
@@ -67,9 +67,10 @@ export const getNotifications = async ({
     ]);
    
 
-    const totalNotificationsPromise = await notificationModel.countDocuments({userId,read:false});
+    const totalNotificationsPromise = await notificationModel.countDocuments({userId});
+    const totalUnReadedNotificationsPromise = await notificationModel.countDocuments({userId,read:false});
 
-    const [notifications, totalNotifications]= await Promise.all([notificationsPromise,totalNotificationsPromise]) as [INotificationDetails[],number];
+    const [notifications, totalNotifications, totalUnReadedNotifications]= await Promise.all([notificationsPromise,totalNotificationsPromise,totalUnReadedNotificationsPromise]) as [INotificationDetails[],number,number];
 
-    return { notifications, totalNotifications };
+    return { notifications, totalNotifications, totalUnReadedNotifications };
 };

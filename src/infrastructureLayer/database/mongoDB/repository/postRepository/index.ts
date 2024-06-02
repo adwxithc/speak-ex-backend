@@ -6,7 +6,7 @@ import { downvote } from './downvote';
 import { insertComment } from './insertComment';
 import { removeComment } from './removeComment';
 import { getPostsInfo } from './getPostsInfo';
-
+import { getPopularPosts } from './getPopularPosts';
 export {
     createPost,
     getUsersPosts,
@@ -15,5 +15,6 @@ export {
     downvote,
     insertComment,
     removeComment,
-    getPostsInfo
+    getPostsInfo,
+    getPopularPosts
 };
