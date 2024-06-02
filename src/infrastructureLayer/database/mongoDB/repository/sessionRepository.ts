@@ -1,5 +1,3 @@
-
-
 import { ISessionRepository } from '../../../../usecaseLayer/interface/repository/ISessionRepository';
 import SessionModel from '../models/SessionModel';
 import {
@@ -11,7 +9,8 @@ import {
     terminateSession,
     rate,
     getMonthlySessions,
-    getUsersSesstionData
+    getUsersSesstionData,
+    listSessions,
 } from './sessionRepository/';
 
 export class SessionRepository implements ISessionRepository {
@@ -21,16 +20,19 @@ export class SessionRepository implements ISessionRepository {
         userId,
         sessionCode,
         selectedLearner,
+        isMonetized,
     }: {
         userId: string;
         sessionCode: string;
         selectedLearner: string;
+        isMonetized: boolean;
     }) {
         return await createSession({
             userId,
             sessionModel: this.sessionModel,
             sessionCode,
             selectedLearner,
+            isMonetized,
         });
     }
 
@@ -45,12 +47,12 @@ export class SessionRepository implements ISessionRepository {
         learner,
         sessionCode,
         rate,
-        languageId
+        languageId,
     }: {
         learner: string;
         sessionCode: string;
-        rate:number
-        languageId:string
+        rate: number;
+        languageId: string;
     }) {
         return await joinLearner({
             learner,
@@ -89,19 +91,67 @@ export class SessionRepository implements ISessionRepository {
         });
     }
 
-    async terminateSession({ sessionCode,endingTime }: { sessionCode: string; endingTime:string }): Promise<void> {
-        return await terminateSession({ sessionCode, sessionModel: this.sessionModel,endingTime });
+    async terminateSession({
+        sessionCode,
+        moneyToTheHelper,
+        endingTime,
+    }: {
+        sessionCode: string;
+        moneyToTheHelper:number
+        endingTime: string;
+    }): Promise<void> {
+        return await terminateSession({
+            sessionCode,
+            sessionModel: this.sessionModel,
+            endingTime,
+            moneyToTheHelper
+        });
     }
 
-    async rate({ sessionCode, rating }: { sessionCode: string; rating: number; }){
-        return await rate({rating,sessionCode,sessionModel:this.sessionModel});
+    async rate({
+        sessionCode,
+        rating,
+    }: {
+        sessionCode: string;
+        rating: number;
+    }) {
+        return await rate({
+            rating,
+            sessionCode,
+            sessionModel: this.sessionModel,
+        });
     }
-    async getMonthlySessions({ languageId }: { languageId: string; }) {
-        return await getMonthlySessions({languageId,sessionModel:this.sessionModel});
+    async getMonthlySessions({ languageId }: { languageId: string }) {
+        return await getMonthlySessions({
+            languageId,
+            sessionModel: this.sessionModel,
+        });
     }
 
-    async getUsersSesstionData({ userId }: { userId: string; }) {
-        return await getUsersSesstionData({userId, sessionModel:this.sessionModel});
+    async getUsersSesstionData({ userId }: { userId: string }) {
+        return await getUsersSesstionData({
+            userId,
+            sessionModel: this.sessionModel,
+        });
     }
-    
+
+    async listSessions({
+        limit,
+        page,
+        type,
+        userId,
+    }: {
+        limit: number;
+        page: number;
+        type: 'helping' | 'learning' | 'all';
+        userId: string;
+    }) {
+        return await listSessions({
+            limit,
+            page,
+            type,
+            sessionModel: this.sessionModel,
+            userId,
+        });
+    }
 }

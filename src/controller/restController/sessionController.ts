@@ -136,17 +136,112 @@ export class VideoSessionController {
         });
 
         res.json({ received: true });
-
-        
     }
 
+    async getSessionData(req: Req, res: Res) {
+        const { userId } = req.params;
+        const eligibility = await this.videoSessionUseCase.getSessionData(
+            userId
+        );
+        res.json({
+            success: true,
+            data: eligibility,
+        });
+    }
 
-    async getMonetizationEligibility(req:Req, res:Res){
+    async requestMonetization(req: Req, res: Res) {
+        const { id } = req.user as IAccessRefreshToken;
+        const { description } = req.body;
+        const result = await this.videoSessionUseCase.requestMonetization({
+            userId: id,
+            description,
+        });
+
+        res.json({
+            success: true,
+            data: result,
+        });
+    }
+
+    async getMonetizationRequests(req:Req, res:Res){
+        const { page = 1, limit = 5,status='all' } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (typeof pageNumber !== 'number' || typeof limitNumber !== 'number') {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const requestData= await this.videoSessionUseCase.listMonetizationRequests({
+            page: pageNumber,
+            limit: limitNumber,
+            status:status as string
+        });
+
+        res.status(200).json({
+            success: true,
+            data: requestData,
+        }); 
+    }
+
+    async updateMonetizationStatus(req:Req, res:Res){
         const {userId} = req.params;
-        const eligibility = await this.videoSessionUseCase.getMonetizationEligibility(userId);
+        const {status} = req.body;
+        const result = await this.videoSessionUseCase.updateMonetizationStatus({userId,status});
+
         res.json({
             success:true,
-            data:eligibility
+            data:result
         });
+    }
+
+    async getVideoSessions(req:Req, res:Res){
+        const { id } = req.user as IAccessRefreshToken;
+        const { page = 1, limit = 5,type='all' } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (typeof pageNumber !== 'number' || typeof limitNumber !== 'number') {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const videoSessionDatas= await this.videoSessionUseCase.getVideoSessions({
+            userId:id,
+            page: pageNumber,
+            limit: limitNumber,
+            type:type as string
+        });
+
+        res.status(200).json({
+            success: true,
+            data: videoSessionDatas
+        }); 
+    }
+
+    async getTransactions(req:Req, res:Res){
+        const { id } = req.user as IAccessRefreshToken;
+        const { page = 1, limit = 5,type='all' } = req.query;
+
+        const pageNumber = parseInt(page as string);
+        const limitNumber = parseInt(limit as string);
+
+        if (typeof pageNumber !== 'number' || typeof limitNumber !== 'number') {
+            throw new BadRequestError('invalid parameters');
+        }
+
+        const transactionDatas= await this.videoSessionUseCase.getTransactions({
+            userId:id,
+            page: pageNumber,
+            limit: limitNumber,
+            type:type as string
+        });
+
+        res.status(200).json({
+            success: true,
+            data: transactionDatas
+        }); 
+
     }
 }

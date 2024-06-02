@@ -2,6 +2,8 @@ import mongoose, { Schema } from 'mongoose';
 import  IWallet from '../../../../domain/wallet';
 
 
+
+
 const walletSchema = new Schema<IWallet>(
     {
         silverCoins: {
@@ -26,9 +28,25 @@ const walletSchema = new Schema<IWallet>(
             ref: 'Users',
         },
         transactions: {
-            type:[ mongoose.Schema.ObjectId],
-            ref:'Transactions'
-        },
+            type:[
+                {
+                    id:{
+                        type: mongoose.Schema.ObjectId,
+                        ref:'Transaction',
+                        required:true
+                    },
+                    type:{
+                        type:String,
+                        enum:['credit' , 'debit'],
+                        required: true,
+                    },
+                    timeStamp:{
+                        type: Date,
+                        default: Date.now,
+                    }
+                },
+            ]
+        }
     },
     {
         timestamps: true,

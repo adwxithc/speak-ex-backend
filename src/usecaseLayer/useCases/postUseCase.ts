@@ -2,6 +2,7 @@ import { IComment } from '../../domain/comment';
 import IPost from '../../domain/post';
 import IUser from '../../domain/user';
 import { ICommentRepository } from '../interface/repository/ICommentRepository';
+import { INotificationRepository } from '../interface/repository/INotification';
 import { IPostRepository } from '../interface/repository/IPostRepository';
 import { ITagRepository } from '../interface/repository/ITagRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
@@ -27,6 +28,7 @@ export class PostUseCase implements IPostUseCase {
     private readonly userRepository: IUserRepository;
     private readonly commentRepository: ICommentRepository;
     private readonly fileBucket: IFileBucket;
+    private readonly notificationRepository: INotificationRepository;
 
     constructor({
         postRepository,
@@ -34,18 +36,21 @@ export class PostUseCase implements IPostUseCase {
         tagRepository,
         fileBucket,
         commentRepository,
+        notificationRepository
     }: {
         postRepository: IPostRepository;
         tagRepository: ITagRepository;
         userRepository: IUserRepository;
         fileBucket: IFileBucket;
         commentRepository: ICommentRepository;
+        notificationRepository:INotificationRepository
     }) {
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.userRepository = userRepository;
         this.fileBucket = fileBucket;
         this.commentRepository = commentRepository;
+        this.notificationRepository=notificationRepository;
     }
 
     async createPost({
@@ -110,6 +115,8 @@ export class PostUseCase implements IPostUseCase {
             postRepository: this.postRepository,
             postId,
             userId,
+            notificationRepository:this.notificationRepository,
+            userRePository:this.userRepository
         });
     }
 

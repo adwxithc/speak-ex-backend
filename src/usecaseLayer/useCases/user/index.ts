@@ -19,6 +19,9 @@ import { getFollowings } from './general/getFollowings';
 import { getUserById } from './profile/getUserById';
 import { getWallet } from './general/getWallet';
 import { getUserDetails } from './profile/getUserDetails';
+import { getNotifications } from './general/getNotifications';
+import { setNotificationReaded } from './general/setNotificationReaded';
+import { getSingleNotification } from './general/getSingleNotification';
 export {
     registerUser,
     createUser,
@@ -40,5 +43,8 @@ export {
     getFollowings,
     getUserById,
     getWallet,
-    getUserDetails
+    getUserDetails,
+    getNotifications,
+    setNotificationReaded,
+    getSingleNotification
 };

@@ -8,8 +8,13 @@ const sessionSchema = new Schema<ISession>(
             required:true,
             unique:true
         },
+        isMonetized:{
+            type:Boolean,
+            default:false
+        },
         helper:{
             type:mongoose.Schema.ObjectId,
+            ref:'User',
             required:true
         },
         learner:{
@@ -37,6 +42,10 @@ const sessionSchema = new Schema<ISession>(
         languageId:{
             type:mongoose.Schema.ObjectId,
             ref:'languages'
+        },
+        moneyToTheHelper:{
+            type:Number,
+            default:0
         }
     },
     {

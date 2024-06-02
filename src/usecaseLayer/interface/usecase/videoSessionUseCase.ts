@@ -1,6 +1,12 @@
 import ICoinPurchasePlan from '../../../domain/coinPurchasePlan';
+import IMonetizationRequest, {
+    IMonetizationRequestStatus,
+} from '../../../domain/monetizationRequest';
 import { IReport } from '../../../domain/report';
 import { ISession } from '../../../domain/session';
+import ITransaction from '../../../domain/transaction';
+import IUser from '../../../domain/user';
+import { IUsersSesstionData } from '../repository/ISessionRepository';
 
 export interface IReportWithUsers {
     reports: (IReport & {
@@ -19,6 +25,21 @@ export interface IReportWithUsers {
         lastName: string;
         profile: string;
     };
+}
+
+export interface IMonetizationRequestData extends IMonetizationRequest {
+    userData: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        userName: string;
+        profile: string;
+    };
+}
+
+export interface ISessionDetails extends ISession {
+    helperData: {firstName:string;lastName:string;userName:string;profile:string ; id:string};
+    learnerData: {firstName:string;lastName:string;userName:string;profile:string ; id:string};
 }
 
 export interface IVideoSessionUseCase {
@@ -103,12 +124,75 @@ export interface IVideoSessionUseCase {
     }): Promise<string>;
     paymentConfirmation({
         signature,
-        payload
-        
+        payload,
     }: {
-        signature:string,
-        payload:Buffer
+        signature: string;
+        payload: Buffer;
     }): Promise<void>;
 
-    getMonetizationEligibility(userId:string):Promise<boolean>
+    getSessionData(
+        userId: string
+    ): Promise<IUsersSesstionData & { isMonetized: boolean }>;
+
+    requestMonetization({
+        userId,
+        description,
+    }: {
+        userId: string;
+        description: string;
+    }): Promise<IMonetizationRequest>;
+
+    listMonetizationRequests({
+        page,
+        limit,
+        status,
+    }: {
+        page: number;
+        limit: number;
+        status: string;
+    }): Promise<{
+        requests: IMonetizationRequestData[];
+        totalRequests: number;
+        lastPage: number;
+    }>;
+
+    updateMonetizationStatus({
+        userId,
+        status,
+    }: {
+        userId: string;
+        status: IMonetizationRequestStatus;
+    }): Promise<IUser>;
+
+    getVideoSessions({
+        userId,
+        page,
+        limit,
+        type,
+    }: {
+        userId: string;
+        page: number;
+        limit: number;
+        type: string;
+    }): Promise<{
+        sessions: ISessionDetails[];
+        totalSessions: number;
+        lastPage: number;
+    }>;
+
+    getTransactions({
+        userId,
+        page,
+        limit,
+        type,
+    }: {
+        userId: string;
+        page: number;
+        limit: number;
+        type: string;
+    }): Promise<{
+        transactions: ITransaction[];
+        totalTransactions: number;
+        lastPage: number;
+    }>;
 }

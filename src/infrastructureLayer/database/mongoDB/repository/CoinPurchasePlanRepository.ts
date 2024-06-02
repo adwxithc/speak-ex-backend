@@ -1,7 +1,7 @@
 
 import { ICoinPurchasePlanRepository } from '../../../../usecaseLayer/interface/repository/ICoinPurchasePlanRepository';
 import CoinPurchasePlanModel from '../models/CoinPurchasePlan';
-import { createPurchasePlan, deletePlan, getPurchasePlan, getPurchasePlans } from './coinPurchasePlanRepository/';
+import { createPurchasePlan, deletePlan, getAveragePrice, getPurchasePlan, getPurchasePlans } from './coinPurchasePlanRepository/';
 
 
 
@@ -20,4 +20,8 @@ export class CoinPurchasePlanRepository implements ICoinPurchasePlanRepository {
     async getPurchasePlan(id: string){
         return await getPurchasePlan({id, coinPurchasePlanModel:this.coinPurchasePlanModel});
     }
+    async getAveragePrice(){
+        return await getAveragePrice(this.coinPurchasePlanModel);
+    }
+    
 }

@@ -18,7 +18,8 @@ import {
     getFollowingPosts,
     getLearners,
     findLearnerWithWallet,
-    findUserById
+    findUserById,
+    findLearnersWithGoldCoins
 } from './userRepository/user';
 import { getAllUser, getUserDataWithWallet } from './userRepository/admin';
 
@@ -83,6 +84,8 @@ export class UserRepository implements IUserRepository {
         profile,
         proficientLanguage,
         focusLanguage,
+        requestedForMonetization,
+        isMonetized
     }: Required<Pick<IUser, 'id'>> &
         Partial<Omit<IUser, 'email'>>): Promise<IUser> {
         return await updateUser(
@@ -95,6 +98,8 @@ export class UserRepository implements IUserRepository {
                 profile,
                 proficientLanguage,
                 focusLanguage,
+                requestedForMonetization,
+                isMonetized
             },
             this.userModels
         );
@@ -192,5 +197,9 @@ export class UserRepository implements IUserRepository {
 
     async getUserDataWithWallet({ userId }: { userId: string; }){
         return await getUserDataWithWallet({userId,userModel:this.userModels});
+    }
+
+    async findLearnersWithGoldCoins({ helperId }: { helperId: string; }){
+        return await findLearnersWithGoldCoins({helperId,userModel:this.userModels});
     }
 }

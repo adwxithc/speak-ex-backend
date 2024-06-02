@@ -60,10 +60,40 @@ export function videoSessionRote(router: Router) {
         }
     );
     router.get(
-        '/monetization-eligibility/:userId',
+        '/session-datas/:userId',
         protect.protectUser,
         async(req:Req, res:Res)=>{
-            await videoSessionController.getMonetizationEligibility(req, res);
+            await videoSessionController.getSessionData(req, res);
+        }
+    );
+
+    router.post(
+        '/request-monetization',
+        [
+            body('description')
+                .trim()
+                .isLength({ min: 1, })
+                .withMessage('description is required'),
+        ],
+        validateRequest,
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.requestMonetization(req, res);
+        }
+    );
+
+    router.get(
+        '/video-sessions',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.getVideoSessions(req, res);
+        }
+    );
+    router.get(
+        '/transactions',
+        protect.protectUser,
+        async(req:Req, res:Res)=>{
+            await videoSessionController.getTransactions(req, res);
         }
     );
    

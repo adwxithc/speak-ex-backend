@@ -5,4 +5,5 @@ export interface ICoinPurchasePlanRepository {
     getPurchasePlans():Promise<ICoinPurchasePlan[]>
     getPurchasePlan(id:string):Promise<ICoinPurchasePlan|null>
     deletePlan(id:string):Promise<ICoinPurchasePlan|null>
+    getAveragePrice():Promise<number>;
 }

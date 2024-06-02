@@ -1,6 +1,10 @@
 import { DbId } from '../usecaseLayer/interface/db/dbTypes';
 
-
+interface ITransactionInfo{
+    id:DbId;
+    type:'credit' | 'debit'
+    timeStamp?:Date
+}
 
 interface IWallet {
     id?: string;
@@ -8,7 +12,7 @@ interface IWallet {
     silverCoins: number;
     goldCoins: number;
     money: number;
-    transactions: DbId[];
+    transactions: ITransactionInfo[];
     createdAt?: string;
     updatedAt?: string;
 }

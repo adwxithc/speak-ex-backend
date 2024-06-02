@@ -36,7 +36,7 @@ app.use(cors());
 
 const httpServer = http.createServer(app);
 
-new SocketManager(httpServer);
+export const socketService=new SocketManager(httpServer);
 
 app.use('/api/user', userRoute(express.Router()));
 app.use('/api/admin', adminRoute(express.Router()));

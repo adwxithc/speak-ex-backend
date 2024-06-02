@@ -4,11 +4,12 @@ export type IMonetizationRequestStatus='pending'|'accepted'|'rejected';
 
 
 interface IMonetizationRequest{
+    id?:string
     userId:DbId
-    requestDate:Date;
-    responseDate?:Date;
     status:IMonetizationRequestStatus;
-    comments?:string;
+    description:string;
+    createdAt?:string;
+    updatedAt?:string;
 }
 
 export default IMonetizationRequest;

@@ -27,6 +27,8 @@ import { PostRepository } from '../../../database/mongoDB/repository/postReposit
 import PostModel from '../../../database/mongoDB/models/post';
 import { ReportRepository } from '../../../database/mongoDB/repository/reportRepository';
 import ReportModel from '../../../database/mongoDB/models/ReportModel';
+import { NotificationRepository } from '../../../database/mongoDB/repository/NotificationRepository';
+import NotificationModel from '../../../database/mongoDB/models/NotificationModel';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -44,6 +46,7 @@ const walletRepository = new WalletRepository({walletModel:WalletModel,transacti
 const postRepository= new PostRepository(PostModel);
 const reportRepository=new ReportRepository(ReportModel);
 const generateUniQueString = new GenerateUniQueString();
+const notificationRepository = new NotificationRepository(NotificationModel);
 const userUseCase = new UserUseCase({
     userRepository,
     bcrypt:encryptService,
@@ -59,7 +62,8 @@ const userUseCase = new UserUseCase({
     generateUniQueString,
     postRepository,
     sessionRepository,
-    reportRepository
+    reportRepository,
+    notificationRepository
 });
 
 
