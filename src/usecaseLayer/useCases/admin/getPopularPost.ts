@@ -9,6 +9,10 @@ export const getPopularPost = async ({
     fileBucket:IFileBucket
 }) => {
     const posts =  await postRepository.getPopularPost();
-    posts.forEach(post=>(post.image=fileBucket.getFileAccessURL(post.image||'')));
+    posts.forEach(post=>{
+        post.image=fileBucket.getFileAccessURL(post.image||'');
+        post.userData.profile =fileBucket.getFileAccessURL(post.userData.profile||'');
+
+    });
     return posts;
 };

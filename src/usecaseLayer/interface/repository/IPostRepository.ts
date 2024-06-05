@@ -42,5 +42,7 @@ export interface IPostRepository {
     }: {
         userId: string;
     }): Promise<{ posts: number; averageLikes: number }>;
-    getPopularPost():Promise<IPost[]>
+    getPopularPost(): Promise<
+    (IPost &{userData: {firstName: string;lastName: string;profile: string;userName: string;}})[]
+    >;
 }
