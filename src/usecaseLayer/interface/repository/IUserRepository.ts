@@ -35,6 +35,7 @@ export interface IUserRepository {
     findLearnersWithGoldCoins({helperId}:{helperId:string}):Promise<{id:string}[]>
 
     getUserDataWithWallet({userId}:{userId:string}):Promise<IUserDataWithWallet>
+    
 }
 
 

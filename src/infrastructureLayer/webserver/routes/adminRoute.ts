@@ -180,5 +180,41 @@ export function adminRoute(router: Router) {
         }
     );
 
+    //DASHBOARD 
+    router.get(
+        '/dashboard-numerics',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await adminController.getDashboardNumerics(req, res);
+        }
+
+    );
+    router.get(
+        '/sessions-vs-profit',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await adminController.getMonthlySessionsProfitSummary(req, res);
+        }
+    );
+    router.get(
+        '/popular-purchase-plans',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await adminController.getPopularPurchasePlans(req, res);
+        }
+    );
+
+    router.get(
+        '/popular-posts',
+        protect.protectAdmin,
+        async(req:Req, res:Res)=>{
+            await adminController.getPopularPost(req, res);
+        }
+    );
+
+ 
+
+   
+
     return router;
 }

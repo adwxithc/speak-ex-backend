@@ -202,6 +202,7 @@ export interface IUserUseCase {
     }): Promise<{
         notifications: INotificationDetails[];
         totalNotifications: number;
+        totalUnReadedNotifications:number;
         lastPage: number;
         currentPage:number
     }>;

@@ -176,7 +176,10 @@ export class UserController {
 
     async renewAccess(req: Req, res: Res) {
         const { refreshToken } = req.cookies;
+        console.log(refreshToken,'refresh..............');
         const accessToken = await this.userUseCase.renewAccess(refreshToken);
+        
+        
         res.cookie('accessToken', accessToken, accessTokenOptions);
 
         res.json({

@@ -55,7 +55,40 @@ export class AdminController {
         });
     }
 
-    
+    async getDashboardNumerics(req:Req, res:Res){
+        const result = await this.adminUseCase.getDashboardNumerics();
+        res.json({
+            succes:true,
+            data:result
+        });
+    }
+    async getMonthlySessionsProfitSummary(req:Req, res:Res){
+        const result = await this.adminUseCase.getMonthlySessionsProfitSummary();
+        res.json({
+            succes:true,
+            data:result
+        });
+    }
+
+    async getPopularPurchasePlans(req:Req, res:Res){
+        const result = await this.adminUseCase.getPopularPurchasePlans();
+        res.json({
+            succes:true,
+            data:result
+        });
+    }
+
+    async getPopularPost(req:Req, res:Res){
+        const result = await this.adminUseCase.getPopularPost();
+        res.json({
+            succes:true,
+            data:result
+        });
+    }
+
+
+
+   
 
    
 }

@@ -37,7 +37,9 @@ export interface IWalletRepository {
     }: {
         limit: number;
         page: number;
-        type: 'credit' | 'debit'|'all';
+        type: 'credit' | 'debit' | 'all';
         userId: string;
-    }):Promise<{ transactions: ITransaction[]; totalTransactions: number }>
+    }): Promise<{ transactions: ITransaction[]; totalTransactions: number }>;
+
+    
 }
