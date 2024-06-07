@@ -27,9 +27,12 @@ export const getPost = async (
         },
         {
             $project: {
+                
+                id:'$_id',
                 _id: 0,
                 title: 1,
                 content: 1,
+                userId:1,
                 image: 1,
                 upvotes: 1,
                 comments: 1,

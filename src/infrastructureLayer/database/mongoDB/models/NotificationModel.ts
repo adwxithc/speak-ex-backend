@@ -4,37 +4,36 @@ import INotification from '../../../../domain/notification';
 
 const notificationSchema = new Schema<INotification>(
     {
-        message:{
-            type:String,
-            required:true
+        message: {
+            type: String,
+            required: true,
         },
-        read:{
-            type:Boolean,
-            required:true,
-            default:false
+        read: {
+            type: Boolean,
+            required: true,
+            default: false,
         },
-        title:{
-            type:String,
-            required:true
+        title: {
+            type: String,
+            required: true,
         },
-        userId:{
-            type:String,
-            ref:'User',
+        userId: {
+            type: String,
+            ref: 'User',
         },
-        actionCreator:{
-            type:String,
-            ref:'User',
-            required:true
+        actionCreator: {
+            type: String,
+            required: true,
+            refPath: 'User',
         },
-        relatedEntity:{
-            type:String,
-            required:true,
+        relatedEntity: {
+            type: String,
+            required: true,
         },
-        type:{
-            type:String,
-            enum:['POST_LIKE']
-        }
-
+        type: {
+            type: String,
+            enum: ['POST_LIKE', 'POST_COMMENT', 'MONETIZATION_REQUEST'],
+        },
     },
     {
         timestamps: true,
@@ -48,6 +47,9 @@ const notificationSchema = new Schema<INotification>(
     }
 );
 
-const NotificationModel = mongoose.model<INotification>('Notification', notificationSchema);
+const NotificationModel = mongoose.model<INotification>(
+    'Notification',
+    notificationSchema
+);
 
 export default NotificationModel;

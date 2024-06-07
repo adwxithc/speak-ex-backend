@@ -29,6 +29,7 @@ import { ReportRepository } from '../../../database/mongoDB/repository/reportRep
 import ReportModel from '../../../database/mongoDB/models/ReportModel';
 import { NotificationRepository } from '../../../database/mongoDB/repository/NotificationRepository';
 import NotificationModel from '../../../database/mongoDB/models/NotificationModel';
+import { ImageFormater } from '../../../services/imageFormater';
 
 const userRepository = new UserRepository(UserModel);
 const encryptService = new Encrypt();
@@ -47,6 +48,7 @@ const postRepository= new PostRepository(PostModel);
 const reportRepository=new ReportRepository(ReportModel);
 const generateUniQueString = new GenerateUniQueString();
 const notificationRepository = new NotificationRepository(NotificationModel);
+const imageFormater= new ImageFormater();
 const userUseCase = new UserUseCase({
     userRepository,
     bcrypt:encryptService,
@@ -63,7 +65,9 @@ const userUseCase = new UserUseCase({
     postRepository,
     sessionRepository,
     reportRepository,
-    notificationRepository
+    notificationRepository,
+    imageFormater
+
 });
 
 

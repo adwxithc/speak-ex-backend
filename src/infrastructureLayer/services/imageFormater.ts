@@ -7,11 +7,15 @@ export class ImageFormater implements IImageFormater {
     async crop({
         imageBuffer,
         aspectRatio,
-        format='jpeg'
+        format = 'jpeg',
+        maxWidth = 500,
+        maxHeight = 500,
     }: {
         imageBuffer: Buffer;
         aspectRatio: number;
-        format:'jpeg'|'png'
+        format: 'jpeg' | 'png';
+        maxWidth: number;
+        maxHeight: number;
     }) {
         const metadata = await sharp(imageBuffer).metadata();
 
@@ -41,11 +45,17 @@ export class ImageFormater implements IImageFormater {
             top,
         });
 
-        // Check if format conversion is needed
+        imageProcessing = imageProcessing.resize({
+            width: maxWidth,
+            height: maxHeight,
+            fit: 'inside', // Ensures the image fits within the given dimensions
+        });
+
+        // Apply format and compression
         if (format === 'jpeg') {
-            imageProcessing = imageProcessing.jpeg();
+            imageProcessing = imageProcessing.jpeg({ quality: 80 }); // Adjust quality as needed
         } else if (format === 'png') {
-            imageProcessing = imageProcessing.png();
+            imageProcessing = imageProcessing.png({ compressionLevel: 9 }); // Adjust compression level as needed
         } else {
             throw new Error('Invalid image format specified');
         }

@@ -4,10 +4,13 @@ import IUser from '../../../../../../domain/user';
 import IWallet from '../../../../../../domain/wallet';
 import ILanguage from '../../../../../../domain/language';
 
+
 export const findLearnerWithWallet = async (
     id: string,
     userModel: typeof UserModel
 ) => {
+
+    
     const [existingUser] = (await userModel.aggregate([
         {
             $match: {

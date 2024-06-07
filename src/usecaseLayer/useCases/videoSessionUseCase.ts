@@ -2,14 +2,17 @@ import { IMonetizationRequestStatus } from '../../domain/monetizationRequest';
 import { ICoinPurchasePlanRepository } from '../interface/repository/ICoinPurchasePlanRepository';
 import { ICoinPurchaseRepository } from '../interface/repository/ICoinPurchaseRepository';
 import { IMonetizationRequestRepository } from '../interface/repository/IMonetizationRequestRepository';
+import { INotificationRepository } from '../interface/repository/INotification';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
+import { ISocketRepository } from '../interface/repository/ISocketRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IWalletRepository } from '../interface/repository/IWalletRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
 import { IGenerateUniQueString } from '../interface/services/IGenerateUniQueString';
 import { IImageFormater } from '../interface/services/IImageFormater';
 import { IPaymentService } from '../interface/services/IPaymentService';
+import { ISocketService } from '../interface/services/ISocketService';
 import { IVideoSessionUseCase } from '../interface/usecase/videoSessionUseCase';
 
 import {
@@ -46,6 +49,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
     private readonly paymentService: IPaymentService;
     private readonly coinPurchaseRepository: ICoinPurchaseRepository;
     private readonly monetizationRequestRepository: IMonetizationRequestRepository;
+    private readonly notificationRepository: INotificationRepository;
+    private readonly socketRepository: ISocketRepository;
+    private readonly socketService: ISocketService;
 
     constructor({
         generateUniqueString,
@@ -59,6 +65,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         paymentService,
         coinPurchaseRepository,
         monetizationRequestRepository,
+        socketService,
+        socketRepository,
+        notificationRepository,
     }: {
         generateUniqueString: IGenerateUniQueString;
         sessionRepository: ISessionRepository;
@@ -71,6 +80,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         paymentService: IPaymentService;
         coinPurchaseRepository: ICoinPurchaseRepository;
         monetizationRequestRepository: IMonetizationRequestRepository;
+        socketService: ISocketService;
+        socketRepository: ISocketRepository;
+        notificationRepository: INotificationRepository;
     }) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
@@ -83,6 +95,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
         this.paymentService = paymentService;
         this.coinPurchaseRepository = coinPurchaseRepository;
         this.monetizationRequestRepository = monetizationRequestRepository;
+        this.socketService = socketService;
+        this.socketRepository = socketRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     //startSession
@@ -318,6 +333,9 @@ export class VideoSessionUseCase implements IVideoSessionUseCase {
             status,
             userRepository: this.userRepository,
             monetizationRequestRepository: this.monetizationRequestRepository,
+            notificationRepository: this.notificationRepository,
+            socketRepository: this.socketRepository,
+            socketService: this.socketService,
         });
     }
 

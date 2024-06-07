@@ -40,8 +40,17 @@ const userSchema = new Schema<IUser>(
         proficientLanguage: {
             type: [String],
         },
-        followers: [{type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique:true}],
-        following: [{type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique:true}],
+
+        followers: {
+            type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+            default: []  // Initialize as empty array
+        },
+        following: {
+            type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+            default: []  // Initialize as empty array
+        },
+       
+
         isMonetized:{
             type: Boolean,
             default:false,
