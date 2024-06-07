@@ -4,9 +4,11 @@ import IUser from '../../domain/user';
 import { ICommentRepository } from '../interface/repository/ICommentRepository';
 import { INotificationRepository } from '../interface/repository/INotification';
 import { IPostRepository } from '../interface/repository/IPostRepository';
+import { ISocketRepository } from '../interface/repository/ISocketRepository';
 import { ITagRepository } from '../interface/repository/ITagRepository';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 import { IFileBucket } from '../interface/services/IFileBucket';
+import { ISocketService } from '../interface/services/ISocketService';
 import { IPostUseCase } from '../interface/usecase/postUseCase';
 import {
     createPost,
@@ -29,28 +31,35 @@ export class PostUseCase implements IPostUseCase {
     private readonly commentRepository: ICommentRepository;
     private readonly fileBucket: IFileBucket;
     private readonly notificationRepository: INotificationRepository;
-
+    private readonly socketService: ISocketService;
+    private readonly socketRepository: ISocketRepository;
     constructor({
         postRepository,
         userRepository,
         tagRepository,
         fileBucket,
         commentRepository,
-        notificationRepository
+        notificationRepository,
+        socketRepository,
+        socketService,
     }: {
         postRepository: IPostRepository;
         tagRepository: ITagRepository;
         userRepository: IUserRepository;
         fileBucket: IFileBucket;
         commentRepository: ICommentRepository;
-        notificationRepository:INotificationRepository
+        notificationRepository: INotificationRepository;
+        socketRepository: ISocketRepository;
+        socketService: ISocketService;
     }) {
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.userRepository = userRepository;
         this.fileBucket = fileBucket;
         this.commentRepository = commentRepository;
-        this.notificationRepository=notificationRepository;
+        this.notificationRepository = notificationRepository;
+        this.socketRepository = socketRepository;
+        this.socketService = socketService;
     }
 
     async createPost({
@@ -115,8 +124,10 @@ export class PostUseCase implements IPostUseCase {
             postRepository: this.postRepository,
             postId,
             userId,
-            notificationRepository:this.notificationRepository,
-            userRePository:this.userRepository
+            notificationRepository: this.notificationRepository,
+            userRePository: this.userRepository,
+            socketRepository: this.socketRepository,
+            socketService: this.socketService,
         });
     }
 
@@ -153,6 +164,9 @@ export class PostUseCase implements IPostUseCase {
             postId,
             userId,
             parentId,
+            notificationRepository:this.notificationRepository,
+            socketRepository:this.socketRepository,
+            socketService:this.socketService,
         });
     }
 
@@ -243,7 +257,7 @@ export class PostUseCase implements IPostUseCase {
             fileBucket: this.fileBucket,
             userId,
             userRepository: this.userRepository,
-            tagRepository:this.tagRepository
+            tagRepository: this.tagRepository,
         });
     }
 }

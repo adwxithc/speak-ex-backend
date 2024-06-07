@@ -6,9 +6,10 @@ interface INotification{
     title:string;
     message:string;
     read:boolean;
-    type:'POST_LIKE',
+    type:'POST_LIKE'|'POST_COMMENT'|'MONETIZATION_REQUEST',
     relatedEntity:string,
     actionCreator:string,
+   
     createdAt?:string;
     updatedAt?:string;
 }

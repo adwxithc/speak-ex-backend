@@ -1,8 +1,10 @@
 import { BadRequestError } from '../../errors';
 import { INotificationRepository } from '../../interface/repository/INotification';
 import { IPostRepository } from '../../interface/repository/IPostRepository';
+import { ISocketRepository } from '../../interface/repository/ISocketRepository';
 import { IUserRepository } from '../../interface/repository/IUserRepository';
 import { IFileBucket } from '../../interface/services/IFileBucket';
+import { ISocketService } from '../../interface/services/ISocketService';
 
 export const upvote = async ({
     postRepository,
@@ -11,6 +13,8 @@ export const upvote = async ({
     notificationRepository,
     postId,
     userId,
+    socketService,
+    socketRepository,
 }: {
     postRepository: IPostRepository;
     fileBucket: IFileBucket;
@@ -18,6 +22,8 @@ export const upvote = async ({
     notificationRepository: INotificationRepository;
     postId: string;
     userId: string;
+    socketService: ISocketService;
+    socketRepository: ISocketRepository;
 }) => {
     const userPromise = userRePository.findUserById(userId);
     const postPromise = postRepository.upvote({ postId, userId });
@@ -33,15 +39,24 @@ export const upvote = async ({
 
     post.image = fileBucket.getFileAccessURL(post.image || '');
 
-    await notificationRepository.createNotification({
+    const notification = await notificationRepository.createNotification({
         message,
         actionCreator: userId,
         userId: post.userId.toString(),
         read: false,
         relatedEntity: post.id?.toString() as string,
-        title: 'got one new like',
+        title: 'liked your post',
         type: 'POST_LIKE',
     });
+    const socketUser = await socketRepository.getUser(
+        notification.userId.toString()
+    );
+    if (socketUser) {
+        socketService.notifyUser({
+            notificationId: notification.id?.toString() as string,
+            socketId: socketUser.socketId,
+        });
+    }
 
     return post;
 };

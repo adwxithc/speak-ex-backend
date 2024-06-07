@@ -1,5 +1,4 @@
 import INotification from '../../../../../domain/notification';
-import { socketService } from '../../../../webserver/config/app';
 import NotificationModel from '../../models/NotificationModel';
 
 export const createNotification = async({
@@ -12,7 +11,6 @@ export const createNotification = async({
 
 
     const notification = await notificationModel.create(newNotification);
-    socketService.notifyUser({userId:newNotification.userId,notificationId:notification.id});
     return await notification.save();
     
 };

@@ -12,8 +12,10 @@ import { NotFoundError } from '../../../usecaseLayer/errors';
 import dotenv from 'dotenv';
 import { Next, Req, Res } from '../../types/expressTypes';
 import { chatRoute } from '../routes/chatRoute';
-import { SocketManager } from '../../socketserver/socketServer';
+
 import { videoSessionRote } from '../routes/videoSessionRote';
+// import { SocketManager } from '../../socketserver/socketServer';
+import socketInstance from './socket';
 
 dotenv.config();
 
@@ -36,7 +38,8 @@ app.use(cors());
 
 const httpServer = http.createServer(app);
 
-export const socketService=new SocketManager(httpServer);
+// export const socketService=new SocketManager(httpServer);
+socketInstance.init(httpServer);
 
 app.use('/api/user', userRoute(express.Router()));
 app.use('/api/admin', adminRoute(express.Router()));

@@ -2,7 +2,7 @@ import { Redis } from 'ioredis';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export function redisDB() {
+function redisDB() {
     const redisClient = () => {
         if (process.env.REDIS_URL) {
             return process.env.REDIS_URL;
@@ -16,3 +16,5 @@ export function redisDB() {
     });
     return redis;
 }
+const redisClient = redisDB();
+export {redisClient};

@@ -56,7 +56,7 @@ export class SocketManager {
         // webRTC
 
         socket.on('session:start', async ({ userId }) => {
-            // console.log('new video session iniated');
+            console.log('new video session iniated');
 
             const liveUsers = await this.getAllUserFromPriority();
             const { data: session } = await videoSessionUseCase.startSession({

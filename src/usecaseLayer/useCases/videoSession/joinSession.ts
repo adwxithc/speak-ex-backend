@@ -23,6 +23,7 @@ export const joinSession = async ({
     if(session.learner) return {success:false,message:'session already occupied'};
     const learner = await userRepository.findLearnerWithWallet(userId);
    
+    console.log(learner,userId);
     
     if(!learner) return {success:false,message:'learner does not exist'};
     if(session.isMonetized){

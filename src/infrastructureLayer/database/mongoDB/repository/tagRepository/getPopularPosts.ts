@@ -31,6 +31,7 @@ export const getPopularPosts = async ({
                 title: { $first: '$popularPosts.title' },
                 content: { $first: '$popularPosts.content' },
                 image: { $first: '$popularPosts.image' },
+                id:{$first:'$popularPosts._id'},
                 userId: { $first: '$popularPosts.userId' },
                 upvotes: { $first: '$popularPosts.upvotes' },
                 comments: { $first: '$popularPosts.comments' },

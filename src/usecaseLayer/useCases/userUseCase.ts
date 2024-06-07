@@ -45,6 +45,7 @@ import { IPostRepository } from '../interface/repository/IPostRepository';
 import { IReportRepository } from '../interface/repository/IReportRepository';
 import { ISessionRepository } from '../interface/repository/ISessionRepository';
 import { INotificationRepository } from '../interface/repository/INotification';
+import { IImageFormater } from '../interface/services/IImageFormater';
 
 export class UserUseCase implements IUserUseCase {
     private readonly userRepository: IUserRepository;
@@ -63,7 +64,7 @@ export class UserUseCase implements IUserUseCase {
     private readonly sessionRepository: ISessionRepository;
     private readonly generateUniQueString: IGenerateUniQueString;
     private readonly notificationRepository: INotificationRepository;
-
+    private readonly imageFormater : IImageFormater;
     constructor({
         userRepository,
         bcrypt,
@@ -81,6 +82,7 @@ export class UserUseCase implements IUserUseCase {
         reportRepository,
         generateUniQueString,
         notificationRepository,
+        imageFormater
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -98,6 +100,7 @@ export class UserUseCase implements IUserUseCase {
         reportRepository: IReportRepository;
         generateUniQueString: IGenerateUniQueString;
         notificationRepository: INotificationRepository;
+        imageFormater:IImageFormater
     }) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -115,6 +118,7 @@ export class UserUseCase implements IUserUseCase {
         this.reportRepository = reportRepository;
         this.sessionRepository = sessionRepository;
         this.notificationRepository = notificationRepository;
+        this.imageFormater=imageFormater;
     }
 
     //register user
@@ -311,6 +315,7 @@ export class UserUseCase implements IUserUseCase {
             userId,
             fileBucket: this.fileBucket,
             userRepository: this.userRepository,
+            imageFormater:this.imageFormater
         });
     }
 

@@ -10,7 +10,6 @@ import {
     insertComment,
     removeComment,
     getPopularPosts,
-    
 } from './postRepository/';
 import { getPostsInfo } from './postRepository/getPostsInfo';
 
@@ -25,12 +24,7 @@ export class PostRepository implements IPostRepository {
         return await getUsersPosts(userId, this.postModel);
     }
 
-    async getPost(postId: string): Promise<
-        | (IPost & {
-              user: { userName: string; email: string; profile: string };
-          })
-        | null
-    > {
+    async getPost(postId: string) {
         return await getPost(postId, this.postModel);
     }
 
@@ -90,12 +84,11 @@ export class PostRepository implements IPostRepository {
         });
     }
 
-    async getPostsInfo({ userId }: { userId: string; }){
-        return await getPostsInfo({userId, postModel:this.postModel});
+    async getPostsInfo({ userId }: { userId: string }) {
+        return await getPostsInfo({ userId, postModel: this.postModel });
     }
 
-    async getPopularPost(){
+    async getPopularPost() {
         return await getPopularPosts(this.postModel);
     }
-   
 }

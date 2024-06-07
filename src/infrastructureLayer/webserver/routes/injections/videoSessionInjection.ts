@@ -3,6 +3,7 @@ import { VideoSessionController } from '../../../../controller/restController/se
 import { VideoSessionUseCase } from '../../../../usecaseLayer/useCases/videoSessionUseCase';
 import CoinPurchaseModel from '../../../database/mongoDB/models/CoinPurchaseModal';
 import CoinPurchasePlanModel from '../../../database/mongoDB/models/CoinPurchasePlan';
+import NotificationModel from '../../../database/mongoDB/models/NotificationModel';
 import ReportModel from '../../../database/mongoDB/models/ReportModel';
 import SessionModel from '../../../database/mongoDB/models/SessionModel';
 import TransactionModel from '../../../database/mongoDB/models/TransactionModel';
@@ -10,6 +11,8 @@ import WalletModel from '../../../database/mongoDB/models/WalletModel';
 import MonetizationRequestModel from '../../../database/mongoDB/models/monetizationRequest';
 import UserModel from '../../../database/mongoDB/models/userModel';
 import { CoinPurchasePlanRepository } from '../../../database/mongoDB/repository/CoinPurchasePlanRepository';
+import { NotificationRepository } from '../../../database/mongoDB/repository/NotificationRepository';
+import { SocketRepository } from '../../../database/mongoDB/repository/SocketRepository';
 import { UserRepository } from '../../../database/mongoDB/repository/UserRepository';
 import { CoinPurchaseRepository } from '../../../database/mongoDB/repository/coinPurchaseRepository';
 import { MonetizationRequestRepository } from '../../../database/mongoDB/repository/monetizationRequestRepository';
@@ -20,6 +23,8 @@ import { FileBucket } from '../../../services/fileBucket';
 import { GenerateUniQueString } from '../../../services/generateUniqueString';
 import { ImageFormater } from '../../../services/imageFormater';
 import { PaymentService } from '../../../services/paymentService';
+import { SocketService } from '../../../services/socketService';
+import { redisClient } from '../../config/redis';
 
 const generateUniqueString = new GenerateUniQueString();
 const imageFormater= new ImageFormater();
@@ -36,9 +41,12 @@ const walletRepository = new WalletRepository({
     walletModel: WalletModel,
     transactionModel: TransactionModel,
 });
+const notificationRepository= new NotificationRepository(NotificationModel);
+const socketRepository= new SocketRepository(redisClient);
+const socketService= new SocketService();
 const coinPurchasePlanRepository = new CoinPurchasePlanRepository(CoinPurchasePlanModel);
 
-export const videoSessionUseCase = new VideoSessionUseCase({
+const videoSessionUseCase = new VideoSessionUseCase({
     generateUniqueString,
     sessionRepository,
     userRepository,
@@ -49,10 +57,12 @@ export const videoSessionUseCase = new VideoSessionUseCase({
     imageFormater,
     paymentService,
     coinPurchaseRepository,
-    monetizationRequestRepository
-
+    monetizationRequestRepository,
+    notificationRepository,
+    socketRepository,
+    socketService
 });
 
 const videoSessionController = new VideoSessionController(videoSessionUseCase);
 
-export { videoSessionController };
+export { videoSessionController, videoSessionUseCase };
