@@ -3,24 +3,22 @@ import 'express-async-errors';
 import cors from 'cors';
 import http from 'http';
 import cookieParser from 'cookie-parser';
+
 import { userRoute } from '../routes/userRoute';
 import { adminRoute } from '../routes/adminRoute';
 import { postRoute } from '../routes/postRoute';
 import { errorHandler } from '../middlewares/error-handler';
 import { NotFoundError } from '../../../usecaseLayer/errors';
-
 import dotenv from 'dotenv';
 import { Next, Req, Res } from '../../types/expressTypes';
 import { chatRoute } from '../routes/chatRoute';
-
 import { videoSessionRote } from '../routes/videoSessionRote';
-// import { SocketManager } from '../../socketserver/socketServer';
 import socketInstance from './socket';
 
 dotenv.config();
 
 const app = express();
-// app.use(express.json());
+
 
 
 app.use((req: Req, res: Res, next: Next): void => {
@@ -38,7 +36,6 @@ app.use(cors());
 
 const httpServer = http.createServer(app);
 
-// export const socketService=new SocketManager(httpServer);
 socketInstance.init(httpServer);
 
 app.use('/api/user', userRoute(express.Router()));
@@ -47,9 +44,7 @@ app.use('/api/post', postRoute(express.Router()));
 app.use('/api/chat', chatRoute(express.Router()));
 app.use('/api/session', videoSessionRote(express.Router()));
 
-app.all('*', (req: Req) => {
-    console.log(req.originalUrl, 'original url');
-
+app.all('*', () => {
     throw new NotFoundError();
 });
 
