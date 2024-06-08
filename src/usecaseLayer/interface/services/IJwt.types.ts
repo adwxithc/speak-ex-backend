@@ -19,7 +19,7 @@ export interface IJwt {
     createVerificationJWT(payload: IVerificationJwt): string;
     createAccessAndRefreshToken(payload:IAccessRefreshToken): IToken;
     verifyJwt(token: string): Promise< IVerificationJwt | null >;
-    verifyPasswordResetJwt(token: string): Promise< IVerificationJwt | null >;
+    verifyPasswordResetJwt(token: string): Promise< IVerificationJwt >;
     createPasswordResetJWT(payload:IVerificationJwt): string;
     
     verifyAccessJwt(token:string):Promise<IAccessRefreshToken| null>

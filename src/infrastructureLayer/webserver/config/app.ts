@@ -47,7 +47,7 @@ app.use('/api/session', videoSessionRote(express.Router()));
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.all('*', (req:Req) => {
-    console.log('----------',req.originalUrl);
+    console.log('----------',req.originalUrl,req.method);
     
     throw new NotFoundError();
 });
