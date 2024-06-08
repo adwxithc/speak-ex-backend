@@ -13,11 +13,6 @@ const transactionSchema = new Schema<ITransaction>(
             type: Number,
             required: true,
         },
-        // timestamp: {
-        //     type: Date,
-        //     required: true,
-        //     default: Date.now,
-        // },
         type: {
             type: String,
             enum: ['credit', 'debit'],

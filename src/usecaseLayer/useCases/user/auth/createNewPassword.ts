@@ -20,25 +20,25 @@ export const createNewPassword = async ({
     bcrypt:IHashpassword
     
 }) => {
+    try {
+        const decode = await jwtToken.verifyPasswordResetJwt(token);
 
-    const decode = await jwtToken.verifyPasswordResetJwt(token);
-
-    if(!decode){
+        const {email}= decode;
+    
+        const user= await UserRepository.findUserByEmail(email);
+    
+        if(!user){
+            throw new BadRequestError('user does not exist please signup');
+        }
+        const{id} = user;
+    
+        const hashPassword = await bcrypt.createHash(password as string);
+    
+        return await UserRepository.changePassword(hashPassword,id as string);
+    } catch (error) {
+      
         throw new BadRequestError('token has been expired, try again');
     }
-    const {email}= decode;
 
-    const user= await UserRepository.findUserByEmail(email);
-
-    if(!user){
-        throw new BadRequestError('user does not exist please signup');
-    }
-
-    const{id} = user;
-
-    const hashPassword = await bcrypt.createHash(password as string);
-
-
-    return await UserRepository.changePassword(hashPassword,id as string);
  
 };

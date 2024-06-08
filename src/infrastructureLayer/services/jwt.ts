@@ -76,7 +76,6 @@ export class JWTToken implements IJwt {
                 }
             });
         });
-        
     }
 
     createAccessToken(payload: IAccessRefreshToken): string {
@@ -87,10 +86,10 @@ export class JWTToken implements IJwt {
     }
 
 
-    verifyPasswordResetJwt(token: string): Promise<IVerificationJwt | null> {
+    verifyPasswordResetJwt(token: string): Promise<IVerificationJwt> {
         return new Promise((resolve, reject)=>{
             jwt.verify(token, this.JWT_RESET_PASSWORD_KEY,(err, decoded)=>{
-                if(err){
+                if(err){   
                     reject(null);
                 }else{
                     resolve(decoded as IVerificationJwt);
