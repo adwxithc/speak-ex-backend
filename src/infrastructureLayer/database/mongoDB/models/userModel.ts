@@ -12,7 +12,6 @@ const userSchema = new Schema<IUser>(
         },
         lastName: {
             type: String,
-            required: true,
         },
         userName: {
             type: String,

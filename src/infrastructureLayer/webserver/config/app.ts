@@ -3,6 +3,7 @@ import 'express-async-errors';
 import cors from 'cors';
 import http from 'http';
 import cookieParser from 'cookie-parser';
+import swaggerUI from 'swagger-ui-express';
 
 import { userRoute } from '../routes/userRoute';
 import { adminRoute } from '../routes/adminRoute';
@@ -14,12 +15,11 @@ import { Next, Req, Res } from '../../types/expressTypes';
 import { chatRoute } from '../routes/chatRoute';
 import { videoSessionRote } from '../routes/videoSessionRote';
 import socketInstance from './socket';
+import { swaggerSpec } from './swagger';
 
 dotenv.config();
 
 const app = express();
-
-
 
 app.use((req: Req, res: Res, next: Next): void => {
     if (req.originalUrl === '/api/session/webhook') {
@@ -44,7 +44,11 @@ app.use('/api/post', postRoute(express.Router()));
 app.use('/api/chat', chatRoute(express.Router()));
 app.use('/api/session', videoSessionRote(express.Router()));
 
-app.all('*', () => {
+app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
+app.all('*', (req:Req) => {
+    console.log('----------',req.originalUrl);
+    
     throw new NotFoundError();
 });
 

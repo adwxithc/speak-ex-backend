@@ -51,6 +51,7 @@ export class UserController {
             res.clearCookie('verificationToken').status(200).json({
                 success: true,
                 data: result,
+                message:'user created'
             });
     }
 
@@ -66,7 +67,7 @@ export class UserController {
 
         res.status(200).json({
             success: true,
-            message: 'verification otp has been re send to the mail',
+            message: 'verification otp has been resend to the mail',
         });
     }
 

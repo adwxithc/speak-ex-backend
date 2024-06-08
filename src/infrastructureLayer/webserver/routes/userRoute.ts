@@ -9,6 +9,45 @@ import { Req, Res } from '../../types/expressTypes';
 import { upload } from '../middlewares/multer';
 
 export function userRoute(router: Router) {
+    /**
+     * @openapi
+     * tags:
+     *   name: User
+     *   description: The User managing API
+     */
+
+    /**
+     * @openapi
+     * /api/user/signup:
+     *   post:
+     *     summary: User signup
+     *     tags: [User]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               firstName:
+     *                 type: string
+     *               userName:
+     *                 type: string
+     *               email:
+     *                 type: string
+     *               password:
+     *                 type: string
+     *             required:
+     *               - firstName
+     *               - userName
+     *               - email
+     *               - password
+     *     responses:
+     *       '200':
+     *         description: verification otp has been send to the mail
+     *       '400':
+     *         description: invalid cridetial are provided
+     */
     router.post(
         '/signup',
         [
@@ -30,6 +69,47 @@ export function userRoute(router: Router) {
         }
     );
 
+    /**
+     * @openapi
+     * components:
+     *   securitySchemes:
+     *     userAuth:
+     *       type: http
+     *       scheme: bearer
+     *       bearerFormat: JWT
+     * paths:
+     *   /api/user/signup/verify-user:
+     *     post:
+     *       summary: Verify user's OTP for signup
+     *       tags:
+     *         - User
+     *       requestBody:
+     *         required: true
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 otp:
+     *                   type: string
+     *               required:
+     *                 - otp
+     *       responses:
+     *         '200':
+     *           content:
+     *             application/json:
+     *               schema:
+     *                 type: object
+     *                 properties:
+     *                   success:
+     *                     type: boolean
+     *                   data:
+     *                     $ref: '#/components/schemas/User'
+     *                   message:
+     *                     type: string
+     *                     example: user created
+     */
+
     router.post(
         '/signup/verify-user',
         [body('otp').isLength({ min: 6, max: 6 }).withMessage('invalid otp')],
@@ -39,13 +119,66 @@ export function userRoute(router: Router) {
         }
     );
 
+    /**
+     * @openapi
+     * components:
+     *   securitySchemes:
+     *     userAuth:
+     *       type: http
+     *       scheme: bearer
+     *       bearerFormat: JWT
+     * paths:
+     *   /api/user/signup/verify-user/resend-otp:
+     *     post:
+     *       summary: Resend users verification OTP for signup
+     *       tags:
+     *         - User
+
+     */
+
     router.post(
         '/signup/verify-user/resend-otp',
         async (req: Req, res: Res) => {
             await userController.resendOtp(req, res);
         }
     );
-
+    /**
+     * @openapi
+     *   /api/user/signin:
+     *     post:
+     *       summary: User signin
+     *       tags:
+     *         - User
+     *       requestBody:
+     *         required: true
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 email:
+     *                   type: string
+     *                 password:
+     *                   type: string
+     *               required:
+     *                 - email
+     *                 - password
+     *       responses:
+     *         '200':
+     *           description: Successful signin
+     *           content:
+     *             application/json:
+     *               schema:
+     *                 type: object
+     *                 properties:
+     *                   success:
+     *                     type: boolean
+     *                   message:
+     *                     type: string
+     *                     example: Verification OTP has been resent to the mail
+     *         '400':
+     *           description: Invalid email or password
+     */
     router.post(
         '/signin',
         [
@@ -60,11 +193,56 @@ export function userRoute(router: Router) {
             await userController.signin(req, res);
         }
     );
-
+    /**
+     * @openapi
+     * paths:
+     *   /api/user/signout:
+     *     post:
+     *       summary: user signout
+     *       tags:
+     *         - User
+     *       responses:
+     *         '200':
+     *           description: successfully logout
+     */
     router.post('/signout', async (req: Req, res: Res) => {
         await userController.signout(req, res);
     });
-
+    /**
+     * @openapi
+     * paths:
+     *   /api/user/forgot-password:
+     *     post:
+     *       summary: user forgot password
+     *       tags:
+     *         - User
+     *       requestBody:
+     *         required: true
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 email:
+     *                   type: string
+     *               required:
+     *                 - email
+     *       responses:
+     *         '200':
+     *           description: user forgot password request
+     *           content:
+     *             application/json:
+     *               schema:
+     *                 type: object
+     *                 properties:
+     *                   success:
+     *                     type: boolean
+     *                   message:
+     *                     type: string
+     *                     example: Verification OTP has been resent to the mail
+     *         '400':
+     *           description: user account  does not exist please signup
+     */
     router.post(
         '/forgot-password',
         [body('email').isEmail().withMessage('Email must be valid')],
@@ -74,6 +252,42 @@ export function userRoute(router: Router) {
         }
     );
 
+    /**
+     * @openapi
+     * paths:
+     *   /api/user/forgot-password/verify-user:
+     *     post:
+     *       summary: user verify user to reset forgotten password
+     *       tags:
+     *         - User
+     *       requestBody:
+     *         required: true
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 otp:
+     *                   type: string
+     *               required:
+     *                 - otp
+     *       responses:
+     *         '200':
+     *           description: user forgot password request
+     *           content:
+     *             application/json:
+     *               schema:
+     *                 type: object
+     *                 properties:
+     *                   success:
+     *                     type: boolean
+     *                   message:
+     *                     type: string
+     *                     example: your email has been verified please provide new password
+     *         '400':
+     *           description: token has been expired
+     */
+    
     router.post(
         '/forgot-password/verify-user',
         [body('otp').isLength({ min: 6, max: 6 }).withMessage('invalid otp')],
@@ -82,6 +296,42 @@ export function userRoute(router: Router) {
             await userController.verifyPasswordReset(req, res);
         }
     );
+
+    /**
+     * @openapi
+     * paths:
+     *   /api/user/forgot-password/reset-password:
+     *     post:
+     *       summary: user reset new password
+     *       tags:
+     *         - User
+     *       requestBody:
+     *         required: true
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 password:
+     *                   type: string
+     *               required:
+     *                 - password
+     *       responses:
+     *         '200':
+     *           description: user forgot password reset
+     *           content:
+     *             application/json:
+     *               schema:
+     *                 type: object
+     *                 properties:
+     *                   success:
+     *                     type: boolean
+     *                   message:
+     *                     type: string
+     *                     example: new password created please login
+     *         '400':
+     *           description: token has been expired
+     */
 
     router.post(
         '/forgot-password/reset-password',
@@ -98,15 +348,10 @@ export function userRoute(router: Router) {
     );
 
     router.get('/refresh', async (req: Req, res: Res) => {
-       
-
         await userController.renewAccess(req, res);
     });
 
-    router.post('/protect', protect.protectUser, async (req: Req, res: Res) => {
-        res.send('entered protected router');
-    });
-
+ 
     router.post(
         '/check-userName',
         body('userName')
@@ -117,7 +362,7 @@ export function userRoute(router: Router) {
             await userController.checkUserName(req, res);
         }
     );
-
+  
     router.put(
         '/profile',
         protect.protectUser,
@@ -162,7 +407,6 @@ export function userRoute(router: Router) {
             await userController.updateUser(req, res);
         }
     );
-
     router.get(
         '/languages',
         protect.protectUser,
@@ -229,7 +473,6 @@ export function userRoute(router: Router) {
         '/notifications',
         protect.protectUser,
         async (req: Req, res: Res) => {
-           
             await userController.getNotifications(req, res);
         }
     );
@@ -251,9 +494,7 @@ export function userRoute(router: Router) {
         '/notification/:notificationId',
         validateRequest,
         protect.protectUser,
-        async (req:Req, res:Res)=>{
-            
-            
+        async (req: Req, res: Res) => {
             await userController.getSingleNotification(req, res);
         }
     );
