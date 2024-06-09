@@ -32,6 +32,18 @@ export const getMessages = async({
         { $limit: limit },
         {
             $sort:{createdAt:1}
+        },
+        {
+            $project:{
+                id:'$_id',
+                _id:0,
+                roomId:1,
+                senderId:1,
+                text:1,
+                createdAt:1,
+                updatedAt:1,
+                seen:1
+            }
         }
     ]) as IMessage[];
 
