@@ -12,7 +12,7 @@ export class ChatController {
         const chatRoom = await this.chatUseCase.createChatRoom({ members });
         res.json({
             success: true,
-            message: 'new chat room created',
+            message: 'chatroom created',
             data: chatRoom,
         });
     }
