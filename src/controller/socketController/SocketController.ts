@@ -9,20 +9,19 @@ export class SocketController {
 
     constructor({
         socketRepository,
-        // videoSessionUseCase,
-    }: {
+    }: // videoSessionUseCase,
+    {
         socketRepository: ISocketRepository;
         // videoSessionUseCase: IVideoSessionUseCase;
     }) {
         // console.log('in constructor ',videoSessionUseCase);
-        
+
         this.socketRepository = socketRepository;
         // this.videoSessionUseCase = videoSessionUseCase;
     }
 
     async handleConnection(socket: Socket, io: Server) {
         console.log('a user connected');
-        
 
         socket.on('addUser', async ({ userId }) => {
             this.socketRepository.addUser(userId, socket.id);
@@ -57,11 +56,10 @@ export class SocketController {
             const liveUsers =
                 await this.socketRepository.getAllUserFromPriority();
 
-            const { data: session } =
-                await videoSessionUseCase.startSession({
-                    userId,
-                    liveUsers,
-                });
+            const { data: session } = await videoSessionUseCase.startSession({
+                userId,
+                liveUsers,
+            });
 
             socket.join(session?.sessionCode || '');
 
@@ -117,11 +115,12 @@ export class SocketController {
         socket.on('session:rematch', async ({ sessionId }) => {
             const liveUsers =
                 await this.socketRepository.getAllUserFromPriority();
-            const { data: selectedLearner } =
-                await videoSessionUseCase.rematch({
+            const { data: selectedLearner } = await videoSessionUseCase.rematch(
+                {
                     sessionCode: sessionId,
                     liveUsers,
-                });
+                }
+            );
 
             const user = await this.socketRepository.getUser(
                 selectedLearner?.toString() || ''
@@ -147,28 +146,60 @@ export class SocketController {
                 });
             }
         });
+        socket?.on('peer:ice-candidate', async ({ candidate, to,from}) => {
+            
+            const { socketId } =
+                (await this.socketRepository.getUser(to)) || {};
+            console.log('----------------------------------------------------to, from socketId, peer:ice-candidate',to,from,socketId);
+
+            io.to(socketId || '').emit('peer:ice-candidate', { candidate,from });
+        });
 
         socket?.on('session:call-user', async ({ from, to, offer }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
+            console.log(
+                'call user from, to, offer ------------------------',
+                from,
+                to,
+                offer,
+                '-------------------'
+            );
+
+            console.log('session:call-user', socketId);
+
             io.to(socketId || '').emit('incomming:call', { from, offer });
         });
 
         socket.on('call:accepted', async ({ to, ans, from }) => {
+            console.log(
+                'call:accepted to, ans, from -----------------------------',
+                to,
+                ans,
+                from,
+                '---------------------------------'
+            );
+
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
+            console.log('call:accepted', socketId);
+
             io.to(socketId || '').emit('call:accepted', { from, ans });
         });
 
         socket.on('peer:nego-needed', async ({ from, to, offer }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
+            console.log('peer:nego-needed', socketId);
+
             io.to(socketId || '').emit('peer:nego-needed', { from, offer });
         });
 
         socket.on('peer:nego-done', async ({ from, to, ans }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
+            console.log('peer:nego-done', socketId);
+
             io.to(socketId || '').emit('peer:nego-final', { from, ans });
         });
     }

@@ -21,26 +21,30 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+const corsOptions = {
+    origin: process.env.CLIENT_URL,
+    credentials: true, 
+    optionsSuccessStatus: 200
+};
+
+// app.use(express.urlencoded({ extended: true }));
 
 app.use((req: Req, res: Res, next: Next): void => {
     if (req.originalUrl === '/api/session/webhook') {
+        
         next();
     } else {
         express.json()(req, res, next);
     }
 });
 
-app.use((req, res, next)=>{
-    console.log(req.originalUrl,req.body);
-    next();
-    
-});
 
 app.set('trust proxy', true);
-app.use(cookieParser());
 
-app.use(cors());
+
+app.use(cors(corsOptions));
 
 const httpServer = http.createServer(app);
 
@@ -55,7 +59,7 @@ app.use('/api/session', videoSessionRote(express.Router()));
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.all('*', (req:Req) => {
-    console.log('----------',req.originalUrl,req.method);
+    console.log('----------------------------',req.originalUrl,req.method);
     
     throw new NotFoundError();
 });

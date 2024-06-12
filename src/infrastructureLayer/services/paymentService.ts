@@ -7,7 +7,9 @@ dotenv.config();
 export class PaymentService implements IPaymentService {
     private readonly stripe: Stripe;
     constructor() {
-        this.stripe = new Stripe(process.env.STRIPE_KEY as string);
+        this.stripe = new Stripe(process.env.STRIPE_KEY as string, {
+            apiVersion: '2024-04-10',
+        });
     }
 
     async createPaymentIntent({
@@ -60,16 +62,24 @@ export class PaymentService implements IPaymentService {
             signature,
             process.env.WEBHOOK_SECRET as string
         );
-       
+
         const eventType = event.type;
-        if (eventType === 'checkout.session.completed' ) {
+        if (eventType === 'checkout.session.completed') {
             const session = event.data.object;
             const metadata = session.metadata;
-            if(!metadata) return null;
+            if (!metadata) return null;
 
             const transactionId = event.data.object.payment_intent as string;
-            const{userId,coinPurchasePlanId,amount,coinCount} =metadata;
-            return { metadata:{userId,coinPurchasePlanId,amount:Number(amount),coinCount:Number(coinCount)}, transactionId };
+            const { userId, coinPurchasePlanId, amount, coinCount } = metadata;
+            return {
+                metadata: {
+                    userId,
+                    coinPurchasePlanId,
+                    amount: Number(amount),
+                    coinCount: Number(coinCount),
+                },
+                transactionId,
+            };
         }
         return null;
     }
