@@ -50,7 +50,7 @@ export class SocketController {
         });
 
         // webRTC
-        socket.on('session:start', async ({ userId }) => {
+        socket.on('session:start', async ({ userId, offer }) => {
             console.log('new video session iniated');
 
             const liveUsers =
@@ -60,6 +60,15 @@ export class SocketController {
                 userId,
                 liveUsers,
             });
+            this.socketRepository.setSession(
+                session.sessionCode,
+
+                JSON.stringify({
+                    offer,
+                    learnerReady: false,
+                    helperReady: false,
+                })
+            );
 
             socket.join(session?.sessionCode || '');
 
@@ -93,13 +102,22 @@ export class SocketController {
                 userId,
                 sessionId,
             });
+            let session = null;
+            if (allowed) {
+                session = await this.socketRepository.getSession(sessionId);
+                if (session) {
+                    session = JSON.parse(session);
+                }
+            }
 
             io.to(socket.id).emit('session:join-allow', {
                 sessionId,
                 isMonetized: data?.isMonetized || false,
                 allowed,
                 message,
+                remoteUserId: data?.helper.toString(),
                 startTime: data?.createdAt,
+                offer: session.offer,
             });
 
             if (allowed) {
@@ -146,60 +164,58 @@ export class SocketController {
                 });
             }
         });
-        socket?.on('peer:ice-candidate', async ({ candidate, to,from}) => {
-            
+
+        socket?.on('peer:ice-candidate', async ({ candidate, to, from }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
-            console.log('----------------------------------------------------to, from socketId, peer:ice-candidate',to,from,socketId);
-
-            io.to(socketId || '').emit('peer:ice-candidate', { candidate,from });
+            io.to(socketId || '').emit('peer:ice-candidate', {
+                candidate,
+                from,
+            });
         });
 
         socket?.on('session:call-user', async ({ from, to, offer }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
-            console.log(
-                'call user from, to, offer ------------------------',
-                from,
-                to,
-                offer,
-                '-------------------'
-            );
-
-            console.log('session:call-user', socketId);
+           
 
             io.to(socketId || '').emit('incomming:call', { from, offer });
         });
 
         socket.on('call:accepted', async ({ to, ans, from }) => {
-            console.log(
-                'call:accepted to, ans, from -----------------------------',
-                to,
-                ans,
-                from,
-                '---------------------------------'
-            );
-
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
-            console.log('call:accepted', socketId);
-
             io.to(socketId || '').emit('call:accepted', { from, ans });
+        });
+
+        socket.on('session:client-ready', async ({ sessionCode, role, to }) => {
+            const session = await this.socketRepository.getSession(sessionCode);
+            if (session) {
+                const data = JSON.parse(session);
+                if ((role == 'helper' && data['learner'] == true)||(role == 'learner' && data['helper'] == true)) {
+                    socket.emit('session:client-ready');
+                }
+
+                await this.socketRepository.setSession(
+                    sessionCode,
+                    JSON.stringify({ ...data, [role]: true })
+                );
+                
+                const { socketId } =
+                    (await this.socketRepository.getUser(to)) || {};
+                io.to(socketId || '').emit('session:client-ready');
+            }
         });
 
         socket.on('peer:nego-needed', async ({ from, to, offer }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
-            console.log('peer:nego-needed', socketId);
-
             io.to(socketId || '').emit('peer:nego-needed', { from, offer });
         });
 
         socket.on('peer:nego-done', async ({ from, to, ans }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
-            console.log('peer:nego-done', socketId);
-
             io.to(socketId || '').emit('peer:nego-final', { from, ans });
         });
     }

@@ -22,6 +22,7 @@ import { getUserDetails } from './profile/getUserDetails';
 import { getNotifications } from './general/getNotifications';
 import { setNotificationReaded } from './general/setNotificationReaded';
 import { getSingleNotification } from './general/getSingleNotification';
+import { updateCoverPic } from './profile/updateCoverPic';
 export {
     registerUser,
     createUser,
@@ -46,5 +47,6 @@ export {
     getUserDetails,
     getNotifications,
     setNotificationReaded,
-    getSingleNotification
+    getSingleNotification,
+    updateCoverPic
 };

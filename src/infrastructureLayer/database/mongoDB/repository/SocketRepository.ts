@@ -46,4 +46,10 @@ export class SocketRepository implements ISocketRepository {
     async removePriority({ userId }: { userId: string }) {
         await this.redisClient.zrem('priority', userId);
     }
+    async setSession(sessionCode: string, data: string){
+        await this.redisClient.set(sessionCode,data,'EX', 3600);//expires in 1h
+    }
+    async getSession(sessionCode:string){
+        return await this.redisClient.get(sessionCode);
+    }
 }

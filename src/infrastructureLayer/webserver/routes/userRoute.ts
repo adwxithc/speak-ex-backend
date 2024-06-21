@@ -373,6 +373,15 @@ export function userRoute(router: Router) {
     );
 
     router.put(
+        '/cover-pic',
+        protect.protectUser,
+        upload.single('image'),
+        async (req: Req, res: Res) => {
+            await userController.updateCoverPic(req, res);
+        }
+    );
+
+    router.put(
         '/',
         [
             body('firstName')

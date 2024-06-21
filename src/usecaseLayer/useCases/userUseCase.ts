@@ -29,6 +29,7 @@ import {
     getNotifications,
     setNotificationReaded,
     getSingleNotification,
+    updateCoverPic,
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
@@ -316,6 +317,22 @@ export class UserUseCase implements IUserUseCase {
             fileBucket: this.fileBucket,
             userRepository: this.userRepository,
             imageFormater:this.imageFormater
+        });
+    }
+
+    async updateCoverPic({
+        imageFile,
+        userId,
+    }: {
+        imageFile: Express.Multer.File | undefined;
+        userId: string;
+    }){
+        return await updateCoverPic({
+            imageFile,
+            userId,
+            fileBucket: this.fileBucket,
+            userRepository: this.userRepository,
+            imageFormater: this.imageFormater,
         });
     }
 

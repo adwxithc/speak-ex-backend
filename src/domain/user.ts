@@ -16,7 +16,7 @@ interface IUser{
     following?: DbId[]
     isMonetized?:boolean;
     requestedForMonetization?:boolean;
-
+    coverPic?:string;
 }
 
 export default IUser; 

@@ -218,6 +218,21 @@ export class UserController {
         });
     }
 
+    async updateCoverPic(req: Req, res: Res) {
+        const { id } = (req.user as IAccessRefreshToken) || {};
+        const { file } = req;
+
+        const url = await this.userUseCase.updateCoverPic({
+            imageFile: file,
+            userId: id,
+        });
+        res.json({
+            success: true,
+            data: url,
+            message: 'Cover Picture updated successfully',
+        });
+    }
+
     async updateUser(req: Req, res: Res) {
         const { id } = req.user as IAccessRefreshToken;
         const {
