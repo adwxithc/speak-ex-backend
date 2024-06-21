@@ -73,5 +73,6 @@ export const updateUser = async ({
     });
 
     newUserData.profile=fileBucket.getFileAccessURL(newUserData.profile || '');
+    newUserData.coverPic=fileBucket.getFileAccessURL(newUserData.coverPic||'');
     return newUserData;
 };
