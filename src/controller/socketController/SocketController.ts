@@ -44,7 +44,7 @@ export class SocketController {
         });
 
         socket.on('disconnect', async () => {
-            this.socketRepository.removeUser(socket.id);
+            await this.socketRepository.removeUser(socket.id);
             const users = await this.socketRepository.getAllUsers();
             io.emit('getUsers', users);
         });
@@ -60,7 +60,9 @@ export class SocketController {
                 userId,
                 liveUsers,
             });
-            this.socketRepository.setSession(
+            socket.join(session?.sessionCode || '');
+            
+            await this.socketRepository.setSession(
                 session.sessionCode,
 
                 JSON.stringify({
@@ -70,7 +72,7 @@ export class SocketController {
                 })
             );
 
-            socket.join(session?.sessionCode || '');
+            
 
             io.to(socket.id).emit('session:started', {
                 sessionId: session?.sessionCode,
@@ -82,14 +84,16 @@ export class SocketController {
             );
 
             if (user) {
-                await this.socketRepository.descreasePriority({
-                    userId: user.userId,
-                });
-
                 io.to(user.socketId).emit('session:available', {
                     sessionId: session?.sessionCode,
                     start: Date.now(),
                 });
+                
+                await this.socketRepository.descreasePriority({
+                    userId: user.userId,
+                });
+
+                
             }
         });
 
@@ -177,7 +181,6 @@ export class SocketController {
         socket?.on('session:call-user', async ({ from, to, offer }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
-           
 
             io.to(socketId || '').emit('incomming:call', { from, offer });
         });
@@ -192,18 +195,25 @@ export class SocketController {
             const session = await this.socketRepository.getSession(sessionCode);
             if (session) {
                 const data = JSON.parse(session);
-                if ((role == 'helper' && data['learner'] == true)||(role == 'learner' && data['helper'] == true)) {
+                if (
+                    (role == 'helper' && data['learner'] == true) ||
+                    (role == 'learner' && data['helper'] == true)
+                ) {
                     socket.emit('session:client-ready');
                 }
 
-                await this.socketRepository.setSession(
+                const setSessionPromise = this.socketRepository.setSession(
                     sessionCode,
                     JSON.stringify({ ...data, [role]: true })
                 );
-                
-                const { socketId } =
-                    (await this.socketRepository.getUser(to)) || {};
-                io.to(socketId || '').emit('session:client-ready');
+
+                const getUserPromise = this.socketRepository.getUser(to);
+
+                const [user] = await Promise.all([
+                    getUserPromise,
+                    setSessionPromise,
+                ]) ;
+                io.to(user?.socketId || '').emit('session:client-ready');
             }
         });
 

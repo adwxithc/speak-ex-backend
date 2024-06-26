@@ -5,16 +5,18 @@ export class SocketRepository implements ISocketRepository {
     constructor(private redisClient: Redis) {}
 
     async addUser(userId: string, socketId: string) {
-        await this.redisClient.hset('users', userId, socketId);
-        await this.addToPriorityQueue({ userId });
+        const setUserPromise= this.redisClient.hset('users', userId, socketId);
+        const addPriorityPromise= this.addToPriorityQueue({ userId });
+        await Promise.all([setUserPromise, addPriorityPromise]);
     }
 
     async removeUser(socketId: string) {
         const users = await this.getAllUsers();
         const user = users.find((user) => user.socketId == socketId);
         if (user) {
-            await this.redisClient.hdel('users', user.userId);
-            await this.removePriority({ userId: user.userId });
+            const delPromise=  this.redisClient.hdel('users', user.userId);
+            const removePriorityPromise= this.removePriority({ userId: user.userId });
+            await Promise.all([delPromise,removePriorityPromise]);
         }
     }
 

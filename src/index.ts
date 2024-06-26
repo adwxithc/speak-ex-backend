@@ -17,7 +17,7 @@ const start = async () => {
     }
 
     httpServer.listen(PORT, () => {
-        console.log(`listening on port ${PORT} for production.`);
+        console.log('listening  for production.');
     });
 };
 

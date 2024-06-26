@@ -67,6 +67,7 @@ export const getPopularPosts = async ({
                 totalCount: { $arrayElemAt: ['$totalCount.totalCount', 0] || 0 }, // Ensure totalCount is not null
             },
         },
+       
     ]);
 
     

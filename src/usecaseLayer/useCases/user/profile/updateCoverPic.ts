@@ -22,6 +22,7 @@ export const updateCoverPic = async ({
     if (!user) throw new BadRequestError('invalid user');
     if (imageFile) {
         const formatedImageBuffer = await imageFormater.crop({imageBuffer:imageFile.buffer,aspectRatio:4/1, format:'jpeg', maxHeight:396 ,maxWidth:1584});
+        
         imageName = await fileBucket.uploadImage({
             imageBuffer: formatedImageBuffer,
             mimetype: imageFile.mimetype,
