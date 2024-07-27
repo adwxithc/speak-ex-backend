@@ -29,6 +29,9 @@ const userSchema = new Schema<IUser>(
         profile: {
             type: String,
         },
+        coverPic:{
+            type:String
+        },
         blocked: {
             type: Boolean,
             default:false,

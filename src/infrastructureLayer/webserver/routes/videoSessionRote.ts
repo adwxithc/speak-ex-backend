@@ -56,6 +56,7 @@ export function videoSessionRote(router: Router) {
         '/webhook',
         raw({type: 'application/json'}),
         async(req:Req, res:Res)=>{
+            
             await videoSessionController.webhook(req, res);
         }
     );

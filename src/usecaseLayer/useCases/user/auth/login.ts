@@ -32,6 +32,8 @@ export const login = async ({
 
     if(user.profile)
         user.profile=fileBucket.getFileAccessURL(user.profile);
+    
+    user.coverPic=fileBucket.getFileAccessURL(user?.coverPic||'');
 
     const data ={
         id:user.id,

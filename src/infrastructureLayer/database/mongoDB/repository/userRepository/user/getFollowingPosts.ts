@@ -3,17 +3,17 @@ import UserModel from '../../../models/userModel';
 import IUser from '../../../../../../domain/user';
 import IPost from '../../../../../../domain/post';
 
-export const getFollowingPosts = async({
+export const getFollowingPosts = async ({
     page,
     limit,
     userId,
-    userModel
-}:{
-    page:number;
-    limit:number;
-    userId:string;
-    userModel:typeof UserModel
-})=>{
+    userModel,
+}: {
+    page: number;
+    limit: number;
+    userId: string;
+    userModel: typeof UserModel;
+}) => {
     const [result] = await userModel.aggregate([
         {
             $match: {
@@ -42,22 +42,20 @@ export const getFollowingPosts = async({
                     {
                         $unwind: '$posts',
                     },
-                
                     {
                         $replaceRoot: { newRoot: '$posts' },
                     },
                     {
-                        $lookup:{
-                            from:'users',
-                            localField:'userId',
-                            foreignField:'_id',
-                            as:'user'
-                        }
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userId',
+                            foreignField: '_id',
+                            as: 'user',
+                        },
                     },
                     {
-                        $unwind:'$user'
+                        $unwind: '$user',
                     },
-                    
                     {
                         $sort: { createdAt: -1 },
                     },
@@ -66,6 +64,26 @@ export const getFollowingPosts = async({
                     },
                     {
                         $limit: limit,
+                    },
+                    {
+                        $addFields: {
+                            id: '$_id'
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            id: 1,
+                            content: 1,
+                            userId: 1,
+                            createdAt: 1,
+                            user: 1,
+                            title:1,
+                            image:1,
+                            upvotes:1,
+                            comments:1,
+                            updatedAt:1
+                        }
                     },
                 ],
                 totalCount: [
@@ -86,8 +104,6 @@ export const getFollowingPosts = async({
                             totalCount: { $sum: 1 },
                         },
                     },
-                   
-                   
                 ],
             },
         },
@@ -98,12 +114,12 @@ export const getFollowingPosts = async({
             },
         },
     ]);
-
-    
-    
-    const {paginatedFeeds,totalCount} = result as {paginatedFeeds:(IPost &{user:IUser})[],totalCount:number};
     
 
-    return {posts:paginatedFeeds,totalPosts:totalCount};
+    const { paginatedFeeds, totalCount } = result as {
+        paginatedFeeds: (IPost & { user: IUser })[];
+        totalCount: number;
+    };
 
+    return { posts: paginatedFeeds, totalPosts: totalCount };
 };

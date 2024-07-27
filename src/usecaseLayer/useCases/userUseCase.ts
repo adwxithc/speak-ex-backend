@@ -1,7 +1,5 @@
 import IUser from '../../domain/user';
-import {
-    IUserUseCase,
-} from '../interface/usecase/userUseCase';
+import { IUserUseCase } from '../interface/usecase/userUseCase';
 import { IUserRepository } from '../interface/repository/IUserRepository';
 
 import {
@@ -29,11 +27,12 @@ import {
     getNotifications,
     setNotificationReaded,
     getSingleNotification,
+    updateCoverPic,
 } from './user';
 import { IHashpassword } from '../interface/services/IHashPassword';
 import { IcreateOTP } from '../interface/services/ICreateOtp';
 import { ISendMail } from '../interface/services/ISendMail';
-import { IJwt, IToken } from '../interface/services/IJwt.types';
+import { IJwt } from '../interface/services/IJwt.types';
 import { IUnverifiedUserRepository } from '../interface/repository/IUnverifiedUserRepository';
 import { IUserOtpRepository } from '../interface/repository/IUserOtp';
 import { IFileBucket } from '../interface/services/IFileBucket';
@@ -64,7 +63,7 @@ export class UserUseCase implements IUserUseCase {
     private readonly sessionRepository: ISessionRepository;
     private readonly generateUniQueString: IGenerateUniQueString;
     private readonly notificationRepository: INotificationRepository;
-    private readonly imageFormater : IImageFormater;
+    private readonly imageFormater: IImageFormater;
     constructor({
         userRepository,
         bcrypt,
@@ -82,7 +81,7 @@ export class UserUseCase implements IUserUseCase {
         reportRepository,
         generateUniQueString,
         notificationRepository,
-        imageFormater
+        imageFormater,
     }: {
         userRepository: IUserRepository;
         bcrypt: IHashpassword;
@@ -100,7 +99,7 @@ export class UserUseCase implements IUserUseCase {
         reportRepository: IReportRepository;
         generateUniQueString: IGenerateUniQueString;
         notificationRepository: INotificationRepository;
-        imageFormater:IImageFormater
+        imageFormater: IImageFormater;
     }) {
         this.userRepository = userRepository;
         this.bcrypt = bcrypt;
@@ -118,7 +117,7 @@ export class UserUseCase implements IUserUseCase {
         this.reportRepository = reportRepository;
         this.sessionRepository = sessionRepository;
         this.notificationRepository = notificationRepository;
-        this.imageFormater=imageFormater;
+        this.imageFormater = imageFormater;
     }
 
     //register user
@@ -151,7 +150,7 @@ export class UserUseCase implements IUserUseCase {
     }
 
     //resend verification otp
-    async resendOtp(token: string): Promise<string | void> {
+    async resendOtp(token: string) {
         return await resendOtp({
             unverifiedUserRepository: this.unverifiedUserRepository,
             sendMail: this.sendMail,
@@ -162,13 +161,7 @@ export class UserUseCase implements IUserUseCase {
     }
 
     //signin
-    async signin({
-        email,
-        password,
-    }: {
-        email: string;
-        password: string;
-    }): Promise<{ user: IUser; token: IToken }> {
+    async signin({ email, password }: { email: string; password: string }) {
         return await login({
             bcrypt: this.bcrypt,
             jwtToken: this.jwtToken,
@@ -179,7 +172,7 @@ export class UserUseCase implements IUserUseCase {
         });
     }
 
-    async sendPasswordResetMail(email: string): Promise<string> {
+    async sendPasswordResetMail(email: string) {
         return await sendPasswordResetMail({
             email,
             otpGenerator: this.otpGenerator,
@@ -190,10 +183,7 @@ export class UserUseCase implements IUserUseCase {
         });
     }
 
-    async verifyPasswordReset(
-        otpFromUser: string,
-        token: string
-    ): Promise<string> {
+    async verifyPasswordReset(otpFromUser: string, token: string) {
         return verifyPasswordReset({
             UserOtpRepository: this.userOtpRepository,
             jwtToken: this.jwtToken,
@@ -202,7 +192,7 @@ export class UserUseCase implements IUserUseCase {
         });
     }
 
-    async createNewPassword(password: string, token: string): Promise<boolean> {
+    async createNewPassword(password: string, token: string) {
         return await createNewPassword({
             UserRepository: this.userRepository,
             jwtToken: this.jwtToken,
@@ -220,11 +210,7 @@ export class UserUseCase implements IUserUseCase {
         page: number;
         key: string;
         limit: number;
-    }): Promise<{
-        users: Omit<IUser, 'password'>[];
-        totalUsers: number;
-        lastPage: number;
-    }> {
+    }) {
         const usersData = await listUsers({
             UserRepository: this.userRepository,
             fileBucket: this.fileBucket,
@@ -243,11 +229,7 @@ export class UserUseCase implements IUserUseCase {
         page: number;
         key: string;
         limit: number;
-    }): Promise<{
-        users: Pick<IUser, 'userName' | 'profile'>[];
-        totalUsers: number;
-        lastPage: number;
-    }> {
+    }) {
         return await searchUsers({
             UserRepository: this.userRepository,
             fileBucket: this.fileBucket,
@@ -273,7 +255,7 @@ export class UserUseCase implements IUserUseCase {
         password?: string;
         focusLanguage?: string;
         proficientLanguage?: string[];
-    }): Promise<Omit<IUser, 'password'> | null> {
+    }) {
         return await updateUser({
             id,
             firstName,
@@ -296,7 +278,7 @@ export class UserUseCase implements IUserUseCase {
             UserRepository: this.userRepository,
         });
     }
-    async checkUserName(userName: string): Promise<boolean> {
+    async checkUserName(userName: string) {
         return await checkUserName({
             userName,
             UserRepository: this.userRepository,
@@ -309,17 +291,33 @@ export class UserUseCase implements IUserUseCase {
     }: {
         imageFile: Express.Multer.File | undefined;
         userId: string;
-    }): Promise<string> {
+    }) {
         return await updateProfile({
             imageFile,
             userId,
             fileBucket: this.fileBucket,
             userRepository: this.userRepository,
-            imageFormater:this.imageFormater
+            imageFormater: this.imageFormater,
         });
     }
 
-    async getUser(userName: string): Promise<Omit<IUser, 'password'>> {
+    async updateCoverPic({
+        imageFile,
+        userId,
+    }: {
+        imageFile: Express.Multer.File | undefined;
+        userId: string;
+    }) {
+        return await updateCoverPic({
+            imageFile,
+            userId,
+            fileBucket: this.fileBucket,
+            userRepository: this.userRepository,
+            imageFormater: this.imageFormater,
+        });
+    }
+
+    async getUser(userName: string) {
         return await getUser({
             userName,
             fileBucket: this.fileBucket,
@@ -341,7 +339,7 @@ export class UserUseCase implements IUserUseCase {
     }: {
         followerId: string;
         followedUserId: string;
-    }): Promise<void> {
+    }) {
         return await follow({
             followerId,
             followedUserId,
@@ -355,7 +353,7 @@ export class UserUseCase implements IUserUseCase {
     }: {
         followerId: string;
         followedUserId: string;
-    }): Promise<void> {
+    }) {
         return await unfollow({
             followerId,
             followedUserId,

@@ -19,4 +19,6 @@ export interface ISocketRepository {
     getAllUserFromPriority(): Promise<string[]>;
     descreasePriority({ userId }: { userId: string }): Promise<void>;
     removePriority({ userId }: { userId: string }): Promise<void>;
+    setSession(sessionCode:string,data:string):Promise<void>
+    getSession(sessionCode:string):Promise<string|null>
 }

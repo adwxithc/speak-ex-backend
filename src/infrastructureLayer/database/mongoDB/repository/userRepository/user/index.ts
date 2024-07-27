@@ -15,7 +15,7 @@ import { getFollowings } from './getFollowings';
 import { getFollowingPosts } from './getFollowingPosts';
 import { getLearners } from './getLearners';
 import { findLearnersWithGoldCoins } from './findLearnersWithGoldCoins';
-
+import { findUserWithRating } from './findUserWithRating';
 export {
     findUserByEmail,
     createUser,
@@ -33,5 +33,6 @@ export {
     getFollowings,
     getFollowingPosts,
     getLearners,
-    findLearnersWithGoldCoins
+    findLearnersWithGoldCoins,
+    findUserWithRating
 };

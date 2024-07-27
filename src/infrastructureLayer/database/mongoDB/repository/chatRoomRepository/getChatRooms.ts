@@ -105,6 +105,9 @@ export const getChatRooms = async({
                 'unseenMessageCount':1,
                 'lastMessage':1
             }
+        },
+        {
+            $sort:{'updatedAt':-1}
         }
     ]) as IChatList;
    

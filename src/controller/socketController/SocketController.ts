@@ -9,20 +9,19 @@ export class SocketController {
 
     constructor({
         socketRepository,
-        // videoSessionUseCase,
-    }: {
+    }: // videoSessionUseCase,
+    {
         socketRepository: ISocketRepository;
         // videoSessionUseCase: IVideoSessionUseCase;
     }) {
         // console.log('in constructor ',videoSessionUseCase);
-        
+
         this.socketRepository = socketRepository;
         // this.videoSessionUseCase = videoSessionUseCase;
     }
 
     async handleConnection(socket: Socket, io: Server) {
         console.log('a user connected');
-        
 
         socket.on('addUser', async ({ userId }) => {
             this.socketRepository.addUser(userId, socket.id);
@@ -45,25 +44,35 @@ export class SocketController {
         });
 
         socket.on('disconnect', async () => {
-            this.socketRepository.removeUser(socket.id);
+            await this.socketRepository.removeUser(socket.id);
             const users = await this.socketRepository.getAllUsers();
             io.emit('getUsers', users);
         });
 
         // webRTC
-        socket.on('session:start', async ({ userId }) => {
+        socket.on('session:start', async ({ userId, offer }) => {
             console.log('new video session iniated');
 
             const liveUsers =
                 await this.socketRepository.getAllUserFromPriority();
 
-            const { data: session } =
-                await videoSessionUseCase.startSession({
-                    userId,
-                    liveUsers,
-                });
-
+            const { data: session } = await videoSessionUseCase.startSession({
+                userId,
+                liveUsers,
+            });
             socket.join(session?.sessionCode || '');
+            
+            await this.socketRepository.setSession(
+                session.sessionCode,
+
+                JSON.stringify({
+                    offer,
+                    learnerReady: false,
+                    helperReady: false,
+                })
+            );
+
+            
 
             io.to(socket.id).emit('session:started', {
                 sessionId: session?.sessionCode,
@@ -75,14 +84,16 @@ export class SocketController {
             );
 
             if (user) {
-                await this.socketRepository.descreasePriority({
-                    userId: user.userId,
-                });
-
                 io.to(user.socketId).emit('session:available', {
                     sessionId: session?.sessionCode,
                     start: Date.now(),
                 });
+                
+                await this.socketRepository.descreasePriority({
+                    userId: user.userId,
+                });
+
+                
             }
         });
 
@@ -95,13 +106,22 @@ export class SocketController {
                 userId,
                 sessionId,
             });
+            let session = null;
+            if (allowed) {
+                session = await this.socketRepository.getSession(sessionId);
+                if (session) {
+                    session = JSON.parse(session);
+                }
+            }
 
             io.to(socket.id).emit('session:join-allow', {
                 sessionId,
                 isMonetized: data?.isMonetized || false,
                 allowed,
                 message,
+                remoteUserId: data?.helper.toString(),
                 startTime: data?.createdAt,
+                offer: session.offer,
             });
 
             if (allowed) {
@@ -117,11 +137,12 @@ export class SocketController {
         socket.on('session:rematch', async ({ sessionId }) => {
             const liveUsers =
                 await this.socketRepository.getAllUserFromPriority();
-            const { data: selectedLearner } =
-                await videoSessionUseCase.rematch({
+            const { data: selectedLearner } = await videoSessionUseCase.rematch(
+                {
                     sessionCode: sessionId,
                     liveUsers,
-                });
+                }
+            );
 
             const user = await this.socketRepository.getUser(
                 selectedLearner?.toString() || ''
@@ -148,9 +169,19 @@ export class SocketController {
             }
         });
 
+        socket?.on('peer:ice-candidate', async ({ candidate, to, from }) => {
+            const { socketId } =
+                (await this.socketRepository.getUser(to)) || {};
+            io.to(socketId || '').emit('peer:ice-candidate', {
+                candidate,
+                from,
+            });
+        });
+
         socket?.on('session:call-user', async ({ from, to, offer }) => {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
+
             io.to(socketId || '').emit('incomming:call', { from, offer });
         });
 
@@ -158,6 +189,32 @@ export class SocketController {
             const { socketId } =
                 (await this.socketRepository.getUser(to)) || {};
             io.to(socketId || '').emit('call:accepted', { from, ans });
+        });
+
+        socket.on('session:client-ready', async ({ sessionCode, role, to }) => {
+            const session = await this.socketRepository.getSession(sessionCode);
+            if (session) {
+                const data = JSON.parse(session);
+                if (
+                    (role == 'helper' && data['learner'] == true) ||
+                    (role == 'learner' && data['helper'] == true)
+                ) {
+                    socket.emit('session:client-ready');
+                }
+
+                const setSessionPromise = this.socketRepository.setSession(
+                    sessionCode,
+                    JSON.stringify({ ...data, [role]: true })
+                );
+
+                const getUserPromise = this.socketRepository.getUser(to);
+
+                const [user] = await Promise.all([
+                    getUserPromise,
+                    setSessionPromise,
+                ]) ;
+                io.to(user?.socketId || '').emit('session:client-ready');
+            }
         });
 
         socket.on('peer:nego-needed', async ({ from, to, offer }) => {

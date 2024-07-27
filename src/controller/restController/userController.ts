@@ -28,8 +28,9 @@ export class UserController {
 
         res.cookie('verficationToken', token, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             expires: new Date(Date.now() + 30 * 60 * 1000),
+            secure:true
         });
 
         res.status(200).json({
@@ -61,8 +62,10 @@ export class UserController {
 
         res.cookie('verficationToken', newToken, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             expires: new Date(Date.now() + 30 * 60 * 1000),
+            secure:true
+
         });
 
         res.status(200).json({
@@ -73,7 +76,7 @@ export class UserController {
 
     async signin(req: Req, res: Res) {
         const { email, password } = req.body;
-
+        
         const result = await this.userUseCase.signin({ email, password });
         res.cookie(
             'accessToken',
@@ -107,8 +110,9 @@ export class UserController {
         const token = await this.userUseCase.sendPasswordResetMail(email);
         res.cookie('forgotPasswordToken', token, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             expires: new Date(Date.now() + 30 * 60 * 1000),
+            secure: true
         });
 
         res.status(200).json({
@@ -127,8 +131,9 @@ export class UserController {
 
         res.cookie('passwordResetToken', passwordResetToken, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             expires: new Date(Date.now() + 30 * 60 * 1000),
+            secure: true
         });
 
         res.status(200).json({
@@ -177,6 +182,7 @@ export class UserController {
 
     async renewAccess(req: Req, res: Res) {
         const { refreshToken } = req.cookies;
+      
         const accessToken = await this.userUseCase.renewAccess(refreshToken);
         
         
@@ -209,6 +215,21 @@ export class UserController {
             success: true,
             data: url,
             message: 'profile updated successfully',
+        });
+    }
+
+    async updateCoverPic(req: Req, res: Res) {
+        const { id } = (req.user as IAccessRefreshToken) || {};
+        const { file } = req;
+
+        const url = await this.userUseCase.updateCoverPic({
+            imageFile: file,
+            userId: id,
+        });
+        res.json({
+            success: true,
+            data: url,
+            message: 'Cover Picture updated successfully',
         });
     }
 

@@ -129,7 +129,9 @@ export class VideoSessionController {
 
     async webhook(req: Req, res: Res) {
         const payload = req.body;
+
         const signature = req.headers['stripe-signature'] as string;
+
         await this.videoSessionUseCase.paymentConfirmation({
             signature,
             payload,
@@ -163,8 +165,8 @@ export class VideoSessionController {
         });
     }
 
-    async getMonetizationRequests(req:Req, res:Res){
-        const { page = 1, limit = 5,status='all' } = req.query;
+    async getMonetizationRequests(req: Req, res: Res) {
+        const { page = 1, limit = 5, status = 'all' } = req.query;
 
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
@@ -173,32 +175,36 @@ export class VideoSessionController {
             throw new BadRequestError('invalid parameters');
         }
 
-        const requestData= await this.videoSessionUseCase.listMonetizationRequests({
-            page: pageNumber,
-            limit: limitNumber,
-            status:status as string
-        });
+        const requestData =
+            await this.videoSessionUseCase.listMonetizationRequests({
+                page: pageNumber,
+                limit: limitNumber,
+                status: status as string,
+            });
 
         res.status(200).json({
             success: true,
             data: requestData,
-        }); 
+        });
     }
 
-    async updateMonetizationStatus(req:Req, res:Res){
-        const {userId} = req.params;
-        const {status} = req.body;
-        const result = await this.videoSessionUseCase.updateMonetizationStatus({userId,status});
+    async updateMonetizationStatus(req: Req, res: Res) {
+        const { userId } = req.params;
+        const { status } = req.body;
+        const result = await this.videoSessionUseCase.updateMonetizationStatus({
+            userId,
+            status,
+        });
 
         res.json({
-            success:true,
-            data:result
+            success: true,
+            data: result,
         });
     }
 
-    async getVideoSessions(req:Req, res:Res){
+    async getVideoSessions(req: Req, res: Res) {
         const { id } = req.user as IAccessRefreshToken;
-        const { page = 1, limit = 5,type='all' } = req.query;
+        const { page = 1, limit = 5, type = 'all' } = req.query;
 
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
@@ -207,22 +213,23 @@ export class VideoSessionController {
             throw new BadRequestError('invalid parameters');
         }
 
-        const videoSessionDatas= await this.videoSessionUseCase.getVideoSessions({
-            userId:id,
-            page: pageNumber,
-            limit: limitNumber,
-            type:type as string
-        });
+        const videoSessionDatas =
+            await this.videoSessionUseCase.getVideoSessions({
+                userId: id,
+                page: pageNumber,
+                limit: limitNumber,
+                type: type as string,
+            });
 
         res.status(200).json({
             success: true,
-            data: videoSessionDatas
-        }); 
+            data: videoSessionDatas,
+        });
     }
 
-    async getTransactions(req:Req, res:Res){
+    async getTransactions(req: Req, res: Res) {
         const { id } = req.user as IAccessRefreshToken;
-        const { page = 1, limit = 5,type='all' } = req.query;
+        const { page = 1, limit = 5, type = 'all' } = req.query;
 
         const pageNumber = parseInt(page as string);
         const limitNumber = parseInt(limit as string);
@@ -231,17 +238,18 @@ export class VideoSessionController {
             throw new BadRequestError('invalid parameters');
         }
 
-        const transactionDatas= await this.videoSessionUseCase.getTransactions({
-            userId:id,
-            page: pageNumber,
-            limit: limitNumber,
-            type:type as string
-        });
+        const transactionDatas = await this.videoSessionUseCase.getTransactions(
+            {
+                userId: id,
+                page: pageNumber,
+                limit: limitNumber,
+                type: type as string,
+            }
+        );
 
         res.status(200).json({
             success: true,
-            data: transactionDatas
-        }); 
-
+            data: transactionDatas,
+        });
     }
 }

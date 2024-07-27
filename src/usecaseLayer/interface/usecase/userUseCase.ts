@@ -134,6 +134,14 @@ export interface IUserUseCase {
         userId: string;
     }): Promise<string>;
 
+    updateCoverPic({
+        imageFile,
+        userId,
+    }: {
+        imageFile: Express.Multer.File | undefined;
+        userId: string;
+    }): Promise<string>;
+
     getUser(userName: string): Promise<Omit<IUser, 'password'>>;
     getUserById(userId: string): Promise<Omit<IUser, 'password'>>;
     getUserDetails(userId: string): Promise<IUserDetails>;
@@ -202,9 +210,9 @@ export interface IUserUseCase {
     }): Promise<{
         notifications: INotificationDetails[];
         totalNotifications: number;
-        totalUnReadedNotifications:number;
+        totalUnReadedNotifications: number;
         lastPage: number;
-        currentPage:number
+        currentPage: number;
     }>;
 
     setNotificationReaded({
@@ -215,5 +223,11 @@ export interface IUserUseCase {
         notificationIds: string[];
     }): Promise<void>;
 
-    getSingleNotification({userId,notificationId}:{userId:string,notificationId:string}):Promise<INotificationDetails>
+    getSingleNotification({
+        userId,
+        notificationId,
+    }: {
+        userId: string;
+        notificationId: string;
+    }): Promise<INotificationDetails>;
 }

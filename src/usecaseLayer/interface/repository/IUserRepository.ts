@@ -17,6 +17,7 @@ export interface IUserRepository {
     findUserById(id: string): Promise<Omit<IUser, 'password'> | null>;
     findLearnerWithWallet(id: string): Promise<Omit<IUser & {wallet:IWallet,focusLanguageInfo:ILanguage}, 'password'> | null>;
     findUserByUserName(userName:string): Promise<IUser | null>
+    findUserWithRating(userName:string): Promise<Omit<IUser &{rating:number}, 'password'>  | null>
 
     createUser(newUser: IUser): Promise<IUser>;
     getAllUser(): Promise<IUser[]>;

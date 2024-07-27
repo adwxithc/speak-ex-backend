@@ -19,7 +19,8 @@ import {
     getLearners,
     findLearnerWithWallet,
     findUserById,
-    findLearnersWithGoldCoins
+    findLearnersWithGoldCoins,
+    findUserWithRating
 } from './userRepository/user';
 import { getAllUser, getUserDataWithWallet } from './userRepository/admin';
 
@@ -41,6 +42,12 @@ export class UserRepository implements IUserRepository {
     }
     async findUserByUserName(userName: string): Promise<IUser | null> {
         return await findUserByUserName(userName, this.userModels);
+    }
+
+    async findUserWithRating(
+        userName: string
+    ){
+        return await findUserWithRating(userName, this.userModels);
     }
 
     async changePassword(password: string, userId: string): Promise<boolean> {
@@ -85,7 +92,8 @@ export class UserRepository implements IUserRepository {
         proficientLanguage,
         focusLanguage,
         requestedForMonetization,
-        isMonetized
+        isMonetized,
+        coverPic
     }: Required<Pick<IUser, 'id'>> &
         Partial<Omit<IUser, 'email'>>): Promise<IUser> {
         return await updateUser(
@@ -99,7 +107,8 @@ export class UserRepository implements IUserRepository {
                 proficientLanguage,
                 focusLanguage,
                 requestedForMonetization,
-                isMonetized
+                isMonetized,
+                coverPic
             },
             this.userModels
         );

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "lint": "eslint . --ext .ts",
-     "build": "tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
