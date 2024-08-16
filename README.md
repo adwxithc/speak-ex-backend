@@ -2,7 +2,7 @@
 
 # SpeakEx Backend
 
-Welcome to the backend repository for SpeakEx, a platform designed to help users achieve fluency in new languages through real-time conversations.
+Welcome to the backend repository for Speakex, a platform designed to help users achieve fluency in new languages through real-time conversations.
 
 ## Table of Contents
 
