@@ -37,6 +37,7 @@ export class PaymentService implements IPaymentService {
                 },
             ],
             mode: 'payment',
+            billing_address_collection: 'required',
             success_url: `${process.env.CLIENT_URL}/`,
             cancel_url: `${process.env.CLIENT_URL}/`,
             metadata: {

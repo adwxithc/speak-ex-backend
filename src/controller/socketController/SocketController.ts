@@ -72,7 +72,7 @@ export class SocketController {
                 })
             );
 
-            
+
 
             io.to(socket.id).emit('session:started', {
                 sessionId: session?.sessionCode,
@@ -88,12 +88,9 @@ export class SocketController {
                     sessionId: session?.sessionCode,
                     start: Date.now(),
                 });
-                
                 await this.socketRepository.descreasePriority({
                     userId: user.userId,
                 });
-
-                
             }
         });
 
