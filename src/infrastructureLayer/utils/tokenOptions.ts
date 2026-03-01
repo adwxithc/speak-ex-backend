@@ -13,12 +13,12 @@ interface ITokenOptions {
 export const accessTokenOptions: ITokenOptions = {
     expires: new Date(Date.now() + 5 * 60 * 60 * 1000), //5 hour
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'none',
     secure: process.env.NODE_ENV === 'production',
 };
 export const refreshTokenOptions: ITokenOptions = {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'none',
     secure: process.env.NODE_ENV === 'production',
 };
